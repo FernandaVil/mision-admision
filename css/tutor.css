@@ -107,3 +107,5 @@
   .gn-paso { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .gn-rol { justify-self: start; }
 }
+.guia-clases { align-self: start; justify-self: start; }
+.guia-minimo ul { margin: 0; display: grid; gap: 8px; }

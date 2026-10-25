@@ -22,11 +22,13 @@
   }
 
   function crearPractica(raiz, opciones = {}) {
-    const C = MA.M1;
+    // El módulo 1 usa las claves de siempre (practica.m1, m1.prac.*): no se cambian para no perder avance
+    const C = opciones.datos || MA.M1;
+    const mod = opciones.modulo || 'm1';
     const lista = C.EJERCICIOS;
-    const estado = MA.almacen.leer('practica.m1', {}) || {};
+    const estado = MA.almacen.leer('practica.' + mod, {}) || {};
     const borradores = new Map();
-    let actual = Math.min(MA.almacen.leer('practica.m1.actual', 0) || 0, lista.length - 1);
+    let actual = Math.min(MA.almacen.leer('practica.' + mod + '.actual', 0) || 0, lista.length - 1);
 
     raiz.innerHTML = `
       <nav class="pr-mapa" aria-label="Ejercicios"></nav>
@@ -76,7 +78,7 @@
       MA.bus.emit('ejercicio-activo', { numero: actual + 1, plano: planoDe(ej), tema: C.TEMAS[ej.tema] });
     };
     const datosDe = ej => (estado[ej.id] = estado[ej.id] || { resuelto: false, intentos: 0, pistas: 0, solucion: false });
-    const guardar = () => MA.almacen.guardar('practica.m1', estado);
+    const guardar = () => MA.almacen.guardar('practica.' + mod, estado);
 
     function ponerMensaje(tipo, titulo, texto) {
       const ico = { ok: 'checkCirculo', aviso: 'alerta', info: 'info', error: 'errorCirculo' }[tipo];
@@ -99,7 +101,7 @@
     function mostrar(i) {
       guardarBorrador();
       actual = MA.clamp(i, 0, lista.length - 1);
-      MA.almacen.guardar('practica.m1.actual', actual);
+      MA.almacen.guardar('practica.' + mod + '.actual', actual);
       const ej = lista[actual], d = datosDe(ej);
       $('.pr-cabeza', raiz).innerHTML = `
         <span class="etiqueta">Ejercicio ${actual + 1} de ${lista.length}</span>
@@ -116,16 +118,16 @@
         if (d.resuelto) $(`.pr-opcion[data-k="${ej.correcta}"]`, resp).classList.add('correcta');
       } else {
         resp.innerHTML = `
-          <label class="pr-etiqueta-campo" for="pr-campo">Respuesta</label>
+          <label class="pr-etiqueta-campo" for="pr-campo-${mod}">Respuesta</label>
           <div class="pr-fila-campo">
             <span class="campo-grupo">
-              <input id="pr-campo" class="campo" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Número">
+              <input id="pr-campo-${mod}" class="campo" type="text" inputmode="${opciones.teclado || 'decimal'}" autocomplete="off" spellcheck="false" placeholder="Número">
               ${ej.unidad ? `<span class="campo-unidad">${ej.unidad}</span>` : ''}
             </span>
             <button type="button" class="btn" data-accion="comprobar">Comprobar</button>
           </div>
-          <p class="texto-3 pr-ayuda-campo">Solo el número. Sirven la coma o el punto decimal (2,5 o 2.5) y las fracciones (1/3).</p>`;
-        const campo = $('#pr-campo', resp);
+          <p class="texto-3 pr-ayuda-campo">${opciones.ayudaCampo || 'Solo el número. Sirven la coma o el punto decimal (2,5 o 2.5) y las fracciones (1/3).'}</p>`;
+        const campo = $('.campo', resp);
         campo.addEventListener('keydown', e => { if (e.key === 'Enter') comprobar(); });
         if (d.resuelto) campo.value = MA.fmt(ej.respuesta).replace(/ /g, '');
       }
@@ -143,7 +145,7 @@
 
       const bh = $('[data-accion="herramienta"]', raiz);
       bh.hidden = !ej.herramienta;
-      if (ej.herramienta) bh.innerHTML = ej.herramienta.tipo === 'balanza' ? `${icono('balanza')}Probarlo en la balanza` : `${icono('regla')}Probarlo en la mesa de conversión`;
+      if (ej.herramienta) bh.innerHTML = ej.herramienta.boton ? `${icono(ej.herramienta.icono || 'regla')}${ej.herramienta.boton}` : ej.herramienta.tipo === 'balanza' ? `${icono('balanza')}Probarlo en la balanza` : `${icono('regla')}Probarlo en la mesa de conversión`;
 
       $('[data-accion="anterior"]', raiz).disabled = actual === 0;
       const sig = $('[data-accion="siguiente"]', raiz);
@@ -166,7 +168,7 @@
       const primera = d.intentos === 0 && d.pistas === 0 && !d.solucion;
       d.resuelto = true;
       guardar();
-      MA.progreso.marcar('m1.prac.' + ej.id);
+      MA.progreso.marcar(mod + '.prac.' + ej.id);
       ponerMensaje('ok', '¡Correcto!', primera ? 'A la primera y sin ayudas: ¡muy bien!' : '¡Bien hecho! Lo importante es entender el procedimiento: vale la pena compararlo con la solución.');
       const sig = $('[data-accion="siguiente"]', raiz);
       sig.classList.remove('btn-secundario');
@@ -181,7 +183,7 @@
     }
     function comprobar() {
       const ej = lista[actual], d = datosDe(ej);
-      const campo = $('#pr-campo', raiz);
+      const campo = $('.pr-respuesta .campo', raiz);
       const cands = MA.leerNumeros(campo.value);
       if (!cands.length) { ponerMensaje('aviso', 'Solo el número.', 'Sin unidades. Ejemplos válidos: 20 · 2,5 · 1/3'); campo.focus(); return; }
       if (cands.some(c => MA.casiIgual(c, ej.respuesta, ej.tolerancia || 0.01))) { acierto(ej, d); return; }

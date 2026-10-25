@@ -12,15 +12,15 @@
   const MA = window.MA;
   const { $, $$, icono } = MA;
 
-  function crearPresentacion(raiz, { diapositivas, partes, alTerminarParte }) {
-    let actual = MA.clamp(MA.almacen.leer('m1.diapositiva', 0) || 0, 0, diapositivas.length - 1);
+  function crearPresentacion(raiz, { diapositivas, partes, alTerminarParte, clave = 'm1.diapositiva', etiqueta = 'Partes de las ideas clave' }) {
+    let actual = MA.clamp(MA.almacen.leer(clave, 0) || 0, 0, diapositivas.length - 1);
     let presentando = false, escribiendo = false;
     const tinta = new Map();   // diapositiva -> trazos
 
     raiz.classList.add('pres');
     raiz.innerHTML = `
       <div class="pres-barra">
-        <div class="segmentado pres-partes" role="group" aria-label="Partes de las ideas clave">
+        <div class="segmentado pres-partes" role="group" aria-label="${etiqueta}">
           ${partes.map(p => `<button type="button" class="segmento" data-parte="${p.id}" aria-pressed="false">${p.nombre}<span class="texto-3">${p.minutos}</span></button>`).join('')}
         </div>
         <button type="button" class="btn btn-secundario btn-chico" data-pres="presentar">${icono('pantalla')}Pantalla completa</button>
@@ -66,7 +66,7 @@
       $('[data-pres="siguiente"]', raiz).disabled = actual === diapositivas.length - 1;
       if (!tinta.has(actual)) tinta.set(actual, []);
       lienzo.usarTrazos(tinta.get(actual));
-      MA.almacen.guardar('m1.diapositiva', actual);
+      MA.almacen.guardar(clave, actual);
       if (actual === p.hasta && alTerminarParte) alTerminarParte(p.id);
     }
     function ir(i) { actual = MA.clamp(i, 0, diapositivas.length - 1); pintar(); }

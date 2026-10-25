@@ -23,9 +23,10 @@
     {
       id: 'm2', num: '02',
       titulo: 'Álgebra básica y factorización',
-      resumen: 'Signos, jerarquía de operaciones, potencias y casos de factorización.',
-      disponible: false,
+      resumen: 'Fracciones, signos, orden de las operaciones, potencias y factorización.',
+      disponible: true,
       temario: [
+        'Fracciones: dividir entre una fracción, también con unidades',
         'Leyes de los signos y jerarquía de operaciones',
         'Potencias, exponentes negativos y notación científica',
         'Factor común y diferencia de cuadrados',

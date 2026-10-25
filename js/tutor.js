@@ -15,6 +15,12 @@
   const { icono } = MA;
 
   const GUIA = {
+    id: 'c1',
+    nombre: 'Clase 1',
+    titulo: 'Guion de la clase 1',
+    entrada: 'Unos 80 minutos por videollamada. La teoría va en dos bloques cortos, cada uno justo antes de la herramienta donde se usa, y alterna lo que muestras, lo que le preguntas y lo que escribes en el pizarrón.',
+    diapositivas: () => MA.Clase1.DIAPOSITIVAS,
+    claveCheck: 'guia.check',
     antes: [
       'Envíale el enlace de la plataforma y pídele que la abra en el computador.',
       'Que tenga papel, lápiz y nada de calculadora: así es el examen.',
@@ -177,9 +183,9 @@
   };
 
   const ROLES = { tu: 'Tú dices', pregunta: 'Pregúntale', el: 'Él hace', pizarra: 'Pizarrón', accion: 'Tú haces', ojo: 'Ojo' };
-  function pasoHtml(p) {
+  function pasoHtml(p, guia) {
     if (p.t === 'diapo') {
-      const d = MA.Clase1.DIAPOSITIVAS[p.n - 1];
+      const d = guia.diapositivas()[p.n - 1];
       return `<li class="gn-diapo">${icono('pantalla')}<span>Diapositiva ${p.n}</span><b>${d ? d.titulo : ''}</b></li>`;
     }
     const texto = p.t === 'tu' || p.t === 'pregunta' ? `«${p.x}»` : p.x;
@@ -190,13 +196,20 @@
       </li>`;
   }
 
+  // Guías disponibles (la de la clase 2 solo existe si se cargó su archivo)
+  const guias = () => [GUIA, MA.GuiaClase2].filter(Boolean);
+
   function montarGuia(cont) {
-    const hechos = MA.almacen.leer('guia.check', {}) || {};
+    const lista = guias();
+    const elegida = MA.almacen.leer('guia.clase', null);
+    const guia = lista.find(g => g.id === elegida) || lista[lista.length - 1];
+    const hechos = MA.almacen.leer(guia.claveCheck, {}) || {};
     cont.innerHTML = `
+      ${lista.length > 1 ? `<div class="segmentado guia-clases" role="group" aria-label="Elegir la clase">${lista.map(g => `<button type="button" class="segmento" data-guia="${g.id}" aria-pressed="${g === guia}">${g.nombre}</button>`).join('')}</div>` : ''}
       <header class="guia-cabeza">
         <span class="pildora pildora-ambar">${icono('info')}Solo para ti</span>
-        <h1>Guion de la clase 1</h1>
-        <p class="entrada">Unos 80 minutos por videollamada. La teoría va en dos bloques cortos, cada uno justo antes de la herramienta donde se usa, y alterna lo que muestras, lo que le preguntas y lo que escribes en el pizarrón.</p>
+        <h1>${guia.titulo}</h1>
+        <p class="entrada">${guia.entrada}</p>
         <p class="texto-3 guia-privada">Ninguna página de la plataforma de tu hermano enlaza a esta. Guárdala en favoritos.</p>
       </header>
       <section class="tarjeta gn-leyenda" aria-label="Cómo leer el guion">
@@ -205,23 +218,27 @@
       <div class="guia-columnas">
         <section class="tarjeta">
           <h2>Antes de la llamada</h2>
-          <ul class="guia-check">${GUIA.antes.map((t, i) => `
+          <ul class="guia-check">${guia.antes.map((t, i) => `
             <li><label><input type="checkbox" id="guia-check-${i}" data-check="${i}" ${hechos[i] ? 'checked' : ''}><span>${t}</span></label></li>`).join('')}
           </ul>
         </section>
         <section class="tarjeta">
           <h2>Al terminar, tu hermano debe poder</h2>
-          <ol class="guia-objetivos">${GUIA.objetivos.map(t => `<li>${t}</li>`).join('')}</ol>
+          <ol class="guia-objetivos">${guia.objetivos.map(t => `<li>${t}</li>`).join('')}</ol>
         </section>
       </div>
       <section class="tarjeta guia-minimo">
         <h2>Lo mínimo antes de cualquier ejercicio</h2>
         <p class="texto-2">Son las cinco ideas de las diapositivas. Si alguna no le queda clara, vuelve a ella antes de seguir.</p>
-        <ol>${GUIA.minimo.map(([t, d]) => `<li><b>${t}.</b> ${d}</li>`).join('')}</ol>
+        <ol>${guia.minimo.map(([t, d]) => `<li><b>${t}.</b> ${d}</li>`).join('')}</ol>
       </section>
+      ${guia.enfoque ? `<section class="tarjeta guia-minimo">
+        <h2>Cómo trabajar con él</h2>
+        <ul>${guia.enfoque.map(t => `<li>${t}</li>`).join('')}</ul>
+      </section>` : ''}
       <h2 class="guia-titulo-linea">Guion paso a paso</h2>
       <ol class="guia-linea">
-        ${GUIA.guion.map(b => `
+        ${guia.guion.map(b => `
           <li class="guia-bloque">
             <div class="guia-tiempo mono">${b.tiempo}</div>
             <div class="tarjeta guia-cuerpo">
@@ -229,20 +246,27 @@
                 <h3>${b.titulo}</h3>
                 <span class="pildora">${icono('pantalla')}${b.comparte}</span>
               </div>
-              <ol class="gn-pasos">${b.pasos.map(pasoHtml).join('')}</ol>
+              <ol class="gn-pasos">${b.pasos.map(p => pasoHtml(p, guia)).join('')}</ol>
               ${b.ruta ? `<div class="fila-botones guia-boton"><a class="btn btn-secundario btn-chico" href="${b.ruta}" target="_blank" rel="noopener">${b.boton}${icono('externo')}</a></div>` : ''}
             </div>
           </li>`).join('')}
       </ol>
       <section class="tarjeta guia-ajustes">
-        ${GUIA.ajustes.map(([t, d]) => `<div><h3>${t}</h3><p>${d}</p></div>`).join('')}
+        ${guia.ajustes.map(([t, d]) => `<div><h3>${t}</h3><p>${d}</p></div>`).join('')}
       </section>`;
-    cont.addEventListener('change', e => {
+    cont.onchange = e => {
       const c = e.target.closest('[data-check]');
       if (!c) return;
       hechos[c.dataset.check] = c.checked;
-      MA.almacen.guardar('guia.check', hechos);
-    });
+      MA.almacen.guardar(guia.claveCheck, hechos);
+    };
+    cont.onclick = e => {
+      const b = e.target.closest('[data-guia]');
+      if (!b) return;
+      MA.almacen.guardar('guia.clase', b.dataset.guia);
+      montarGuia(cont);
+      window.scrollTo({ top: 0 });
+    };
   }
 
   MA.Tutor = { GUIA, montarGuia };

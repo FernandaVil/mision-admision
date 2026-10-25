@@ -2,7 +2,7 @@
    PLATAFORMA · rutas, navegación, tema, cajones y panel general
    Rutas (anclas simples, para que también funcionen como enlace directo):
      #inicio · #m1 · #m1-ideas · #m1-ideas-p2 · #m1-despejes ·
-     #m1-conversion · #m1-practica · #m2 … #m6
+     #m1-conversion · #m1-practica · #m2 · #m2-fracciones … #m6
    ===================================================================== */
 (function () {
   'use strict';
@@ -53,10 +53,16 @@
     if (!sinFoco && habia.length && disparador && document.contains(disparador)) disparador.focus({ preventScroll: true });
   }
 
+  /* ---------- Módulos disponibles y su avance ---------- */
+  const vistaDe = m => (m.disponible && MA.vistasModulo[m.id]) || null;
+  // El módulo para continuar: el primero disponible que no está completo (o el último disponible)
+  function moduloActual() {
+    const disp = MA.MODULOS.filter(vistaDe);
+    return disp.find(m => vistaDe(m).progreso().pct < 1) || disp[disp.length - 1] || MA.MODULOS[0];
+  }
+
   /* ---------- Barra lateral ---------- */
   function pintarLateral(ruta) {
-    const vm = MA.vistasModulo.m1;
-    const p1 = vm ? vm.progreso() : null;
     $('#lateral').innerHTML = `
       <button type="button" class="btn-icono lat-cerrar" data-cerrar aria-label="Cerrar el menú">${icono('cerrar')}</button>
       <div class="lat-titulo">Preparación</div>
@@ -68,12 +74,13 @@
       <div class="lat-titulo">Módulos</div>
       ${MA.MODULOS.map(m => {
         const activo = ruta.mod === m.id;
+        const vm = vistaDe(m), p = vm ? vm.progreso() : null;
         let estado = '<span>En preparación</span>';
-        if (m.id === 'm1' && p1) estado = `<span>${Math.round(p1.pct * 100)} %</span><span class="barra"><i style="width:${p1.pct * 100}%"></i></span>`;
-        const sub = m.id === 'm1' && vm ? `<div class="nav-sub">${vm.secciones.map(s => {
-          const [h, t] = p1[s.id];
+        if (p) estado = `<span>${Math.round(p.pct * 100)} %</span><span class="barra"><i style="width:${p.pct * 100}%"></i></span>`;
+        const sub = vm ? `<div class="nav-sub">${vm.secciones.map(s => {
+          const [h, t] = p[s.id];
           const act = activo && ruta.sec === s.id;
-          return `<a href="#m1-${s.id}" class="${act ? 'activo' : ''}" ${act ? 'aria-current="page"' : ''}>${s.nombre}${h === t ? `<span class="hecho" title="Completo">${icono('check')}</span>` : ''}</a>`;
+          return `<a href="#${m.id}-${s.id}" class="${act ? 'activo' : ''}" ${act ? 'aria-current="page"' : ''}>${s.nombre}${h === t ? `<span class="hecho" title="Completo">${icono('check')}</span>` : ''}</a>`;
         }).join('')}</div>` : '';
         return `
           <a class="nav-item ${m.disponible ? 'disponible' : ''} ${activo ? 'activo' : ''}" href="#${m.id}" ${activo && !ruta.sec ? 'aria-current="page"' : ''}>
@@ -110,12 +117,12 @@
           <h1>Preparación para el examen de admisión</h1>
           <p class="entrada">Seis módulos, de la base hacia el examen. El punto de partida es el módulo 1: despejar y convertir unidades es la base de toda la física y la química que vienen después.</p>
           <div class="fila-botones">
-            <a class="btn" href="#m1">Continuar con el módulo 1${icono('flechaD')}</a>
+            <a class="btn ini-continuar" href="#m1">Continuar con el módulo 1${icono('flechaD')}</a>
             <button type="button" class="btn btn-secundario" data-abrir-asistente>${icono('chat')}Centro de comando IA</button>
           </div>
         </div>
         <div class="portada-dato">
-          <div class="dato"><small>Módulo 1 completado</small><b class="ini-pct"></b><div class="barra"><i class="ini-barra"></i></div></div>
+          <div class="dato"><small class="ini-mod">Módulo 1 completado</small><b class="ini-pct"></b><div class="barra"><i class="ini-barra"></i></div></div>
           <div class="dato"><small>Actividades terminadas</small><b class="ini-act"></b></div>
           <div class="dato"><small>Ritmo sugerido</small><b>30 a 40 min al día</b></div>
         </div>
@@ -143,11 +150,17 @@
   }
   function pintarInicio() {
     const v = vistas.inicio;
-    if (!v || !MA.vistasModulo.m1) return;
-    const p = MA.vistasModulo.m1.progreso();
+    if (!v) return;
+    const m = moduloActual(), vm = vistaDe(m);
+    if (!vm) return;
+    const p = vm.progreso(), n = Number(m.num);
+    const todos = MA.MODULOS.filter(vistaDe).map(x => vistaDe(x).progreso());
+    $('.ini-continuar', v).href = '#' + m.id;
+    $('.ini-continuar', v).innerHTML = `Continuar con el módulo ${n}${icono('flechaD')}`;
+    $('.ini-mod', v).textContent = `Módulo ${n} completado`;
     $('.ini-pct', v).textContent = Math.round(p.pct * 100) + ' %';
     $('.ini-barra', v).style.width = p.pct * 100 + '%';
-    $('.ini-act', v).textContent = `${p.hechos} de ${p.total}`;
+    $('.ini-act', v).textContent = `${todos.reduce((s, x) => s + x.hechos, 0)} de ${todos.reduce((s, x) => s + x.total, 0)}`;
   }
 
   function vistaPendiente(m) {
@@ -163,7 +176,7 @@
       </div>
       <div class="caja">
         <div class="caja-titulo">${icono('info')}Mientras tanto</div>
-        <p>Primero, terminar el módulo 1: todo lo que viene después usa despejes y conversiones de unidades. <a href="#m1">Ir al módulo 1</a></p>
+        <p>Primero, terminar el módulo ${Number(moduloActual().num)}: cada módulo usa lo del anterior. <a href="#${moduloActual().id}">Ir al módulo ${Number(moduloActual().num)}</a></p>
       </div>`;
     return v;
   }
