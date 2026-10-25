@@ -95,15 +95,22 @@
     });
     fichas.forEach(fi => { fi.estado = fi.restante === 0 ? 'cancelada' : fi.restante < fi.exp ? 'parcial' : 'viva'; });
 
-    // Factores que alejan de la meta (orientación al revés o que no ayudan)
-    const sospechosos = cadena.map(fc => {
-      const { num, den } = orientar(fc);
-      const aporte = mult(num[1], den[1], -1);
-      return Object.keys(aporte).some(k => {
-        const dif = (u[k] || 0) - (problema.meta[k] || 0);
-        return dif !== 0 && Math.sign(dif) === Math.sign(aporte[k]);
-      });
+    // Factores que alejan de la meta: invertirlos o quitarlos dejaría las unidades
+    // más cerca de ella. Un paso intermedio (h → min antes de min → s) no se marca.
+    const distancia = cad => {
+      let v = Object.assign({}, problema.inicio.u);
+      cad.forEach(fc => { const { num, den } = orientar(fc); v = mult(mult(v, num[1], 1), den[1], -1); });
+      return Object.keys(mult(v, problema.meta, -1)).reduce((s, k) => s + Math.abs((v[k] || 0) - (problema.meta[k] || 0)), 0);
+    };
+    const dBase = distancia(cadena);
+    const arreglos = cadena.map((fc, i) => {
+      const dInv = distancia(cadena.map((x, j) => (j === i ? Object.assign({}, x, { inv: !x.inv }) : x)));
+      const dSin = distancia(cadena.filter((x, j) => j !== i));
+      if (dInv < dBase && dInv <= dSin) return 'invertir';
+      if (dSin < dBase) return 'quitar';
+      return null;
     });
+    const sospechosos = arreglos.map(a => a !== null);
 
     // Qué falta: unidades por eliminar y por conseguir
     const porEliminar = [], porConseguir = [];
@@ -116,7 +123,7 @@
     });
 
     return {
-      u, valor, fichas, sospechosos, porEliminar, porConseguir,
+      u, valor, fichas, sospechosos, arreglos, porEliminar, porConseguir,
       arribaNums, abajoNums,
       listo: igual(u, problema.meta)
     };

@@ -300,7 +300,8 @@
     ['Tiempo (va de 60 en 60)', ['1 h = 60 min', '1 min = 60 s', '1 h = 3600 s', '0,5 h = 30 min', '0,1 h = 6 min · 0,1 min = 6 s']],
     ['Volumen', ['1 mL = 1 cm³', '1 L = 1000 cm³', '1 m³ = 1000 L']],
     ['Área (el factor va dos veces)', ['1 m² = 10 000 cm²', '1 km² = 1 000 000 m²']],
-    ['Velocidad', ['km/h → m/s: ÷ 3,6', 'm/s → km/h: × 3,6']]
+    ['Velocidad', ['km/h → m/s: ÷ 3,6', 'm/s → km/h: × 3,6']],
+    ['Unidades con nombre propio (no hay que memorizarlas)', ['1 N (newton) = 1 kg · m/s²', '1 J (joule) = 1 N · m = 1 kg · m²/s²', '1 W (vatio) = 1 J/s', '1 Pa (pascal) = 1 N/m²']]
   ];
   function fichaHtml() {
     return `

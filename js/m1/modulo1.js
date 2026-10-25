@@ -32,6 +32,7 @@
   }
 
   const por = op('·'), igual = op('=');
+  const qn = (valor, unidad) => `${n(valor)} ${un(unidad)}`;
 
   function htmlIdeas() {
     return `
@@ -64,6 +65,10 @@
       <div class="caja">
         <div class="caja-titulo">${icono('pista')}El atajo del colegio, explicado</div>
         <p>«Lo que está multiplicando pasa a dividir» no es una regla mágica: es un resumen de lo que se hace en la balanza. La ${vr('v')} no «pasa» a ningún lado: se dividen los dos lados entre ${vr('v')} y, donde estaba multiplicando, ${mt(vr('v'), op('÷'), vr('v'), igual, n(1))}, así que desaparece.</p>
+      </div>
+      <div class="caja caja-neutra">
+        <div class="caja-titulo">${icono('info')}Unidades con nombre propio</div>
+        <p>Algunas unidades son abreviaturas de una combinación: ${mt(qn('1', 'N'), igual, qn('1', 'kg · m/s²'))} (newton, fuerza) y ${mt(qn('1', 'J'), igual, qn('1', 'N · m'))} (joule, energía). No hace falta memorizarlas: el examen da la fórmula, y para despejar se tratan como cualquier otra unidad. Están en la ficha de equivalencias por si se necesita revisar que las unidades cuadran.</p>
       </div>
       <div class="tarjeta m1-contrarias">
         <h3>Operaciones contrarias</h3>
@@ -122,6 +127,16 @@
           <li>Las h están abajo: el segundo factor lleva las h arriba.</li>
           <li>Solo quedan m arriba y s abajo. Entonces se hace la cuenta: ${mt(n(72000), op('÷'), n(3600), igual, n(20))}.</li>
         </ol>
+      </div>
+      <div class="caja">
+        <div class="caja-titulo">${icono('pista')}¿Por qué la h va arriba en el factor?</div>
+        <p>km/h se lee «kilómetros por cada hora»: ${mt(q(72, 'km'), op('÷'), q(1, 'h'))}. La hora está <b>abajo, dividiendo</b>. Para que se cancele, el factor tiene que traer una h <b>arriba</b>: así queda h arriba y h abajo, y ${mt(un('h'), op('÷'), un('h'), igual, n(1))}, igual que ${mt(n(5), op('÷'), n(5), igual, n(1))}. La regla sirve para cualquier unidad: lo que está abajo se cancela con lo mismo arriba, y al revés.</p>
+      </div>
+      <div class="caja">
+        <div class="caja-titulo">${icono('pista')}Cuando la fracción queda abajo</div>
+        <p>Al calcular ${mt(vr('t'), igual, fr(vr('d'), vr('v')))} con ${q(200, 'km')} y ${q(80, 'km/h')}, la unidad queda ${mt(un('km'), op('÷'), op('('), fr(un('km'), un('h')), op(')'))}: una fracción dentro de otra. Dividir entre una fracción es multiplicar por la misma fracción <b>dada vuelta</b>: ${mt(n(6), op('÷'), fr(n(1), n(2)), igual, n(6), por, fr(n(2), n(1)), igual, n(12))}. Con las unidades pasa lo mismo:</p>
+        <div class="mt mt-bloque">${un('km')} ${op('÷')} ${fr(un('km'), un('h'))} ${igual} ${tach(un('km'))} ${por} ${fr(un('h'), tach(un('km')))} ${igual} ${un('h')}</div>
+        <p>La h, que estaba «abajo del abajo», termina arriba. Por eso el resultado sale en horas.</p>
       </div>
       <div class="caja caja-neutra">
         <div class="caja-titulo">${icono('info')}¿Y la regla de tres?</div>

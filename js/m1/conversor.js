@@ -1,11 +1,15 @@
 /* =====================================================================
    HERRAMIENTA 2 · MESA DE CONVERSIÓN (método del factor unitario)
    ---------------------------------------------------------------------
-   La cantidad inicial queda a la izquierda. El alumno agrega
-   equivalencias del banco como fracciones que valen 1 y las invierte
-   hasta que cada unidad que quiere eliminar quede una vez arriba y otra
-   abajo: en ese momento se tacha sola. La cantidad nunca cambia; solo
-   cambia su nombre (se ve en vivo en el resultado).
+   La cantidad inicial queda a la izquierda. Se agregan equivalencias
+   del banco como fracciones que valen 1, acomodadas para que cada unidad
+   que se quiere eliminar quede una vez arriba y otra abajo: en ese
+   momento se tacha sola. La cantidad nunca cambia; solo cambia su nombre.
+   Para evitar el ensayo y error («invertir hasta que quede bien»):
+   - antes de colocar un factor, la mesa pregunta dónde debe ir la unidad
+     (predecir → ver → entender);
+   - la bitácora explica en palabras qué hace cada factor;
+   - si un factor se invierte dos veces sin cancelar nada, aparece la regla.
    ===================================================================== */
 (function () {
   'use strict';
@@ -13,11 +17,16 @@
   const { $, $$, icono } = MA;
   const U = MA.unidades;
   const MAX_FACTORES = 6;
+  const opuesto = l => (l === 'arriba' ? 'abajo' : 'arriba');
+  const lugarTxt = l => (l === 'arriba' ? 'arriba' : 'abajo (dividiendo)');
 
   function crearConversor(raiz) {
     const C = MA.M1;
     const reducido = MA.movimientoReducido();
-    const st = { retoId: null, problema: null, cadena: [], resuelto: false, origen: null, contador: 0 };
+    const st = {
+      retoId: null, problema: null, cadena: [], resuelto: false, origen: null, contador: 0,
+      pregunta: null, predecir: MA.almacen.leer('conv.predecir', true) !== false
+    };
 
     raiz.classList.add('banco', 'conversor');
     raiz.innerHTML = `
@@ -34,10 +43,14 @@
         <div class="cv-cadena"></div>
         <div class="cv-calculo"></div>
       </div>
+      <div class="cv-pregunta" hidden></div>
       <div class="cv-guia" aria-live="polite"></div>
       <div class="banco-pie">
         <div class="cv-banco">
-          <h4>Equivalencias disponibles <span class="texto-3">· tocar una o arrastrarla a la mesa</span></h4>
+          <div class="cv-banco-cabeza">
+            <h4>Equivalencias disponibles <span class="texto-3">· tocar una o arrastrarla a la mesa</span></h4>
+            <label class="cv-predecir"><input type="checkbox" id="cv-predecir" ${st.predecir ? 'checked' : ''}><span>Pensar antes de colocar</span></label>
+          </div>
           <div class="cv-equivalencias"></div>
         </div>
         <div class="mensaje cv-mensaje" role="status" aria-live="polite"></div>
@@ -46,7 +59,12 @@
           <button type="button" class="btn btn-fantasma btn-chico" data-accion="reiniciar">${icono('reiniciar')}Reiniciar</button>
         </div>
       </div>
-      <div class="cv-exito" hidden></div>`;
+      <div class="cv-exito" hidden></div>
+      <section class="cv-bitacora" aria-label="Bitácora de pasos">
+        <h4>Bitácora de pasos</h4>
+        <p class="texto-3">Qué hace cada factor, en palabras. Así se piensa en el examen.</p>
+        <ol class="bz-pasos cv-pasos"></ol>
+      </section>`;
 
     const msg = $('.cv-mensaje', raiz);
     function ponerMensaje(tipo, titulo, texto) {
@@ -56,7 +74,7 @@
     }
 
     /* ---------- Render de piezas ---------- */
-    const unidadHtml = (unidad, exp, clase) => `<span class="un cv-un ${clase || ''}">${unidad}${U.sup(exp)}</span>`;
+    const unidadHtml = (unidad, exp, clase) => `<span class="un cv-un ${clase || ''}" data-u="${unidad}">${unidad}${U.sup(exp)}</span>`;
     function ladoHtml(valor, mapa, fichas, origen, lugar) {
       const unidades = Object.keys(mapa).map(k => {
         const fi = fichas.find(x => x.origen === origen && x.lugar === lugar && x.unidad === k);
@@ -67,6 +85,36 @@
     }
     const eqTexto = id => { const e = U.EQUIV[id]; return `${MA.fmt(e.a[0])} ${U.textoUnaParte(e.a[1])} = ${MA.fmt(e.b[0])} ${U.textoUnaParte(e.b[1])}`; };
     const fraccionTexto = (num, den) => `${MA.fmt(num[0])} ${U.textoUnaParte(num[1])} / ${MA.fmt(den[0])} ${U.textoUnaParte(den[1])}`;
+    const lista = arr => arr.length > 1 ? arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1] : arr[0];
+    const conExp = (u, e) => `${u}${U.sup(e)}`;
+    const vecesTxt = n => ['', 'una vez', 'dos veces', 'tres veces', 'cuatro veces'][n] || `${n} veces`;
+
+    /* Qué hace el factor i: qué cancela y qué deja */
+    function explicarFactor(i, e) {
+      const fichas = e.fichas.filter(f => f.origen === i);
+      const cancela = fichas.filter(f => f.estado !== 'viva').map(f => `${conExp(f.unidad, f.exp)} ${f.lugar} se cancela con ${f.unidad} ${opuesto(f.lugar)}`);
+      const deja = fichas.filter(f => f.estado === 'viva').map(f => `${conExp(f.unidad, f.exp)} ${f.lugar}`);
+      return { cancela, deja };
+    }
+    /* Por qué el factor i no acerca a la meta, con el caso concreto */
+    function motivo(i, e) {
+      const tipo = e.arreglos[i];
+      if (tipo !== 'invertir') return { tipo, razon: '' };
+      const { num, den } = U.orientar(st.cadena[i]);
+      const unidades = Object.keys(U.mult(num[1], den[1], -1));
+      const datos = unidades.map(k => ({ k, neto: e.u[k] || 0, meta: st.problema.meta[k] || 0 }));
+      const dobles = datos.filter(d => Math.abs(d.neto) >= 2 && d.neto !== d.meta)
+        .map(d => `${d.k} queda ${vecesTxt(Math.abs(d.neto))} ${d.neto > 0 ? 'arriba' : 'abajo'} (${conExp(d.k, Math.abs(d.neto))})`);
+      const piso = datos.filter(d => d.neto && d.meta && Math.sign(d.neto) !== Math.sign(d.meta))
+        .map(d => `${d.k} queda ${d.neto > 0 ? 'arriba' : 'abajo'}, pero la meta la pide ${d.neto > 0 ? 'abajo' : 'arriba'}`);
+      return { tipo, razon: dobles.length ? lista(dobles) : piso.length ? lista(piso) : '' };
+    }
+    function motivoTexto(i, e) {
+      const m = motivo(i, e);
+      if (m.tipo === 'quitar') return 'no hace falta para esta conversión: conviene quitarlo con la ×.';
+      return `está al revés${m.razon ? ': ' + m.razon : ''}. Conviene invertirlo.`;
+    }
+    const mayus = s => s.charAt(0).toUpperCase() + s.slice(1);
 
     function pintarRetos() {
       $('.cv-retos', raiz).innerHTML = C.RETOS_CONVERSION.map((r, i) => `
@@ -87,6 +135,38 @@
         alSoltar: () => agregar(b.dataset.eq),
         alTocar: () => agregar(b.dataset.eq)
       }));
+    }
+
+    function pintarBitacora(e) {
+      const p = st.problema;
+      const ini = U.separar(p.inicio.u);
+      const arriba = Object.keys(ini.arriba).map(k => conExp(k, ini.arriba[k]));
+      const abajo = Object.keys(ini.abajo).map(k => conExp(k, ini.abajo[k]));
+      const pasos = [{
+        etq: 'Inicio',
+        html: `<span class="mt">${MA.fmt(p.inicio.valor)} ${U.texto(p.inicio.u)}</span>`,
+        nota: `Arriba: ${lista(arriba)}${abajo.length ? ` · abajo (dividiendo): ${lista(abajo)}` : ''}. Meta: ${U.texto(p.meta)}.`
+      }];
+      st.cadena.forEach((fc, i) => {
+        const { num, den } = U.orientar(fc);
+        const x = explicarFactor(i, e);
+        const frases = x.cancela.concat(x.deja.length ? [`deja ${lista(x.deja)}`] : []);
+        pasos.push({
+          etq: `Factor ${i + 1} · ${eqTexto(fc.eq)}`,
+          html: `<span class="mt">${MA.f.fr(`${MA.fmt(num[0])} ${U.textoUnaParte(num[1])}`, `${MA.fmt(den[0])} ${U.textoUnaParte(den[1])}`)}</span>`,
+          texto: frases.length ? frases.join('; ') + '.' : '',
+          aviso: e.sospechosos[i] ? mayus(motivoTexto(i, e)) : ''
+        });
+      });
+      if (e.listo) {
+        const arr = e.arribaNums.filter((n, i) => i === 0 || n !== 1).map(n => MA.fmt(n)).join(' · ');
+        const ab = e.abajoNums.filter(n => n !== 1).map(n => MA.fmt(n)).join(' · ');
+        pasos.push({ etq: 'Resultado', html: `<span class="mt"><span class="num">${MA.fmtSig(e.valor, 6)}</span> <span class="un">${U.texto(p.meta)}</span></span>`, texto: `Solo quedan ${U.texto(p.meta)}. La cuenta: ${ab ? `(${arr}) ÷ (${ab})` : arr}.` });
+      } else if (e.porEliminar.length && st.cadena.length) {
+        pasos.push({ etq: 'Falta', texto: `Todavía queda ${lista(e.porEliminar.map(x => `${conExp(x.unidad, x.veces)} ${x.lugar}`))}.` });
+      }
+      $('.cv-pasos', raiz).innerHTML = pasos.map(s => `
+        <li><span class="bz-paso-etq">${s.etq}</span>${s.html || ''}${s.texto ? `<span class="cv-paso-texto">${s.texto}</span>` : ''}${s.nota ? `<span class="cv-paso-texto">${s.nota}</span>` : ''}${s.aviso ? `<span class="bz-paso-nota">${s.aviso}</span>` : ''}</li>`).join('');
     }
 
     function pintar() {
@@ -114,7 +194,10 @@
       }).join('');
       const unidadTxt = U.texto(e.u) || 'sin unidades';
       $('.cv-cadena', raiz).innerHTML = `
-        <div class="cv-inicio mt">${inicioHtml}</div>
+        <div class="cv-inicio-bloque">
+          <div class="cv-inicio mt">${inicioHtml}</div>
+          ${tieneAbajo ? '<div class="cv-pisos" aria-hidden="true"><span>arriba</span><span>abajo, dividiendo</span></div>' : ''}
+        </div>
         ${factores}
         ${st.resuelto || st.cadena.length >= MAX_FACTORES ? '' : `<span class="op cv-por">×</span><div class="cv-ranura">${icono('mas')}<span>Agregar una equivalencia</span></div>`}
         <span class="op cv-igual">=</span>
@@ -143,7 +226,58 @@
       }
       $$('.cv-eq', raiz).forEach(b => { b.disabled = st.resuelto || st.cadena.length >= MAX_FACTORES; });
       $('[data-accion="pista"]', raiz).disabled = st.resuelto;
+      pintarBitacora(e);
       return e;
+    }
+
+    /* ---------- Pensar antes de colocar ---------- */
+    function preguntar(eqId, pend) {
+      st.pregunta = { eqId, unidad: pend.unidad, lugar: pend.lugar, veces: pend.veces };
+      const caja = $('.cv-pregunta', raiz);
+      caja.hidden = false;
+      caja.innerHTML = `
+        <div class="cv-preg-cuerpo" role="group" aria-label="Pensar antes de colocar">
+          <p class="cv-preg-titulo">Antes de colocar <b>${eqTexto(eqId)}</b></p>
+          <p>Para cancelar <b>${pend.unidad}</b>, ¿dónde tiene que quedar <b>${pend.unidad}</b> en este factor?</p>
+          <div class="fila-botones">
+            <button type="button" class="btn btn-chico" data-predice="arriba">Arriba</button>
+            <button type="button" class="btn btn-chico" data-predice="abajo">Abajo</button>
+            <button type="button" class="btn btn-fantasma btn-chico" data-predice="ver">${icono('objetivo')}Ver dónde está ${pend.unidad} ahora</button>
+            <button type="button" class="btn btn-fantasma btn-chico" data-predice="cancelar">Cancelar</button>
+          </div>
+        </div>`;
+      $('[data-predice="arriba"]', caja).focus({ preventScroll: true });
+    }
+    function cerrarPregunta() {
+      st.pregunta = null;
+      const caja = $('.cv-pregunta', raiz);
+      caja.hidden = true;
+      caja.innerHTML = '';
+    }
+    function responder(resp) {
+      const q = st.pregunta;
+      if (!q) return;
+      if (resp === 'cancelar') { cerrarPregunta(); return; }
+      if (resp === 'ver') {
+        $$(`.cv-cadena .cv-un[data-u="${q.unidad}"]:not(.tachado)`, raiz).forEach(el => { el.classList.remove('resaltada'); void el.offsetWidth; el.classList.add('resaltada'); });
+        return;
+      }
+      const eq = U.EQUIV[q.eqId];
+      const enA = !!eq.a[1][q.unidad];
+      const inv = enA ? resp === 'abajo' : resp === 'arriba';
+      const correcto = resp !== q.lugar;
+      cerrarPregunta();
+      st.cadena.push({ eq: q.eqId, inv, nuevo: !reducido, id: ++st.contador, invertidas: 0 });
+      const e = pintar();
+      if (e.listo) return exito(e);
+      const u = q.unidad, antes = conExp(u, q.veces);
+      if (correcto) {
+        const sig = e.porEliminar[0];
+        ponerMensaje('ok', '¡Eso es!', `${antes} estaba ${lugarTxt(q.lugar)}; en el factor va ${resp}, y ${u} ÷ ${u} = 1: se cancela${q.veces > 1 ? ' una' : ''}.${sig ? ` Todavía queda ${conExp(sig.unidad, sig.veces)} ${sig.lugar}.` : ''}`);
+      } else {
+        const veces = Math.abs(e.u[u] || 0);
+        ponerMensaje('aviso', 'Así no se cancela.', `${antes} ya estaba ${lugarTxt(q.lugar)}. Con ${u} también ${resp} en el factor, queda ${vecesTxt(veces)} ${resp} (${conExp(u, veces)}). Para cancelarse, ${u} tiene que estar una vez arriba y otra abajo: se arregla con «Invertir».`);
+      }
     }
 
     /* ---------- Carga ---------- */
@@ -152,6 +286,7 @@
       st.retoId = retoId || null;
       st.cadena = [];
       st.resuelto = false;
+      cerrarPregunta();
       $('.cv-exito', raiz).hidden = true;
       const r = problema;
       const numero = C.RETOS_CONVERSION.findIndex(x => x.id === retoId);
@@ -186,7 +321,13 @@
     function agregar(eqId) {
       if (st.resuelto) return;
       if (st.cadena.length >= MAX_FACTORES) { ponerMensaje('aviso', 'La mesa está llena.', 'Conviene quitar algún factor que no ayude.'); return; }
-      st.cadena.push({ eq: eqId, inv: false, nuevo: !reducido, id: ++st.contador });
+      if (st.predecir) {
+        const e = U.estado(st.problema, st.cadena);
+        const eq = U.EQUIV[eqId];
+        const pend = e.porEliminar.find(x => eq.a[1][x.unidad] || eq.b[1][x.unidad]);
+        if (pend) { preguntar(eqId, pend); return; }
+      }
+      st.cadena.push({ eq: eqId, inv: false, nuevo: !reducido, id: ++st.contador, invertidas: 0 });
       const e = pintar();
       despues(e, `${eqTexto(eqId)}, agregada como fracción.`);
     }
@@ -194,8 +335,25 @@
       const fc = st.cadena[i];
       if (!fc || st.resuelto) return;
       fc.inv = !fc.inv;
+      fc.invertidas = (fc.invertidas || 0) + 1;
       fc.girando = !reducido;
       const e = pintar();
+      if (e.listo) return exito(e);
+      const x = explicarFactor(i, e);
+      if (x.cancela.length && !e.sospechosos[i]) {
+        ponerMensaje('ok', 'Factor invertido.', `Ahora ${x.cancela.join('; ')}.`);
+        return;
+      }
+      if (fc.invertidas >= 2) {
+        // Invertir al azar no enseña: se explica la regla con el caso concreto
+        const { num, den } = U.orientar(fc);
+        const unidades = Object.keys(U.mult(num[1], den[1], -1));
+        const pend = e.porEliminar.find(p => unidades.includes(p.unidad));
+        if (pend) {
+          ponerMensaje('aviso', 'Antes de invertir otra vez, a pensarlo:', `${pend.unidad} está ${lugarTxt(pend.lugar)} en la mesa. Para cancelarla, en el factor tiene que ir ${opuesto(pend.lugar)}: así queda ${pend.unidad} arriba y ${pend.unidad} abajo, y ${pend.unidad} ÷ ${pend.unidad} = 1.`);
+          return;
+        }
+      }
       despues(e, 'Factor invertido: sigue valiendo 1, pero ahora las unidades están en el otro piso.');
     }
     function quitar(i) {
@@ -209,8 +367,7 @@
       const i = e.sospechosos.indexOf(true);
       if (i >= 0) {
         const { num, den } = U.orientar(st.cadena[i]);
-        ponerMensaje('aviso', 'Hay un factor que no acerca a la meta.',
-          `${accion} El factor ${fraccionTexto(num, den)} deja unidades repetidas en el mismo piso en vez de cancelarlas. Conviene invertirlo o quitarlo.`);
+        ponerMensaje('aviso', 'Hay un factor que no acerca a la meta.', `${accion} El factor ${fraccionTexto(num, den)} ${motivoTexto(i, e)}`);
         return;
       }
       const pend = e.porEliminar[0];
@@ -220,7 +377,9 @@
       const e = U.estado(st.problema, st.cadena);
       const i = e.sospechosos.indexOf(true);
       if (i >= 0) {
-        ponerMensaje('info', `Ojo con el factor número ${i + 1}.`, 'Está al revés o no sirve para esta conversión: se invierte tocándolo o se quita con la ×.');
+        ponerMensaje('info', `Ojo con el factor número ${i + 1}.`, e.arreglos[i] === 'quitar'
+          ? 'No hace falta para esta conversión: se quita con la ×.'
+          : 'Está al revés: se invierte tocándolo o con «Invertir».');
         $$('.cv-factor', raiz)[i].classList.add('sugerida');
         return;
       }
@@ -233,13 +392,14 @@
       // La unidad debe quedar en el piso contrario al que ocupa ahora
       const quieroAbajo = pend.lugar === 'arriba';
       const num = (enA === quieroAbajo) ? eq.b : eq.a, den = (enA === quieroAbajo) ? eq.a : eq.b;
-      ponerMensaje('info', `Para eliminar ${pend.unidad} (que está ${pend.lugar}):`,
+      ponerMensaje('info', `Para eliminar ${pend.unidad} (que está ${lugarTxt(pend.lugar)}):`,
         `usar ${eqTexto(id)} y acomodarla con ${pend.unidad} ${quieroAbajo ? 'abajo' : 'arriba'}: ${fraccionTexto(num, den)}.`);
       const b = $(`.cv-eq[data-eq="${id}"]`, raiz);
       if (b) { b.classList.remove('sugerida'); void b.offsetWidth; b.classList.add('sugerida'); }
     }
     function exito(e) {
       st.resuelto = true;
+      cerrarPregunta();
       const p = st.problema;
       const final = pintar();
       ponerMensaje('ok', '¡Muy bien!', 'Conversión completa: todas las unidades que sobraban se cancelaron.');
@@ -273,6 +433,7 @@
     raiz.addEventListener('click', e => {
       const b = e.target.closest('button');
       if (!b || !raiz.contains(b)) return;
+      if (b.dataset.predice) { responder(b.dataset.predice); return; }
       if (b.dataset.reto) { cargarReto(b.dataset.reto); return; }
       if (b.dataset.ir === 'practica') { location.hash = '#m1-practica'; return; }
       if (b.dataset.ir === 'origen') { const o = st.origen; st.origen = null; pintarOrigen(); if (o) o.volver(); return; }
@@ -282,6 +443,11 @@
       else if (accion === 'quitar') quitar(i);
       else if (accion === 'pista') pista();
       else if (accion === 'reiniciar') { if (st.retoId) cargar(st.problema, st.retoId); else cargarProblema(st.problema, st.origen); }
+    });
+    $('#cv-predecir', raiz).addEventListener('change', e => {
+      st.predecir = e.target.checked;
+      MA.almacen.guardar('conv.predecir', st.predecir);
+      if (!st.predecir) cerrarPregunta();
     });
     MA.bus.on('progreso', () => pintarRetos());
 

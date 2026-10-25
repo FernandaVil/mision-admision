@@ -39,9 +39,13 @@
       <svg class="bz-svg" viewBox="0 0 ${ANCHO} ${ALTO}" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false">
         <rect class="bz-suelo" x="250" y="314" width="300" height="3" rx="1.5"/>
         <rect class="bz-base" x="300" y="300" width="200" height="14" rx="4"/>
-        <path class="bz-fulcro" d="M400 236 L360 300 L440 300 Z"/>
-        <line class="bz-igual" x1="388" y1="275" x2="412" y2="275"/>
-        <line class="bz-igual" x1="388" y1="285" x2="412" y2="285"/>
+        <g class="bz-igual-btn">
+          <title>Tocar el igual para intercambiar los lados</title>
+          <rect class="bz-igual-zona" x="344" y="240" width="112" height="70" rx="10"/>
+          <path class="bz-fulcro" d="M400 236 L360 300 L440 300 Z"/>
+          <line class="bz-igual" x1="388" y1="275" x2="412" y2="275"/>
+          <line class="bz-igual" x1="388" y1="285" x2="412" y2="285"/>
+        </g>
         <g class="bz-brazo">
           <rect class="bz-viga" x="${PIVOTE.x - BRAZO - 10}" y="224" width="${2 * BRAZO + 20}" height="12" rx="6"/>
           <g class="bz-marcas">${marcas}</g>
@@ -96,7 +100,7 @@
         <div class="bz-ops" role="group" aria-label="Operaciones"></div>
         <div class="fila-botones bz-acciones">
           <button type="button" class="btn btn-secundario btn-chico" data-accion="pista">${icono('pista')}Pista</button>
-          <button type="button" class="btn btn-secundario btn-chico" data-accion="intercambiar">${icono('intercambiar')}Intercambiar lados</button>
+          <button type="button" class="btn btn-secundario btn-chico" data-accion="intercambiar" title="También se puede tocar el «=» de la balanza">${icono('intercambiar')}Intercambiar lados</button>
           <button type="button" class="btn btn-fantasma btn-chico" data-accion="deshacer">${icono('deshacer')}Deshacer</button>
           <button type="button" class="btn btn-fantasma btn-chico" data-accion="reiniciar">${icono('reiniciar')}Reiniciar</button>
         </div>
@@ -425,12 +429,23 @@
     }
 
     function intercambiar() {
-      if (st.pendiente || st.resuelto) return;
-      guardar();
-      st.ec = { izq: st.ec.der, der: st.ec.izq };
-      st.bitacora.push({ etiqueta: `Paso ${st.bitacora.length} · se intercambian los lados`, html: ecHtml(st.ec), nota: 'Si a = b, también b = a.' });
-      refrescar();
-      if (!comprobarMeta()) ponerMensaje('info', 'Lados intercambiados.', 'La balanza sigue igual: solo cambia qué plato se mira primero.');
+      if (st.girando || st.resuelto) return;
+      if (st.pendiente) {
+        ponerMensaje('aviso', 'Primero hay que terminar la operación.', `Falta aplicar ${opHtml(st.pendiente.op)} también al plato ${LADO_TXT[otro(st.pendiente.lado)]}.`);
+        return;
+      }
+      const hacer = () => {
+        guardar();
+        st.ec = { izq: st.ec.der, der: st.ec.izq };
+        st.bitacora.push({ etiqueta: `Paso ${st.bitacora.length} · se intercambian los lados`, html: ecHtml(st.ec), nota: 'Si a = b, también b = a.' });
+        refrescar();
+        if (!comprobarMeta()) ponerMensaje('info', 'Lados intercambiados.', 'La balanza sigue igual: solo cambia qué plato se mira primero.');
+      };
+      if (reducido) { hacer(); return; }
+      // Los bloques se cruzan hacia el centro, cambian de plato y vuelven
+      st.girando = true;
+      esc.classList.add('bz-girando');
+      setTimeout(() => { hacer(); esc.classList.remove('bz-girando'); st.girando = false; }, 230);
     }
 
     function deshacer() {
@@ -513,6 +528,8 @@
 
     /* ---------- Eventos ---------- */
     ['izq', 'der'].forEach(l => plato[l].addEventListener('click', () => aplicarEn(l)));
+    // Tocar el «=» del centro da vuelta los platos (con teclado está el botón «Intercambiar lados»)
+    $('.bz-igual-btn', raiz).addEventListener('click', () => intercambiar());
     raiz.addEventListener('click', e => {
       const b = e.target.closest('button');
       if (!b || !raiz.contains(b)) return;

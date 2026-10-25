@@ -86,6 +86,7 @@
           { t: 'tu', x: 'Cuénteme en una frase lo que hizo.' },
           { t: 'pregunta', x: 'Reto 4: la d está dividida entre t. ¿Cuál es la contraria de dividir?', r: 'Multiplicar: × t en los dos lados.' },
           { t: 'pregunta', x: 'Reto 5: la t está abajo. ¿Qué hace primero?', r: 'Subirla con × t y después dividir entre v.' },
+          { t: 'el', x: 'Si la variable queda sola a la derecha, toca el «=» del centro de la balanza para dar vuelta los platos y leerla mejor.' },
           { t: 'pregunta', x: 'Reto 6: ¿qué quita primero, lo que suma o lo que multiplica?', r: 'Lo que suma: primero − v₀ y después ÷ a.' },
           { t: 'ojo', x: 'Si en el reto 6 quiere dividir entre a antes de restar, déjalo: verá que la a no se cancela porque no multiplica a todo el lado. Después, que use «Deshacer».' },
           { t: 'el', x: 'Mueve los deslizadores de «Valores de prueba».' },
@@ -126,15 +127,20 @@
       {
         tiempo: '36–56 min', titulo: 'Mesa de conversión, retos 1 a 7', comparte: 'Él', ruta: 'index.html#m1-conversion', boton: 'Abrir la mesa',
         pasos: [
+          { t: 'ojo', x: 'La mesa pregunta «¿arriba o abajo?» antes de colocar cada factor. No le soples: si duda, que toque «Ver dónde está…» y te explique en voz alta por qué elige lo que elige.' },
           { t: 'pregunta', x: 'Antes de agregar un factor: ¿qué unidad quiere eliminar y en qué piso está?', r: 'Reto 1: km, arriba.' },
           { t: 'pregunta', x: 'Reto 2: no hay una equivalencia directa de horas a segundos. ¿Por dónde pasa?', r: 'Por los minutos: h → min → s.' },
           { t: 'el', x: 'Reto 3 (72 km/h a m/s): necesita dos factores.' },
+          { t: 'pregunta', x: 'En 72 km/h la h está abajo. ¿Por qué en el factor la h va arriba?', r: 'Porque está dividiendo: con una h arriba se cancela, h ÷ h = 1.' },
+          { t: 'el', x: 'Lee en voz alta la bitácora de pasos de la mesa: dice qué cancela cada factor.' },
           { t: 'pizarra', x: 'Cuando lo termine, comparte un momento y escribe en el pizarrón «1000 / 3600 = 1 / 3,6» y debajo «de km/h a m/s: ÷ 3,6».' },
           { t: 'pregunta', x: 'Reto 4: ¿ahora multiplica o divide por 3,6? ¿Por qué?', r: 'Multiplica: en km/h el número es más grande.' },
           { t: 'ojo', x: 'Reto 5 (cm² a m²): deja que caiga en la trampa con un solo factor. La mesa le muestra que todavía queda un cm.' },
           { t: 'pregunta', x: '¿Por qué quedó un cm?', r: 'Porque cm² es cm · cm: el factor va dos veces.' },
           { t: 'pregunta', x: 'Reto 6: el examen dice 1 ft = 0,3 m. ¿Usa ese valor o el exacto?', r: 'El del enunciado: 0,3.' },
           { t: 'el', x: 'Reto 7, si hay tiempo.' },
+          { t: 'ojo', x: 'Si invierte al azar hasta que quede bien, frénalo: «Antes de tocar, dígame dónde está la h y dónde tiene que ir». Si insiste en invertir el mismo factor, la mesa también lo frena y le explica la regla con su caso.' },
+          { t: 'ojo', x: 'Si ya lo domina, puede desmarcar «Pensar antes de colocar» (arriba de las equivalencias) para ir más rápido. La mesa recuerda la elección.' },
           { t: 'ojo', x: 'Si quiere usar regla de tres, que la compare con el factor en el reto 3: con factores el procedimiento es siempre el mismo.' }
         ]
       },
@@ -145,6 +151,8 @@
           { t: 'el', x: 'Resuelve los ejercicios 1 a 8.' },
           { t: 'ojo', x: 'Si se traba, primero una pista de la plataforma. Si sigue trabado, comparte el pizarrón, escribe el planteamiento a medias y que él lo complete dictándote.' },
           { t: 'pregunta', x: 'Cuando la plataforma le marque un error: ¿qué pasó? Cuénteme con sus palabras.', r: 'Que explique el error, por ejemplo «multipliqué por 3,6 en vez de dividir».' },
+          { t: 'ojo', x: 'Ejercicio 7: si se enreda con km ÷ km/h, abre la caja «Cuando la fracción queda abajo» en Conversión. Dividir entre una fracción es multiplicar por la fracción dada vuelta; pruébalo antes con números: 6 ÷ ½ = 12.' },
+          { t: 'ojo', x: 'Si se traba con N o J, no es para memorizar: la ficha dice que N = kg · m/s². Para despejar se tratan como cualquier unidad.' },
           { t: 'tu', x: 'En los de opciones, descarte las incorrectas probando con números fáciles.' }
         ]
       },
