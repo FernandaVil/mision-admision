@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d141d" media="(prefers-color-scheme: dark)">
+<title>Misión admisión</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231e5aa8'/%3E%3Cpath fill='white' transform='translate(3 3) scale(.75)' d='M12 1.8c.7 0 1.2.9 1.2 2.2v5.1l8.3 4.6v2.1l-8.3-2.5v4.6l2.6 1.9v1.7L12 20.6l-3.8.9v-1.7l2.6-1.9v-4.6l-8.3 2.5v-2.1l8.3-4.6V4c0-1.3.5-2.2 1.2-2.2z'/%3E%3C/svg%3E">
+
+<!-- Tema guardado antes de pintar (evita el destello claro/oscuro) -->
+<script>
+  try { var t = localStorage.getItem('misionAdmision.tema'); if (t === 'claro' || t === 'oscuro') document.documentElement.dataset.theme = t === 'claro' ? 'light' : 'dark'; } catch (e) {}
+</script>
+
+<!-- Tipografías: IBM Plex (sans para leer, mono para datos, serif itálica para variables) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/componentes.css">
+<link rel="stylesheet" href="css/modulo1.css">
+<link rel="stylesheet" href="css/clase.css">
+
+<!-- Scripts clásicos (sin compilación): funciona abriendo este archivo con doble clic
+     y también publicado en GitHub Pages, sin cambios. -->
+<script defer src="js/nucleo.js"></script>
+<script defer src="js/catalogo.js"></script>
+<script defer src="js/m1/algebra.js"></script>
+<script defer src="js/m1/unidades.js"></script>
+<script defer src="js/m1/contenido.js"></script>
+<script defer src="js/m1/clase.js"></script>
+<script defer src="js/m1/presentacion.js"></script>
+<script defer src="js/m1/balanza.js"></script>
+<script defer src="js/m1/conversor.js"></script>
+<script defer src="js/m1/practica.js"></script>
+<script defer src="js/m1/modulo1.js"></script>
+<script defer src="js/asistente.js"></script>
+<script defer src="js/plataforma.js"></script>
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<header class="cabecera">
+  <button class="btn-icono solo-movil" type="button" id="btn-menu" aria-label="Abrir el menú de módulos" aria-controls="lateral" aria-expanded="false"></button>
+  <a class="marca" href="#inicio" aria-label="Misión admisión, ir al panel general">
+    <span class="marca-logo" aria-hidden="true"></span>
+    <span class="marca-texto">
+      <b>Misión admisión</b>
+      <small>Ingeniería Aeronáutica · preparación</small>
+    </span>
+  </a>
+  <div class="cabecera-acciones">
+    <button class="btn-icono" type="button" id="btn-tema" aria-label="Cambiar tema"></button>
+    <button class="btn btn-secundario btn-asistente" type="button" id="btn-asistente" aria-controls="asistente" aria-expanded="false">
+      <span class="ico" aria-hidden="true"></span><span class="txt">Centro de comando IA</span>
+    </button>
+  </div>
+</header>
+
+<div class="marco">
+  <nav class="lateral" id="lateral" aria-label="Módulos del curso"></nav>
+  <main class="contenido" id="contenido" tabindex="-1"></main>
+  <aside class="asistente" id="asistente" aria-label="Centro de comando IA"></aside>
+</div>
+<div class="velo" id="velo" hidden></div>
+<div class="aviso-flotante" id="aviso" role="status" aria-live="polite"></div>
+
+<noscript><p class="sin-js">Esta plataforma necesita JavaScript activado.</p></noscript>
+</body>
+</html>
