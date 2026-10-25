@@ -290,13 +290,14 @@ body.arrastrando .cv-cadena { border-color: var(--primario-borde); }
 .tabla td { padding: 10px; border-bottom: 1px solid var(--borde); vertical-align: middle; }
 .tabla tr:last-child td { border-bottom: 0; }
 .m1-contrarias { margin-top: 16px; }
+.tabla-luego td { color: var(--texto-3); }
+.tabla-luego .mt, .tabla-luego .vr { color: var(--texto-3); }
+.tabla-luego-titulo td { font-size: 0.8rem; font-weight: 600; padding-top: 16px; border-bottom: 1px dashed var(--borde-fuerte); }
 .m1-orden { font-size: 0.95rem; margin: 0; }
 .m1-phet { margin-top: 16px; }
 .m1-phet-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
 .m1-phet-fila > div { flex: 1 1 320px; min-width: 0; }
 .m1-phet-fila p { margin: 4px 0 0; font-size: 0.93rem; }
-.plan-guia { display: flex; gap: 8px; align-items: flex-start; margin: 0; padding: 10px 16px 14px; border-top: 1px solid var(--borde); font-size: 0.9rem; color: var(--texto-2); }
-.plan-guia svg { width: 18px; height: 18px; flex: none; color: var(--primario); margin-top: 1px; }
 .m1-ejemplo { margin-bottom: 16px; }
 .m1-ejemplo h3 { margin: 4px 0 4px; }
 .m1-ejemplo-linea { justify-content: flex-start; gap: 0.45em; white-space: normal; font-size: 1.18rem; }

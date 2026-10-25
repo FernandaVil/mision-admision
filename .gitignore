@@ -1,0 +1,7 @@
+# Versión anterior (minijuegos): se queda solo en este computador
+_version_anterior/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store

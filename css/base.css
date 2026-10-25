@@ -206,6 +206,10 @@ small { font-size: 0.85em; }
 .fr > .fr-n, .fr > .fr-d { display: flex; align-items: center; justify-content: center; gap: 0.25em; padding: 0.08em 0.3em; white-space: nowrap; }
 .fr > .fr-d { border-top: 1.5px solid currentColor; }
 .par { font-family: var(--f-texto); font-style: normal; font-weight: 300; font-size: 1.15em; color: var(--texto-2); }
+.mt sup.exp { font-family: var(--f-texto); font-style: normal; font-size: 0.68em; margin-left: -0.15em; align-self: flex-start; }
+.raiz { display: inline-flex; align-items: stretch; vertical-align: middle; }
+.raiz-signo { font-family: var(--f-texto); font-size: 1.15em; line-height: 1; padding-right: 0.04em; align-self: flex-end; }
+.raiz-rad { display: inline-flex; align-items: center; gap: 0.25em; border-top: 1.5px solid currentColor; padding: 0.08em 0.2em 0; }
 
 /* Tachado de unidades o variables que se cancelan */
 .tachado { position: relative; color: var(--texto-3); }

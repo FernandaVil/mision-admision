@@ -37,7 +37,7 @@
       <div class="cv-guia" aria-live="polite"></div>
       <div class="banco-pie">
         <div class="cv-banco">
-          <h4>Equivalencias disponibles <span class="texto-3">· toca una o arrástrala a la mesa</span></h4>
+          <h4>Equivalencias disponibles <span class="texto-3">· tocar una o arrastrarla a la mesa</span></h4>
           <div class="cv-equivalencias"></div>
         </div>
         <div class="mensaje cv-mensaje" role="status" aria-live="polite"></div>
@@ -102,7 +102,7 @@
         return `
           <span class="op cv-por">×</span>
           <div class="cv-factor ${e.sospechosos[i] ? 'sospechoso' : ''} ${fc.nuevo ? 'nuevo' : ''} ${fc.girando ? 'girando' : ''}" data-i="${i}">
-            <button type="button" class="cv-fraccion mt" data-accion="invertir" data-i="${i}" aria-label="Factor ${fraccionTexto(num, den)}. Toca para invertirlo">
+            <button type="button" class="cv-fraccion mt" data-accion="invertir" data-i="${i}" aria-label="Factor ${fraccionTexto(num, den)}. Tocar para invertirlo">
               <span class="fr"><span class="fr-n">${ladoHtml(num[0], num[1], e.fichas, i, 'arriba')}</span><span class="fr-d">${ladoHtml(den[0], den[1], e.fichas, i, 'abajo')}</span></span>
             </button>
             <div class="cv-factor-acciones">
@@ -116,7 +116,7 @@
       $('.cv-cadena', raiz).innerHTML = `
         <div class="cv-inicio mt">${inicioHtml}</div>
         ${factores}
-        ${st.resuelto || st.cadena.length >= MAX_FACTORES ? '' : `<span class="op cv-por">×</span><div class="cv-ranura">${icono('mas')}<span>Agrega una equivalencia</span></div>`}
+        ${st.resuelto || st.cadena.length >= MAX_FACTORES ? '' : `<span class="op cv-por">×</span><div class="cv-ranura">${icono('mas')}<span>Agregar una equivalencia</span></div>`}
         <span class="op cv-igual">=</span>
         <div class="cv-resultado ${e.listo ? 'listo' : ''}">
           <small>${e.listo ? 'Resultado' : 'La misma cantidad, ahora en'}</small>
@@ -158,11 +158,11 @@
       $('.cv-reto', raiz).innerHTML = `
         <div class="bz-meta"><span class="pildora pildora-primaria">${icono('objetivo')}Meta: expresarlo en ${U.texto(r.meta)}</span></div>
         <h4>${numero >= 0 ? `Reto ${numero + 1}. ` : ''}${r.titulo || 'Conversión del ejercicio'}</h4>
-        ${r.contexto ? `<p>${r.contexto}</p>` : `<p>Convierte ${MA.fmt(r.inicio.valor)} ${U.texto(r.inicio.u)} a ${U.texto(r.meta)}.</p>`}`;
+        ${r.contexto ? `<p>${r.contexto}</p>` : `<p>Convertir ${MA.fmt(r.inicio.valor)} ${U.texto(r.inicio.u)} a ${U.texto(r.meta)}.</p>`}`;
       pintarBanco();
       pintarRetos();
       pintarOrigen();
-      ponerMensaje('info', 'Empieza por la unidad que quieres eliminar.', 'Elige una equivalencia que la contenga y acomódala para que esa unidad quede en el piso contrario.');
+      ponerMensaje('info', 'Primero, la unidad que se quiere eliminar.', 'Elegir una equivalencia que la contenga y acomodarla para que esa unidad quede en el piso contrario.');
       pintar();
     }
     function cargarReto(id) {
@@ -185,10 +185,10 @@
     /* ---------- Acciones ---------- */
     function agregar(eqId) {
       if (st.resuelto) return;
-      if (st.cadena.length >= MAX_FACTORES) { ponerMensaje('aviso', 'La mesa está llena.', 'Quita algún factor que no ayude.'); return; }
+      if (st.cadena.length >= MAX_FACTORES) { ponerMensaje('aviso', 'La mesa está llena.', 'Conviene quitar algún factor que no ayude.'); return; }
       st.cadena.push({ eq: eqId, inv: false, nuevo: !reducido, id: ++st.contador });
       const e = pintar();
-      despues(e, `Agregaste ${eqTexto(eqId)} como fracción.`);
+      despues(e, `${eqTexto(eqId)}, agregada como fracción.`);
     }
     function invertir(i) {
       const fc = st.cadena[i];
@@ -196,45 +196,45 @@
       fc.inv = !fc.inv;
       fc.girando = !reducido;
       const e = pintar();
-      despues(e, 'Invertiste el factor: sigue valiendo 1, pero ahora las unidades están en el otro piso.');
+      despues(e, 'Factor invertido: sigue valiendo 1, pero ahora las unidades están en el otro piso.');
     }
     function quitar(i) {
       if (st.resuelto) return;
       st.cadena.splice(i, 1);
       const e = pintar();
-      despues(e, 'Quitaste el factor.');
+      despues(e, 'Factor quitado.');
     }
     function despues(e, accion) {
       if (e.listo) return exito(e);
       const i = e.sospechosos.indexOf(true);
       if (i >= 0) {
         const { num, den } = U.orientar(st.cadena[i]);
-        ponerMensaje('aviso', 'Hay un factor que no te acerca a la meta.',
-          `${accion} El factor ${fraccionTexto(num, den)} deja unidades repetidas en el mismo piso en vez de cancelarlas. Inviértelo o quítalo.`);
+        ponerMensaje('aviso', 'Hay un factor que no acerca a la meta.',
+          `${accion} El factor ${fraccionTexto(num, den)} deja unidades repetidas en el mismo piso en vez de cancelarlas. Conviene invertirlo o quitarlo.`);
         return;
       }
       const pend = e.porEliminar[0];
-      ponerMensaje('info', accion, pend ? `Todavía queda ${pend.unidad}${U.sup(pend.veces)} ${pend.lugar}. Busca una equivalencia que lo contenga.` : 'Revisa qué unidades faltan para llegar a la meta.');
+      ponerMensaje('info', accion, pend ? `Todavía queda ${pend.unidad}${U.sup(pend.veces)} ${pend.lugar}. Falta una equivalencia que lo contenga.` : 'Hay que revisar qué unidades faltan para llegar a la meta.');
     }
     function pista() {
       const e = U.estado(st.problema, st.cadena);
       const i = e.sospechosos.indexOf(true);
       if (i >= 0) {
-        ponerMensaje('info', `Mira el factor número ${i + 1}.`, 'Está al revés o no sirve para esta conversión: tócalo para invertirlo, o quítalo con la ×.');
+        ponerMensaje('info', `Ojo con el factor número ${i + 1}.`, 'Está al revés o no sirve para esta conversión: se invierte tocándolo o se quita con la ×.');
         $$('.cv-factor', raiz)[i].classList.add('sugerida');
         return;
       }
       const pend = e.porEliminar[0];
-      if (!pend) { ponerMensaje('info', 'Revisa la meta.', `Tienes ${U.texto(e.u)} y buscas ${U.texto(st.problema.meta)}.`); return; }
+      if (!pend) { ponerMensaje('info', 'Revisar la meta.', `Hay ${U.texto(e.u)} y se busca ${U.texto(st.problema.meta)}.`); return; }
       const id = st.problema.banco.find(k => U.EQUIV[k].a[1][pend.unidad] || U.EQUIV[k].b[1][pend.unidad]);
-      if (!id) { ponerMensaje('aviso', 'No hay una equivalencia directa.', `Busca una cadena que pase por ${pend.unidad}.`); return; }
+      if (!id) { ponerMensaje('aviso', 'No hay una equivalencia directa.', `Hace falta una cadena que pase por ${pend.unidad}.`); return; }
       const eq = U.EQUIV[id];
       const enA = !!eq.a[1][pend.unidad];
       // La unidad debe quedar en el piso contrario al que ocupa ahora
       const quieroAbajo = pend.lugar === 'arriba';
       const num = (enA === quieroAbajo) ? eq.b : eq.a, den = (enA === quieroAbajo) ? eq.a : eq.b;
       ponerMensaje('info', `Para eliminar ${pend.unidad} (que está ${pend.lugar}):`,
-        `usa ${eqTexto(id)} y acomódala con ${pend.unidad} ${quieroAbajo ? 'abajo' : 'arriba'}: ${fraccionTexto(num, den)}.`);
+        `usar ${eqTexto(id)} y acomodarla con ${pend.unidad} ${quieroAbajo ? 'abajo' : 'arriba'}: ${fraccionTexto(num, den)}.`);
       const b = $(`.cv-eq[data-eq="${id}"]`, raiz);
       if (b) { b.classList.remove('sugerida'); void b.offsetWidth; b.classList.add('sugerida'); }
     }
@@ -242,7 +242,7 @@
       st.resuelto = true;
       const p = st.problema;
       const final = pintar();
-      ponerMensaje('ok', '¡Conversión completa!', 'Todas las unidades que sobraban se cancelaron.');
+      ponerMensaje('ok', '¡Muy bien!', 'Conversión completa: todas las unidades que sobraban se cancelaron.');
       // Línea "como en el papel" (copiada de la mesa, sin botones)
       const linea = [$('.cv-inicio', raiz).innerHTML].concat($$('.cv-fraccion', raiz).map(b => b.innerHTML)).join(' <span class="op">·</span> ');
       const box = $('.cv-exito', raiz);
@@ -250,7 +250,7 @@
       box.innerHTML = `
         <div class="bz-exito-cabeza">${icono('checkCirculo')}<div><span class="etiqueta">Conversión completa</span>
           <h4>${MA.fmt(p.inicio.valor)} ${U.texto(p.inicio.u)} = ${MA.fmtSig(final.valor, 6)} ${U.texto(p.meta)}</h4></div></div>
-        <p class="texto-2">Así lo escribes en el papel:</p>
+        <p class="texto-2">Así se escribe en el papel:</p>
         <div class="cv-linea mt">${linea} <span class="op">=</span> <span class="num">${MA.fmtSig(final.valor, 6)}</span> <span class="un">${U.texto(p.meta)}</span></div>
         ${p.nota ? `<div class="caja"><div class="caja-titulo">${icono('pista')}Para recordar</div>${p.nota}</div>` : ''}
         <div class="fila-botones"></div>`;

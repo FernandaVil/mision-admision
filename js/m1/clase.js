@@ -1,12 +1,12 @@
 /* =====================================================================
-   CLASE 1 · ideas clave (diapositivas), ficha de equivalencias y
-   guía del tutor (#guia)
+   CLASE 1 · ideas clave (diapositivas) y ficha de equivalencias
    ---------------------------------------------------------------------
    La teoría va en dos bloques cortos, cada uno justo antes de la
    herramienta donde se usa:
      parte 1 (diapositivas 1-6)  -> antes de la balanza
      parte 2 (diapositivas 7-12) -> antes de la mesa de conversión
-   Cada diapositiva trae notas para quien da la clase.
+   Las diapositivas le hablan de usted al estudiante (es la voz de la
+   clase); la ficha usa el estilo impersonal del resto de la página.
    ===================================================================== */
 (function () {
   'use strict';
@@ -15,6 +15,103 @@
   const { vr, un, n, op, fr, mt, q, tach } = MA.f;
   const por = op('·'), igual = op('=');
   const qn = (valor, unidad) => `${n(valor)} ${un(unidad)}`;
+  const WIKIPEDIA = 'https://es.wikipedia.org/wiki/Prefijos_del_Sistema_Internacional';
+
+  /* ---------- Escalera de prefijos ----------
+     Centro: la unidad (metro, gramo, litro). Cada escalón vale × 10.
+     Hacia arriba y hacia abajo se abre por niveles: primero los que se
+     ven en la vida diaria y, después, los demás solo por curiosidad.   */
+  const ESCALERA = [
+    { nombre: 'kilo', simbolo: 'k', vale: 'mil veces', factor: '× 1000', celdas: ['km', 'kg', 'kL'], comunes: [1, 1, 0], principal: true },
+    { nombre: 'hecto', simbolo: 'h', vale: 'cien veces', factor: '× 100', celdas: ['hm', 'hg', 'hL'], comunes: [0, 0, 0] },
+    { nombre: 'deca', simbolo: 'da', vale: 'diez veces', factor: '× 10', celdas: ['dam', 'dag', 'daL'], comunes: [0, 0, 0] },
+    { base: true, nombre: 'unidad', vale: 'la referencia', factor: '1', celdas: ['m', 'g', 'L'], nombres: ['metro', 'gramo', 'litro'], comunes: [1, 1, 1], principal: true },
+    { nombre: 'deci', simbolo: 'd', vale: 'la décima parte', factor: '÷ 10', celdas: ['dm', 'dg', 'dL'], comunes: [0, 0, 0] },
+    { nombre: 'centi', simbolo: 'c', vale: 'la centésima parte', factor: '÷ 100', celdas: ['cm', 'cg', 'cL'], comunes: [1, 0, 0], principal: true },
+    { nombre: 'mili', simbolo: 'm', vale: 'la milésima parte', factor: '÷ 1000', celdas: ['mm', 'mg', 'mL'], comunes: [1, 1, 1], principal: true }
+  ];
+  const p10 = (signo, e) => `${signo} 10<sup>${e}</sup>`;
+  // De mayor a menor (así se dibujan en la tabla)
+  const GRANDES_1 = [
+    { nombre: 'giga', simbolo: 'G', vale: 'mil millones', factor: p10('×', 9), ejemplo: 'gigabyte (GB): la memoria del celular' },
+    { nombre: 'mega', simbolo: 'M', vale: 'un millón', factor: p10('×', 6), ejemplo: 'megabyte (MB) y megavatio (MW)' }
+  ];
+  const GRANDES_2 = [
+    { nombre: 'quetta', simbolo: 'Q', vale: 'un quintillón', factor: p10('×', 30), ejemplo: 'la masa de Júpiter: unos 1,9 Qg (quettagramos)' },
+    { nombre: 'ronna', simbolo: 'R', vale: 'mil cuatrillones', factor: p10('×', 27), ejemplo: 'la masa de la Tierra: unos 6 Rg (ronnagramos)' },
+    { nombre: 'yotta', simbolo: 'Y', vale: 'un cuatrillón', factor: p10('×', 24), ejemplo: 'la masa de la Luna: unos 73 Yg (yottagramos)' },
+    { nombre: 'zetta', simbolo: 'Z', vale: 'mil trillones', factor: p10('×', 21), ejemplo: 'la Vía Láctea mide del orden de 1 Zm (zettámetro) de lado a lado' },
+    { nombre: 'exa', simbolo: 'E', vale: 'un trillón', factor: p10('×', 18), ejemplo: 'el tráfico de internet de todo el mundo en un mes se mide en exabytes (EB)' },
+    { nombre: 'peta', simbolo: 'P', vale: 'mil billones', factor: p10('×', 15), ejemplo: 'un año luz mide unos 9,5 Pm (petámetros)' },
+    { nombre: 'tera', simbolo: 'T', vale: 'un billón', factor: p10('×', 12), ejemplo: 'terabyte (TB): un disco duro' }
+  ];
+  const PEQUENOS_1 = [
+    { nombre: 'micro', simbolo: 'µ', vale: 'la millonésima parte', factor: p10('÷', 6), ejemplo: 'un pelo mide unas 70 µm (micras) de grueso' },
+    { nombre: 'nano', simbolo: 'n', vale: 'la milmillonésima parte', factor: p10('÷', 9), ejemplo: 'un virus mide unos 100 nm' }
+  ];
+  const PEQUENOS_2 = [
+    { nombre: 'pico', simbolo: 'p', vale: 'la billonésima parte', factor: p10('÷', 12), ejemplo: 'un átomo de hidrógeno mide unos 100 pm' },
+    { nombre: 'femto', simbolo: 'f', vale: 'la milbillonésima parte', factor: p10('÷', 15), ejemplo: 'un protón mide unos 1,7 fm' },
+    { nombre: 'atto', simbolo: 'a', vale: 'la trillonésima parte', factor: p10('÷', 18), ejemplo: 'los destellos de luz más cortos duran unos cientos de attosegundos (Nobel de Física 2023)' },
+    { nombre: 'zepto', simbolo: 'z', vale: 'la miltrillonésima parte', factor: p10('÷', 21), ejemplo: 'la luz tarda unos 250 zs en cruzar una molécula de hidrógeno' },
+    { nombre: 'yocto', simbolo: 'y', vale: 'la cuatrillonésima parte', factor: p10('÷', 24), ejemplo: 'la masa de un protón: unos 1,7 yg (yoctogramos)' },
+    { nombre: 'ronto', simbolo: 'r', vale: 'la milcuatrillonésima parte', factor: p10('÷', 27), ejemplo: 'la masa de un electrón: unos 0,9 rg (rontogramos)' },
+    { nombre: 'quecto', simbolo: 'q', vale: 'la quintillonésima parte', factor: p10('÷', 30), ejemplo: 'el más pequeño de todos; se creó en 2022, junto con ronna, quetta y ronto' }
+  ];
+
+  // compacta = versión de la diapositiva: todo en una línea por fila
+  const filaEscalon = (f, compacta) => `
+    <tr class="${f.base ? 'esc-base' : f.principal ? 'esc-principal' : 'esc-secundaria'}">
+      <th scope="row">${f.base ? 'unidad' : `${f.nombre} (${f.simbolo})`}</th>
+      <td class="esc-vale">${f.vale}${compacta ? ` <span class="esc-factor">${f.factor}</span>` : `<small>${f.factor}</small>`}</td>
+      ${f.celdas.map((c, i) => `<td><span class="esc-un ${f.comunes[i] ? 'comun' : 'raro'}">${c}</span>${f.nombres ? `<small class="esc-nombre">${f.nombres[i]}</small>` : ''}</td>`).join('')}
+    </tr>`;
+  const filaExtra = f => `
+    <tr class="esc-fila-extra">
+      <th scope="row">${f.nombre} (${f.simbolo})</th>
+      <td class="esc-vale">${f.vale}<small>${f.factor}</small></td>
+      <td colspan="3">${f.ejemplo}</td>
+    </tr>`;
+  const nota = (texto, clase = 'esc-salto') => `<tr class="${clase}"><td colspan="5">${texto}</td></tr>`;
+  const NOTA_SALTO = 'Más allá de kilo y de mili, cada prefijo vale mil veces el anterior: ya no hay escalones de 10. (10<sup>6</sup> es un 1 seguido de 6 ceros.)';
+  const NOTA_CURIOSIDAD = `Solo por curiosidad: no hace falta aprenderlos. <a href="${WIKIPEDIA}" target="_blank" rel="noopener">Tabla completa en Wikipedia</a>`;
+
+  function escaleraHtml({ completa = true } = {}) {
+    return `
+      <div class="escalera ${completa ? '' : 'esc-compacta'}" data-escalera>
+        ${completa ? `<button type="button" class="esc-ver" data-esc="arriba" data-nivel="0" aria-expanded="false">↑ <span class="txt">Ver prefijos más grandes</span></button>` : ''}
+        <div class="tabla-envoltura">
+          <table class="esc-tabla">
+            <thead><tr><th scope="col">Prefijo</th><th scope="col">Vale</th><th scope="col">Longitud</th><th scope="col">Masa</th><th scope="col">Volumen</th></tr></thead>
+            ${completa ? `
+            <tbody class="esc-extra" data-zona="arriba-2" hidden>${nota(NOTA_CURIOSIDAD, 'esc-curiosidad')}${GRANDES_2.map(filaExtra).join('')}</tbody>
+            <tbody class="esc-extra" data-zona="arriba-1" hidden>${GRANDES_1.map(filaExtra).join('')}${nota(NOTA_SALTO)}</tbody>` : ''}
+            <tbody>${ESCALERA.map(f => filaEscalon(f, !completa)).join('')}</tbody>
+            ${completa ? `
+            <tbody class="esc-extra" data-zona="abajo-1" hidden>${nota(NOTA_SALTO)}${PEQUENOS_1.map(filaExtra).join('')}</tbody>
+            <tbody class="esc-extra" data-zona="abajo-2" hidden>${PEQUENOS_2.map(filaExtra).join('')}${nota(NOTA_CURIOSIDAD, 'esc-curiosidad')}</tbody>` : ''}
+          </table>
+        </div>
+        ${completa ? `<button type="button" class="esc-ver" data-esc="abajo" data-nivel="0" aria-expanded="false">↓ <span class="txt">Ver prefijos más pequeños</span></button>` : ''}
+      </div>`;
+  }
+
+  /* Abrir la escalera por niveles: nivel 0 → 1 (mega/giga o micro/nano) → 2 (todos) → 0 */
+  const TEXTOS = {
+    arriba: ['Ver prefijos más grandes', 'Ver todavía más grandes (por curiosidad)', 'Ocultar los prefijos grandes'],
+    abajo: ['Ver prefijos más pequeños', 'Ver todavía más pequeños (por curiosidad)', 'Ocultar los prefijos pequeños']
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-esc]');
+    if (!b) return;
+    const lado = b.dataset.esc, cont = b.closest('[data-escalera]');
+    const nivel = (Number(b.dataset.nivel) + 1) % 3;
+    b.dataset.nivel = String(nivel);
+    cont.querySelector(`[data-zona="${lado}-1"]`).hidden = nivel < 1;
+    cont.querySelector(`[data-zona="${lado}-2"]`).hidden = nivel < 2;
+    b.setAttribute('aria-expanded', String(nivel > 0));
+    b.querySelector('.txt').textContent = TEXTOS[lado][nivel];
+  });
 
   /* Balanza estática para la diapositiva 3 (usa los colores de la balanza real) */
   const balanzaSvg = `
@@ -44,16 +141,12 @@
         <div class="d-portada">
           <p class="d-kicker">Módulo 1 · clase 1</p>
           <h2>Despejes y conversión de unidades</h2>
-          <p class="d-sub">Al terminar hoy vas a poder:</p>
+          <p class="d-sub">Al terminar hoy va a poder:</p>
           <ul class="d-lista">
             <li>Despejar fórmulas como ${mt(vr('d'), igual, vr('v'), por, vr('t'))} sin memorizar reglas.</li>
             <li>Convertir unidades, como km/h a m/s, sin regla de tres.</li>
           </ul>
-        </div>`,
-      notas: {
-        decir: 'Hoy vemos las dos herramientas que más se repiten en el examen. No vamos a memorizar reglas: vamos a entender por qué funcionan, y eso no se olvida.',
-        ojo: 'Antes de empezar, confirma que tiene papel y lápiz, y que no usa calculadora.'
-      }
+        </div>`
     },
     {
       titulo: 'Calentamiento',
@@ -63,13 +156,7 @@
           <div class="d-tarjeta"><span class="d-num">1</span>Si ${mt(n(3), por, vr('x'), igual, n(12))}, ¿cuánto vale ${vr('x')}?</div>
           <div class="d-tarjeta"><span class="d-num">2</span>¿Cuántos metros son ${q(2, 'km')}?</div>
         </div>
-        <p class="d-nota">No hay respuestas malas: cuéntame cómo lo pensaste.</p>`,
-      notas: {
-        decir: 'Antes de explicar nada, quiero ver cómo lo piensas tú.',
-        preguntar: '¿Cuánto vale x? ¿Cuántos metros son 2 km? ¿Cómo lo pensaste?',
-        esperar: 'x = 4, porque 12 ÷ 3 = 4. Y 2000 m.',
-        ojo: 'Si dice «el 3 pasa a dividir», está bien, pero pregúntale por qué. Esa respuesta la va a construir hoy con la balanza. No lo corrijas todavía.'
-      }
+        <p class="d-nota">No hay respuestas malas: cuénteme cómo lo pensó.</p>`
     },
     {
       titulo: 'El igual es una balanza',
@@ -79,20 +166,14 @@
           <div class="d-svg">${balanzaSvg}</div>
           <div>
             <p class="d-grande">Lo que hay a cada lado del igual <b>vale lo mismo</b>.</p>
-            <p>Si le haces algo a un plato, tienes que hacerle lo mismo al otro.</p>
+            <p>Si le hace algo a un plato, tiene que hacerle lo mismo al otro.</p>
             <div class="d-pasos">
               ${mt(n(3), por, vr('x'), igual, n(12))}
               <span class="d-flecha">÷ 3 en los dos lados</span>
               ${mt(vr('x'), igual, n(4))}
             </div>
           </div>
-        </div>`,
-      notas: {
-        decir: 'El igual no significa «da como resultado»: significa «pesa lo mismo». Si divido entre 3 solo el lado izquierdo, la balanza se cae. Si divido los dos lados, sigue equilibrada.',
-        preguntar: 'Si quito la mitad de lo que hay en un plato, ¿qué tengo que hacer con el otro?',
-        esperar: 'Quitarle la mitad también.',
-        ojo: 'Es la idea más importante de la primera parte. Si la entiende, todo lo demás sale solo.'
-      }
+        </div>`
     },
     {
       titulo: 'Operaciones contrarias',
@@ -102,50 +183,41 @@
           <div><span class="d-op">+</span> sumar</div><span class="d-dobleflecha">⇄</span><div><span class="d-op">−</span> restar</div>
           <div><span class="d-op">×</span> multiplicar</div><span class="d-dobleflecha">⇄</span><div><span class="d-op">÷</span> dividir</div>
         </div>
-        <p class="d-destacado">Para dejar sola una variable, deshaces lo que le están haciendo, <b>en los dos lados</b>.</p>
-        <p class="d-nota">Orden: primero lo que suma o resta; después, lo que multiplica o divide.</p>`,
-      notas: {
-        decir: 'Despejar es deshacer. Si a la t la están multiplicando por v, lo deshago dividiendo entre v, pero en los dos platos.',
-        preguntar: 'En d = v · t, ¿qué le están haciendo a la t?',
-        esperar: 'La están multiplicando por v.',
-        ojo: 'Pídele que diga la operación en voz alta antes de hacerla. Así se fija.'
-      }
+        <div class="d-contrarias d-luego" aria-label="Para más adelante">
+          <div><span class="d-op">x²</span> al cuadrado</div><span class="d-dobleflecha">⇄</span><div><span class="d-op">√</span> raíz cuadrada</div>
+          <div><span class="d-op">10ˣ</span> potencia de 10</div><span class="d-dobleflecha">⇄</span><div><span class="d-op">log</span> logaritmo</div>
+          <span class="d-luego-etq">Más adelante: la raíz, para caída libre y energía; el logaritmo, para el pH.</span>
+        </div>
+        <p class="d-destacado">Para dejar sola una variable, deshaga lo que le están haciendo, <b>en los dos lados</b>. Hoy, con las cuatro primeras.</p>`
     },
     {
-      titulo: 'Una fórmula es una relación',
+      titulo: 'Lo que ya sabe, como fórmula',
+      clase: 'd-ya-sabe',
       html: `
-        <h2>Una fórmula es una relación entre cantidades</h2>
+        <h2>Lo que ya sabe, escrito como fórmula</h2>
+        <p>A ${qn(50, 'km/h')}, recorrer ${qn(100, 'km')} toma ${qn(2, 'h')}. Eso, hecho de cabeza, ya es un despeje:</p>
         <div class="d-etiquetada">
           <div><span class="mt">${vr('d')}</span><small>distancia</small></div>
           <div><span class="mt">${igual}</span><small></small></div>
           <div><span class="mt">${vr('v')}</span><small>velocidad</small></div>
           <div><span class="mt">${por}</span><small></small></div>
           <div><span class="mt">${vr('t')}</span><small>tiempo</small></div>
+          <div class="d-etq-flecha"><span class="mt">→</span><small></small></div>
+          <div><span class="mt">${vr('t')} ${igual} ${fr(vr('d'), vr('v'))}</span><small>despejada</small></div>
         </div>
-        <p>Despejar la ${vr('t')} es reescribirla con la ${vr('t')} sola: ${mt(vr('t'), igual, fr(vr('d'), vr('v')))}</p>
-        <p class="d-destacado">Compruébalo con números fáciles: ${qn(100, 'km')} a ${qn(50, 'km/h')} → ${mt(vr('t'), igual, fr(n(100), n(50)), igual, q(2, 'h'))}</p>`,
-      notas: {
-        decir: 'Cada letra es una cantidad con nombre. Despejar t es reescribir la fórmula para que la t quede sola a un lado. Y siempre puedes comprobar tu despeje con números fáciles.',
-        preguntar: 'Si recorres 100 km a 50 km/h, ¿cuánto tardas?',
-        esperar: '2 horas.',
-        ojo: 'El truco de comprobar con números fáciles sirve en todo el examen, sobre todo en las preguntas con opciones.'
-      }
+        <p class="d-destacado">Truco para todo el examen: un despeje se comprueba con números fáciles. ${mt(n(100), op('÷'), n(50), igual, q(2, 'h'))}</p>`
     },
     {
-      titulo: 'Tu turno: la balanza',
+      titulo: 'Su turno: la balanza',
       clase: 'd-turno',
       html: `
         <div class="d-icono">${icono('balanza')}</div>
-        <h2>Tu turno: la balanza</h2>
+        <h2>Su turno: la balanza</h2>
         <ul class="d-lista">
-          <li>Abre <b>Despejes</b> y haz los retos 1 a 6.</li>
-          <li>Antes de cada clic, di qué operación vas a aplicar y por qué.</li>
-          <li>Si te trabas, pregúntate: «¿qué le están haciendo a mi variable?».</li>
-        </ul>`,
-      notas: {
-        decir: 'Ahora te toca a ti. Comparte tu pantalla y haz los retos. Antes de cada clic, dime qué operación vas a aplicar.',
-        ojo: 'No le digas la operación. Si se traba, pregúntale qué le están haciendo a su variable. El botón «Pista» es el último recurso.'
-      }
+          <li>Abra <b>Despejes</b> y haga los retos 1 a 6.</li>
+          <li>Antes de cada clic, diga qué operación va a aplicar y por qué.</li>
+          <li>Si se traba, pregúntese: «¿qué le están haciendo a mi variable?».</li>
+        </ul>`
     },
     // ---------------- Parte 2 ----------------
     {
@@ -156,54 +228,32 @@
           <div><span class="d-cant-num">72</span><small>número</small></div>
           <div><span class="d-cant-un">km/h</span><small>unidad</small></div>
         </div>
-        <p>«72» solo no dice nada: ¿72 qué?</p>
-        <p class="d-destacado">Convertir es cambiar la unidad <b>sin cambiar la cantidad</b>: ${q(1, 'km')} y ${q(1000, 'm')} son la misma distancia.</p>`,
-      notas: {
-        decir: 'La unidad es como el apellido del número: sin ella, el número no dice nada. Convertir es cambiarle el apellido sin cambiar lo que mide.',
-        preguntar: '¿Es lo mismo caminar 1 km que caminar 1000 m?',
-        esperar: 'Sí, es la misma distancia.'
-      }
+        <p class="d-destacado">Convertir es cambiar la unidad <b>sin cambiar la cantidad</b>: ${q(1, 'km')} y ${q(1000, 'm')} son la misma distancia, con distinto nombre.</p>`
     },
     {
       titulo: 'Los prefijos',
+      clase: 'd-prefijos',
       html: `
-        <h2>Los prefijos dicen cuántas veces</h2>
-        <div class="d-tabla-envoltura">
-          <table class="d-tabla">
-            <thead><tr><th scope="col">Prefijo</th><th scope="col">Significa</th><th scope="col">Ejemplos</th></tr></thead>
-            <tbody>
-              <tr><td><b>kilo</b> (k)</td><td>mil veces la unidad (× 1000)</td><td>1 km = 1000 m · 1 kg = 1000 g</td></tr>
-              <tr class="d-fila-base"><td>unidad</td><td>metro, gramo, litro</td><td>m · g · L</td></tr>
-              <tr><td><b>centi</b> (c)</td><td>la centésima parte (÷ 100)</td><td>1 m = 100 cm</td></tr>
-              <tr><td><b>mili</b> (m)</td><td>la milésima parte (÷ 1000)</td><td>1 m = 1000 mm · 1 L = 1000 mL</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="d-destacado">Unidad más pequeña → número más grande: en ${q(1, 'm')} caben ${q(100, 'cm')}.</p>`,
-      notas: {
-        decir: 'Kilo significa mil: un kilómetro son mil metros. Centi y mili son pedacitos: un centímetro es la centésima parte de un metro. Por eso en un metro caben 100 centímetros.',
-        preguntar: '¿Cuántos gramos tiene medio kilo? ¿Cuántos mililitros tiene una botella de 1,5 L?',
-        esperar: '500 g y 1500 mL.',
-        ojo: 'La confusión típica es creer que «centi» significa 100. Centi es la parte: 1 cm es 1/100 de metro. Lo que vale 100 es la cantidad de centímetros que caben en un metro.'
-      }
+        <h2>Los prefijos sirven para cualquier unidad</h2>
+        <p>El prefijo dice cuántas veces la unidad. <b>Kilo siempre es mil</b>: mil metros, mil gramos o mil litros.</p>
+        ${escaleraHtml({ completa: false })}
+        <p class="d-nota">Cada escalón vale × 10: del metro al kilómetro hay tres (10 · 10 · 10 = 1000). Hay más (mega, micro…): están en la ficha.</p>`
     },
     {
-      titulo: 'El tiempo',
+      titulo: 'Horas y minutos',
+      clase: 'd-tiempo',
       html: `
-        <h2>El tiempo no es decimal</h2>
+        <h2>El tiempo va de 60 en 60</h2>
         <div class="d-equivalencias">
           <span class="mt">${qn(1, 'h')} ${igual} ${qn(60, 'min')}</span>
           <span class="mt">${qn(1, 'min')} ${igual} ${qn(60, 's')}</span>
           <span class="mt">${qn(1, 'h')} ${igual} ${qn(3600, 's')}</span>
         </div>
-        <p class="d-destacado d-ojo">${q(2.5, 'h')} son 2 h y media, es decir, <b>2 h 30 min</b>, no 2 h 50 min.</p>
-        <p class="d-nota">La barra de una unidad se lee «por cada»: 90 km/h son 90 km por cada hora.</p>`,
-      notas: {
-        decir: 'Con el tiempo no se corre la coma: una hora tiene 60 minutos, no 100. Por eso 2,5 horas son 2 horas y media.',
-        preguntar: '¿Cuántos minutos son 1,5 h? ¿Y cuántos segundos tiene una hora?',
-        esperar: '90 min y 3600 s, porque 60 · 60 = 3600.',
-        ojo: 'Error típico: 2,5 h = 250 min.'
-      }
+        <div class="d-tarjetas">
+          <div class="d-tarjeta"><span class="d-num">Una unidad con decimal</span>${mt(q(1.3, 'min'), igual, n(1.3), por, q(60, 's'), igual, q(78, 's'))}</div>
+          <div class="d-tarjeta"><span class="d-num">Dos unidades juntas</span>${mt(q(2, 'h'), q(50, 'min'), igual, n(2), por, n(60), op('+'), n(50), igual, q(170, 'min'))}</div>
+        </div>
+        <p class="d-destacado d-ojo">La trampa: 2 h 50 min <b>no es</b> 2,50 h, y 1,3 min <b>no es</b> 1 min 30 s.</p>`
     },
     {
       titulo: 'El 1 disfrazado',
@@ -214,246 +264,65 @@
           <span class="d-flecha">entonces</span>
           ${mt(fr(qn(1000, 'm'), qn(1, 'km')), igual, n(1), igual, fr(qn(1, 'km'), qn(1000, 'm')))}
         </div>
-        <p class="d-destacado">Multiplicar por 1 no cambia la cantidad. <b>Solo cambia la unidad.</b></p>`,
-      notas: {
-        decir: 'Si arriba y abajo hay lo mismo, la fracción vale 1, como 5 / 5. Y multiplicar por 1 no cambia nada. Ese es todo el truco.',
-        preguntar: '¿Cuánto vale 1000 m dividido entre 1 km?',
-        esperar: '1, porque arriba y abajo hay la misma distancia.'
-      }
+        <p class="d-destacado">Multiplicar por 1 no cambia la cantidad. <b>Solo cambia la unidad.</b></p>`
     },
     {
       titulo: 'La regla de oro',
       html: `
-        <h2>La unidad que quieres eliminar va en el piso contrario</h2>
+        <h2>La unidad que quiere eliminar va en el piso contrario</h2>
         <div class="mt mt-bloque d-formula">
           ${n(2.5)} ${tach(un('km'))} ${por} ${fr(qn(1000, 'm'), `${n(1)} ${tach(un('km'))}`)} ${igual} ${q(2500, 'm')}
         </div>
         <p>Los km están arriba, así que en el factor van abajo: se tachan como en una fracción.</p>
-        <p class="d-destacado d-ojo">Si la pones en el mismo piso, se duplica (km²): las unidades te avisan que te equivocaste.</p>`,
-      notas: {
-        decir: 'Si los km están arriba, en el factor los pongo abajo para que se tachen, igual que en una fracción se cancela lo que está arriba y abajo.',
-        preguntar: 'Si quiero pasar 3 h a minutos, ¿cómo acomodo el factor?',
-        esperar: '60 min arriba y 1 h abajo: 3 · 60 = 180 min.',
-        ojo: 'No hace falta resolver km/h a m/s aquí: eso lo descubre en la mesa de conversión (reto 3).'
-      }
+        <p class="d-destacado d-ojo">Si la pone en el mismo piso, se duplica (km²): las unidades le avisan que se equivocó.</p>`
     },
     {
-      titulo: 'Tu turno: la mesa',
+      titulo: 'Su turno: la mesa',
       clase: 'd-turno',
       html: `
         <div class="d-icono">${icono('regla')}</div>
-        <h2>Tu turno: la mesa de conversión</h2>
+        <h2>Su turno: la mesa de conversión</h2>
         <ul class="d-lista">
-          <li>Abre <b>Conversión de unidades</b> y haz los retos 1 a 7.</li>
-          <li>Antes de cada factor, di qué unidad quieres eliminar y en qué piso está.</li>
-          <li>Tienes la ficha de equivalencias en «Ideas clave».</li>
-        </ul>`,
-      notas: {
-        decir: 'Tu turno. En cada reto empieza por la unidad que quieres eliminar.',
-        ojo: 'Cuando termine el reto 3 (72 km/h a m/s), muéstrale de dónde sale el 3,6: 3600 / 1000.'
-      }
+          <li>Abra <b>Conversión de unidades</b> y haga los retos 1 a 7.</li>
+          <li>Antes de cada factor, diga qué unidad quiere eliminar y en qué piso está.</li>
+          <li>Tiene la ficha de equivalencias en «Ideas clave».</li>
+        </ul>`
     }
   ];
 
   const PARTES = [
-    { id: 'p1', nombre: 'Parte 1 · el igual es una balanza', corto: 'Parte 1 · el igual es una balanza', desde: 0, hasta: 5, minutos: '5 min' },
-    { id: 'p2', nombre: 'Parte 2 · unidades y prefijos', corto: 'Parte 2 · unidades y prefijos', desde: 6, hasta: 11, minutos: '6 min' }
+    { id: 'p1', nombre: 'Parte 1 · el igual es una balanza', corto: 'Parte 1 · el igual es una balanza', desde: 0, hasta: 5, minutos: '7 min' },
+    { id: 'p2', nombre: 'Parte 2 · unidades y prefijos', corto: 'Parte 2 · unidades y prefijos', desde: 6, hasta: 11, minutos: '7 min' }
   ];
 
   /* ---------- Ficha de equivalencias ---------- */
-  const FICHA = [
-    ['Longitud', ['1 km = 1000 m', '1 m = 100 cm', '1 m = 1000 mm', '1 cm = 10 mm']],
-    ['Masa', ['1 kg = 1000 g']],
-    ['Volumen', ['1 L = 1000 mL', '1 mL = 1 cm³', '1 m³ = 1000 L']],
-    ['Tiempo', ['1 h = 60 min', '1 min = 60 s', '1 h = 3600 s']],
-    ['Área', ['1 m² = 10 000 cm²', '1 km² = 1 000 000 m²']],
+  const OTRAS = [
+    ['Tiempo (va de 60 en 60)', ['1 h = 60 min', '1 min = 60 s', '1 h = 3600 s', '0,5 h = 30 min', '0,1 h = 6 min · 0,1 min = 6 s']],
+    ['Volumen', ['1 mL = 1 cm³', '1 L = 1000 cm³', '1 m³ = 1000 L']],
+    ['Área (el factor va dos veces)', ['1 m² = 10 000 cm²', '1 km² = 1 000 000 m²']],
     ['Velocidad', ['km/h → m/s: ÷ 3,6', 'm/s → km/h: × 3,6']]
   ];
   function fichaHtml() {
     return `
       <div class="ficha">
-        <div class="ficha-prefijos">
-          <h4>Prefijos</h4>
-          <dl>
-            <div><dt>kilo (k)</dt><dd>mil veces la unidad · × 1000</dd></div>
-            <div><dt>centi (c)</dt><dd>la centésima parte · ÷ 100</dd></div>
-            <div><dt>mili (m)</dt><dd>la milésima parte · ÷ 1000</dd></div>
-          </dl>
-        </div>
-        <div class="ficha-grupos">
-          ${FICHA.map(([titulo, filas]) => `
-            <div class="ficha-grupo">
-              <h4>${titulo}</h4>
-              <ul>${filas.map(f => `<li>${f}</li>`).join('')}</ul>
-            </div>`).join('')}
-        </div>
+        <section class="ficha-bloque">
+          <h4>Prefijos: sirven para cualquier unidad</h4>
+          <p class="ficha-texto">La unidad está en el centro. Cada escalón hacia arriba es 10 veces más grande y cada escalón hacia abajo, 10 veces más pequeño. Por eso ${mt(qn(1, 'km'), igual, qn(1000, 'm'))} (tres escalones) y ${mt(qn(1, 'm'), igual, qn(100, 'cm'))} (dos escalones).</p>
+          ${escaleraHtml()}
+          <p class="ficha-leyenda"><span class="esc-un comun">km</span> Los resaltados son los que más se usan en el examen; los grises casi no se usan.</p>
+        </section>
+        <section class="ficha-bloque">
+          <h4>Otras equivalencias que hay que saber</h4>
+          <div class="ficha-grupos">
+            ${OTRAS.map(([titulo, filas]) => `
+              <div class="ficha-grupo">
+                <h5>${titulo}</h5>
+                <ul>${filas.map(f => `<li>${f}</li>`).join('')}</ul>
+              </div>`).join('')}
+          </div>
+        </section>
       </div>`;
   }
 
-  /* ---------- Guía del tutor (#guia) ---------- */
-  const GUIA = {
-    antes: [
-      'Envíale el enlace de la plataforma y pídele que la abra en el computador.',
-      'Que tenga papel, lápiz y nada de calculadora: así es el examen.',
-      'En las ideas clave compartes tú la pantalla. En la balanza, la mesa y la práctica la comparte él y hace los clics: se aprende haciendo, no mirando.',
-      'Ten esta guía abierta en tu celular o en otra ventana. Si compartes la pantalla con las notas visibles, él también las verá.'
-    ],
-    objetivos: [
-      'Despejar una variable en fórmulas como d = v · t o vf = v₀ + a · t, y explicar por qué se divide o se resta en los dos lados.',
-      'Convertir unidades con factores, incluido km/h ↔ m/s, eligiendo bien la orientación de cada factor.'
-    ],
-    minimo: [
-      ['El igual es una balanza', 'Los dos lados valen lo mismo; lo que se le hace a uno, se le hace al otro.'],
-      ['Cada operación tiene su contraria', 'Suma ↔ resta, multiplicación ↔ división. Despejar es deshacer.'],
-      ['Una cantidad es un número con unidad', 'Convertir cambia la unidad, nunca la cantidad.'],
-      ['Los prefijos y el tiempo', 'Kilo = mil veces; centi = centésima parte; mili = milésima parte. El tiempo va de 60 en 60.'],
-      ['Una equivalencia es un 1', 'Una fracción como 1000 m / 1 km vale 1; multiplicar por ella no cambia la cantidad.']
-    ],
-    bloques: [
-      {
-        tiempo: '0–6 min', titulo: 'Ideas clave, parte 1', quien: 'Tú compartes pantalla', ruta: '#m1-ideas-p1', boton: 'Abrir la parte 1',
-        pasos: ['Abre «Ideas clave», elige la parte 1 y pulsa «Presentar».', 'Pasa las diapositivas 1 a 6. En cada una, haz la pregunta y espera su respuesta antes de avanzar.'],
-        diapositivas: 'p1'
-      },
-      {
-        tiempo: '6–26 min', titulo: 'Balanza, retos 1 a 6', quien: 'Él comparte pantalla', ruta: '#m1-despejes', boton: 'Abrir la balanza',
-        pasos: [
-          'En el reto 1, deja que aplique la operación en un solo plato. Cuando la balanza se incline, pregúntale por qué pasó y cómo lo arregla.',
-          'Al terminar cada reto, que lea en voz alta la bitácora de pasos: así se escribe el despeje en el examen.',
-          'Si se traba, pregúntale qué le están haciendo a su variable. El botón «Pista» es el último recurso.'
-        ],
-        preguntas: [
-          ['Reto 1: ¿qué le están haciendo a la t?', 'La multiplican por v; entonces divide entre v en los dos lados.'],
-          ['Reto 4: ¿cuál es la contraria de dividir?', 'Multiplicar: × t en los dos lados.'],
-          ['Reto 6: ¿qué quitas primero, lo que suma o lo que multiplica?', 'Lo que suma: primero − v₀ y después ÷ a.'],
-          ['Al final: ¿qué significa en realidad «lo que multiplica pasa a dividir»?', 'Que divides los dos lados entre lo mismo.']
-        ],
-        ojo: [
-          'En el reto 6, si quiere dividir entre a antes de restar, déjalo: verá que la a no se cancela porque no multiplica a todo el lado. Después, que use «Deshacer».',
-          'Los valores de prueba sirven para convencerlo: con cualquier número, mientras haga lo mismo en los dos platos, la balanza sigue en equilibrio.'
-        ]
-      },
-      {
-        tiempo: '26–32 min', titulo: 'Ideas clave, parte 2', quien: 'Tú compartes pantalla', ruta: '#m1-ideas-p2', boton: 'Abrir la parte 2',
-        pasos: ['Vuelve a «Ideas clave», elige la parte 2 y presenta las diapositivas 7 a 12.', 'Si quieres, deja a la vista la ficha de equivalencias que está debajo de las diapositivas.'],
-        diapositivas: 'p2'
-      },
-      {
-        tiempo: '32–52 min', titulo: 'Mesa de conversión, retos 1 a 7', quien: 'Él comparte pantalla', ruta: '#m1-conversion', boton: 'Abrir la mesa',
-        pasos: [
-          'Antes de cada factor, que diga qué unidad quiere eliminar y en qué piso está.',
-          'Si pone un factor al revés, no lo corrijas: la mesa lo marca en ámbar. Pregúntale qué pasó con las unidades.',
-          'Después del reto 3 (72 km/h a m/s), muéstrale de dónde sale el 3,6: 3600 / 1000 = 3,6.',
-          'En el reto 5 (cm² a m²), deja que caiga en la trampa: la mesa le mostrará que todavía queda un cm.'
-        ],
-        preguntas: [
-          ['¿Por qué 1000 m / 1 km vale 1?', 'Porque arriba y abajo hay la misma distancia.'],
-          ['¿Por qué de km/h a m/s el número se hace más pequeño?', 'Porque 1 m/s es más rápido que 1 km/h (equivale a 3,6 km/h). Con una unidad más grande, el número sale más pequeño.'],
-          ['¿Cuántos cm² tiene 1 m²?', '10 000, porque son 100 · 100.']
-        ],
-        ojo: ['Si quiere usar regla de tres, deja que la compare con el factor en el reto 3: con factores, el procedimiento es siempre el mismo.']
-      },
-      {
-        tiempo: '52–72 min', titulo: 'Práctica, ejercicios 1 a 8', quien: 'Él comparte pantalla y trabaja en papel', ruta: '#m1-practica', boton: 'Abrir la práctica',
-        pasos: [
-          'Que resuelva primero en papel y te muestre la hoja por la cámara; después escribe el resultado.',
-          'Pistas antes que solución. Si comete un error típico, la plataforma se lo explica: pídele que te lo cuente con sus palabras.',
-          'En los ejercicios con opciones, que descarte las incorrectas comprobando con números fáciles.'
-        ]
-      },
-      {
-        tiempo: '72–80 min', titulo: 'Cierre', quien: 'Los dos', asistente: true, boton: 'Abrir el centro de comando IA',
-        pasos: [
-          'Haz las tres preguntas de salida sin mirar la plataforma.',
-          'Déjale de tarea los ejercicios 9 a 14.',
-          'Muéstrale el centro de comando IA: con un ejercicio abierto, copia la plantilla «Estoy trabado» y pégala en ChatGPT o Claude.'
-        ],
-        preguntas: [
-          ['¿Por qué la balanza se inclinó cuando dividiste un solo plato?', 'Porque los dos lados dejaron de valer lo mismo.'],
-          ['¿Cuántos centímetros tiene un metro y por qué?', '100, porque un centímetro es la centésima parte del metro.'],
-          ['¿En qué piso pones la unidad que quieres eliminar?', 'En el contrario al que está.']
-        ]
-      }
-    ],
-    ajustes: [
-      ['Si te falta tiempo', 'Deja el reto 7 de conversión y los ejercicios 7 y 8 para la tarea.'],
-      ['Si te sobra tiempo', 'Usa el modo libre de la balanza: que despeje la m de F = m · a y la a de vf = v₀ + a · t.']
-    ]
-  };
-
-  const notasHtml = d => {
-    const N = d.notas || {};
-    const fila = (etq, txt, clase = '') => (txt ? `<div class="${clase}"><dt>${etq}</dt><dd>${txt}</dd></div>` : '');
-    return `<dl class="notas">${fila('Qué decir', N.decir, 'nt-decir')}${fila('Qué preguntar', N.preguntar)}${fila('Respuesta esperada', N.esperar)}${fila('Ojo', N.ojo, 'nt-ojo')}</dl>`;
-  };
-
-  function montarGuia(cont) {
-    const v = MA.crear('section', 'vista-guia');
-    const hechos = MA.almacen.leer('guia.check', {}) || {};
-    v.innerHTML = `
-      <header class="guia-cabeza">
-        <span class="pildora pildora-ambar">${icono('info')}Para quien da la clase</span>
-        <h1>Guía de la clase 1</h1>
-        <p class="entrada">Unos 80 minutos por videollamada. La teoría va en dos bloques cortos, cada uno justo antes de la herramienta donde se usa. Así no se satura y cada idea se practica apenas se explica.</p>
-      </header>
-      <div class="guia-columnas">
-        <section class="tarjeta">
-          <h2>Antes de la llamada</h2>
-          <ul class="guia-check">${GUIA.antes.map((t, i) => `
-            <li><label><input type="checkbox" id="guia-check-${i}" data-check="${i}" ${hechos[i] ? 'checked' : ''}><span>${t}</span></label></li>`).join('')}
-          </ul>
-        </section>
-        <section class="tarjeta">
-          <h2>Al terminar, tu hermano debe poder</h2>
-          <ol class="guia-objetivos">${GUIA.objetivos.map(t => `<li>${t}</li>`).join('')}</ol>
-        </section>
-      </div>
-      <section class="tarjeta guia-minimo">
-        <h2>Lo mínimo antes de cualquier ejercicio</h2>
-        <p class="texto-2">Son las cinco ideas de las diapositivas. Si alguna no le queda clara, vuelve a ella antes de seguir.</p>
-        <ol>${GUIA.minimo.map(([t, d]) => `<li><b>${t}.</b> ${d}</li>`).join('')}</ol>
-      </section>
-      <h2 class="guia-titulo-linea">Paso a paso</h2>
-      <ol class="guia-linea">
-        ${GUIA.bloques.map(b => `
-          <li class="guia-bloque">
-            <div class="guia-tiempo mono">${b.tiempo}</div>
-            <div class="tarjeta guia-cuerpo">
-              <div class="guia-bloque-cabeza">
-                <h3>${b.titulo}</h3>
-                <span class="pildora">${b.quien}</span>
-              </div>
-              <ul class="guia-pasos">${b.pasos.map(p => `<li>${p}</li>`).join('')}</ul>
-              ${b.diapositivas ? diapositivasDe(b.diapositivas) : ''}
-              ${b.preguntas ? `<div class="guia-preguntas"><h4>Preguntas</h4><dl>${b.preguntas.map(([p, r]) => `<div><dt>${p}</dt><dd>${r}</dd></div>`).join('')}</dl></div>` : ''}
-              ${b.ojo ? `<div class="guia-ojo"><h4>${icono('alerta')}Ojo</h4><ul>${b.ojo.map(o => `<li>${o}</li>`).join('')}</ul></div>` : ''}
-              <div class="fila-botones guia-boton">
-                ${b.asistente ? `<button type="button" class="btn btn-secundario btn-chico" data-abrir-asistente>${icono('chat')}${b.boton}</button>` : `<a class="btn btn-secundario btn-chico" href="${b.ruta}">${b.boton}${icono('flechaD')}</a>`}
-              </div>
-            </div>
-          </li>`).join('')}
-      </ol>
-      <section class="tarjeta guia-ajustes">
-        ${GUIA.ajustes.map(([t, d]) => `<div><h3>${t}</h3><p>${d}</p></div>`).join('')}
-      </section>`;
-    v.addEventListener('change', e => {
-      const c = e.target.closest('[data-check]');
-      if (!c) return;
-      hechos[c.dataset.check] = c.checked;
-      MA.almacen.guardar('guia.check', hechos);
-    });
-    cont.appendChild(v);
-    return v;
-  }
-  function diapositivasDe(parteId) {
-    const p = PARTES.find(x => x.id === parteId);
-    const lista = DIAPOSITIVAS.slice(p.desde, p.hasta + 1);
-    return `
-      <details class="guia-diapos">
-        <summary>${icono('chevD', 'chev')}Notas de las diapositivas ${p.desde + 1} a ${p.hasta + 1}</summary>
-        <ol start="${p.desde + 1}">${lista.map(d => `<li><h4>${d.titulo}</h4>${notasHtml(d)}</li>`).join('')}</ol>
-      </details>`;
-  }
-
-  MA.Clase1 = { DIAPOSITIVAS, PARTES, GUIA, fichaHtml, notasHtml, montarGuia };
+  MA.Clase1 = { DIAPOSITIVAS, PARTES, fichaHtml };
 })();

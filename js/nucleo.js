@@ -164,6 +164,7 @@
     hoja: '<path d="M9 2h6v4H9z"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/>',
     mas: '<path d="M12 5v14M5 12h14"/>',
     pantalla: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    pizarra: '<rect x="2" y="3" width="20" height="13" rx="2"/><path d="M7 21l5-5 5 5M6 8h7M6 11.5h4"/>',
     flechaD: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     flechaI: '<path d="M19 12H5M11 18l-6-6 6-6"/>',
     mano: '<path d="M9 11V6a1.5 1.5 0 0 1 3 0v4M12 10V4.5a1.5 1.5 0 0 1 3 0V10M15 10V6a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-.5a6 6 0 0 1-4.7-2.3L3.3 13.5a1.6 1.6 0 0 1 2.4-2.1L9 14"/>'
@@ -248,6 +249,8 @@
     mt: (...partes) => `<span class="mt">${partes.join(' ')}</span>`,
     q: (valor, unidad) => `<span class="mt"><span class="num">${typeof valor === 'number' ? MA.fmt(valor) : valor}</span>${unidad ? ' <span class="un">' + unidad + '</span>' : ''}</span>`,
     tach: html => `<span class="tachado">${html}</span>`,
+    raiz: html => `<span class="raiz"><span class="raiz-signo">√</span><span class="raiz-rad">${html}</span></span>`,
+    cuad: html => `${html}<sup class="exp">2</sup>`,
     bloque: html => `<div class="mt mt-bloque">${html}</div>`
   };
   f.igual = f.op('=');

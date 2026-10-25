@@ -1,8 +1,9 @@
 /* =====================================================================
    CENTRO DE COMANDO IA · asistente de autonomía
    ---------------------------------------------------------------------
-   Plantillas listas para copiar en ChatGPT o Claude cuando estudie
-   solo. Están escritas para que la IA dé pistas y revise, no para que
+   Plantillas listas para copiar en ChatGPT o Claude al estudiar solo.
+   Las plantillas son la voz del estudiante hablándole a la IA (de tú);
+   están escritas para que la IA dé pistas y revise, no para que
    resuelva. Lo que va entre corchetes se reemplaza; si hay un ejercicio
    abierto en la práctica, se puede insertar automáticamente.
    ===================================================================== */
@@ -10,20 +11,20 @@
   'use strict';
   const MA = window.MA;
   const { $, $$, icono, esc } = MA;
-  const HUECO_EJERCICIO = '[pega aquí el enunciado del ejercicio]';
+  const HUECO_EJERCICIO = '[pegar aquí el enunciado del ejercicio]';
 
   const PLANTILLAS = [
     {
       id: 'pista',
       titulo: 'Estoy trabado: dame una pista',
-      cuando: 'Cuando no sabes cómo seguir con un ejercicio.',
-      texto: `Actúa como mi tutor de matemáticas y física. Me estoy preparando para el examen de admisión a Ingeniería Aeronáutica y llevo varios años sin estudiar, así que explícame con palabras sencillas.
+      cuando: 'Cuando no se sabe cómo seguir con un ejercicio.',
+      texto: `Hola. Me estoy preparando para el examen de admisión a Ingeniería Aeronáutica y llevo varios años sin estudiar, así que explícame con palabras sencillas. Quiero que actúes como mi tutor de matemáticas y física.
 
 Este es el ejercicio:
 ${HUECO_EJERCICIO}
 
 Esto es lo que intenté (aunque esté mal):
-[escribe tus pasos o en qué parte te trabaste]
+[escribir mis pasos o en qué parte me trabé]
 
 Reglas importantes:
 1. No me des la respuesta final ni resuelvas el ejercicio completo.
@@ -34,33 +35,33 @@ Reglas importantes:
     {
       id: 'revisar',
       titulo: 'Revisa mi procedimiento',
-      cuando: 'Cuando ya tienes un resultado y quieres saber si vas bien.',
+      cuando: 'Cuando ya hay un resultado y se quiere saber si va bien.',
       texto: `Resolví este ejercicio y quiero que revises mi procedimiento como lo haría un buen profesor.
 
 Ejercicio:
 ${HUECO_EJERCICIO}
 
 Mi procedimiento, paso a paso:
-[copia tus pasos tal como los escribiste]
+[copiar mis pasos tal como los escribí]
 
-Mi respuesta final: [tu resultado con unidades]
+Mi respuesta final: [mi resultado con unidades]
 
 Reglas:
 1. No me muestres la solución correcta.
 2. Si hay un error, dime solo en qué paso está y de qué tipo es (despeje, signos, unidades o cálculo), y hazme una pregunta que me ayude a encontrarlo yo.
-3. Si todo está bien, dímelo y propónme un ejercicio parecido pero un poco más difícil, sin la solución.`
+3. Si todo está bien, dímelo y proponme un ejercicio parecido pero un poco más difícil, sin la solución.`
     },
     {
       id: 'concepto',
       titulo: 'No entiendo el concepto',
       cuando: 'Cuando lo que no cuadra es la idea de fondo, no un ejercicio.',
-      texto: `No entiendo este tema: [escribe el tema; por ejemplo, por qué al despejar se divide en los dos lados, o cómo acomodar los factores de conversión].
+      texto: `No entiendo este tema: [escribir el tema; por ejemplo, por qué al despejar se divide en los dos lados, o cómo acomodar los factores de conversión].
 
 Me surgió la duda con este ejercicio:
 ${HUECO_EJERCICIO}
 
 Explícamelo así:
-1. Primero, con una analogía de la vida diaria (una balanza, dinero, recetas de cocina).
+1. Primero, con una analogía de la vida diaria (una balanza, plata, recetas de cocina).
 2. Luego, con un ejemplo resuelto paso a paso, distinto a mi ejercicio, explicando el porqué de cada paso.
 3. Al final, dame un ejercicio parecido para que yo lo resuelva solo. No me des la solución hasta que yo te responda.
 
@@ -103,7 +104,7 @@ Usa frases cortas y palabras sencillas. Si usas un término técnico, explícalo
     $('input', ctx).checked = hay && st.incluir;
     $('.as-contexto-texto', ctx).innerHTML = hay
       ? `Insertar el <b>ejercicio ${st.ejercicio.numero} de la práctica</b> en las plantillas.`
-      : 'Cuando abras un ejercicio de la práctica, podrás insertarlo aquí automáticamente.';
+      : 'Al abrir un ejercicio de la práctica, se puede insertar aquí automáticamente.';
     $$('.plantilla', raiz).forEach(d => d.addEventListener('toggle', () => {
       if (d.open) {
         st.abierta = d.dataset.id;
@@ -120,12 +121,12 @@ Usa frases cortas y palabras sencillas. Si usas un término técnico, explícalo
         <span class="as-icono">${icono('chat')}</span>
         <div>
           <h2>Centro de comando IA</h2>
-          <p>Asistente de autonomía para cuando estudies solo.</p>
+          <p>Asistente de autonomía para estudiar solo.</p>
         </div>
         <button type="button" class="btn-icono" data-cerrar aria-label="Cerrar el centro de comando">${icono('cerrar')}</button>
       </div>
       <div class="as-cuerpo">
-        <p class="as-intro">Si te trabas, copia una plantilla, completa lo que está entre corchetes y pégala en ChatGPT o Claude. Están escritas para que la IA te dé <b>pistas</b>, no la respuesta: así sigues aprendiendo tú.</p>
+        <p class="as-intro">Para cuando algo no sale: se copia una plantilla, se completa lo que está entre corchetes y se pega en ChatGPT o Claude. Están escritas para que la IA dé <b>pistas</b>, no la respuesta.</p>
         <label class="as-contexto">
           <input type="checkbox" id="as-incluir-ejercicio">
           <span class="as-contexto-texto"></span>
@@ -134,9 +135,9 @@ Usa frases cortas y palabras sencillas. Si usas un término técnico, explícalo
         <div class="as-reglas">
           <h3>Tres reglas para usar la IA</h3>
           <ol>
-            <li>Pide una pista a la vez y vuelve a intentarlo antes de pedir otra.</li>
-            <li>Si la IA te da la respuesta completa, dile: «No me des la respuesta, solo una pista».</li>
-            <li>Verifica siempre aquí: la IA también se equivoca, sobre todo en las cuentas.</li>
+            <li>Pedir una pista a la vez y volver a intentarlo antes de pedir otra.</li>
+            <li>Si la IA da la respuesta completa, decirle: «No me des la respuesta, solo una pista».</li>
+            <li>Verificar siempre aquí: la IA también se equivoca, sobre todo en las cuentas.</li>
           </ol>
           <div class="as-enlaces">
             <a href="https://chatgpt.com/" target="_blank" rel="noopener">${icono('externo')}Abrir ChatGPT</a>
@@ -152,7 +153,7 @@ Usa frases cortas y palabras sencillas. Si usas un término técnico, explícalo
         const p = PLANTILLAS.find(x => x.id === b.dataset.copiar);
         const ok = await MA.copiarTexto(textoFinal(p));
         if (ok) {
-          MA.aviso('Plantilla copiada. Pégala en ChatGPT o Claude.');
+          MA.aviso('Plantilla copiada, lista para pegar en ChatGPT o Claude.');
           b.innerHTML = `${icono('check')}<span>Copiada</span>`;
           setTimeout(() => { b.innerHTML = `${icono('copiar')}<span>Copiar plantilla</span>`; }, 2200);
         } else {
@@ -163,7 +164,7 @@ Usa frases cortas y palabras sencillas. Si usas un término técnico, explícalo
           const sel = window.getSelection();
           sel.removeAllRanges();
           sel.addRange(rango);
-          MA.aviso('Texto seleccionado: cópialo con Ctrl + C.', 'info');
+          MA.aviso('Texto seleccionado: se copia con Ctrl + C.', 'info');
         }
         return;
       }

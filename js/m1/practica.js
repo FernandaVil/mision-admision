@@ -53,7 +53,7 @@
       </article>
       <section class="tarjeta pr-borrador" aria-label="Borrador">
         <div class="pr-borrador-cabeza">
-          <div><h4>Borrador</h4><p class="texto-3">Escribe con el dedo, el lápiz o el mouse. Cada ejercicio tiene su propia hoja (se borra al cerrar la página).</p></div>
+          <div><h4>Borrador</h4><p class="texto-3">Se puede escribir con el dedo, el lápiz o el mouse. Cada ejercicio tiene su propia hoja (se borra al cerrar la página).</p></div>
           <div class="segmentado" role="group" aria-label="Herramientas del borrador">
             <button type="button" class="segmento" data-trazo="lapiz" aria-pressed="true">${icono('lapiz')}Lápiz</button>
             <button type="button" class="segmento" data-trazo="goma" aria-pressed="false">${icono('goma')}Borrador</button>
@@ -103,7 +103,7 @@
       const ej = lista[actual], d = datosDe(ej);
       $('.pr-cabeza', raiz).innerHTML = `
         <span class="etiqueta">Ejercicio ${actual + 1} de ${lista.length}</span>
-        <span class="pildora ${ej.nivel === 'examen' ? 'pildora-primaria' : ''}">${C.NIVELES[ej.nivel]}</span>
+        <span class="pildora ${ej.nivel === 'examen' ? 'pildora-primaria' : ej.nivel === 'reto' ? 'pildora-ambar' : ''}">${C.NIVELES[ej.nivel]}</span>
         <span class="pildora">${C.TEMAS[ej.tema]}</span>
         ${d.resuelto ? `<span class="pildora pildora-exito pr-estado">${icono('check')}Resuelto</span>` : ''}`;
       $('.pr-enunciado', raiz).innerHTML = `<p>${ej.enunciado}</p>`;
@@ -116,10 +116,10 @@
         if (d.resuelto) $(`.pr-opcion[data-k="${ej.correcta}"]`, resp).classList.add('correcta');
       } else {
         resp.innerHTML = `
-          <label class="pr-etiqueta-campo" for="pr-campo">Tu respuesta</label>
+          <label class="pr-etiqueta-campo" for="pr-campo">Respuesta</label>
           <div class="pr-fila-campo">
             <span class="campo-grupo">
-              <input id="pr-campo" class="campo" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Escribe el número">
+              <input id="pr-campo" class="campo" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Número">
               ${ej.unidad ? `<span class="campo-unidad">${ej.unidad}</span>` : ''}
             </span>
             <button type="button" class="btn" data-accion="comprobar">Comprobar</button>
@@ -132,7 +132,7 @@
 
       fb.className = 'mensaje pr-feedback';
       fb.innerHTML = '';
-      if (d.resuelto) ponerMensaje('ok', 'Ya resolviste este ejercicio.', 'Puedes repasarlo o seguir con el siguiente.');
+      if (d.resuelto) ponerMensaje('ok', 'Ejercicio resuelto.', 'Se puede repasar o seguir con el siguiente.');
 
       $('.pr-pistas', raiz).innerHTML = ej.pistas.slice(0, d.pistas).map((p, k) => `<li><b>Pista ${k + 1}.</b> ${p}</li>`).join('');
       pintarBotonPista(ej, d);
@@ -159,7 +159,7 @@
       const b = $('[data-accion="pista"]', raiz);
       const quedan = d.pistas < ej.pistas.length;
       b.disabled = !quedan;
-      $('span', b).textContent = quedan ? `Pista ${d.pistas + 1} de ${ej.pistas.length}` : 'Ya viste todas las pistas';
+      $('span', b).textContent = quedan ? `Pista ${d.pistas + 1} de ${ej.pistas.length}` : 'No hay más pistas';
     }
 
     function acierto(ej, d) {
@@ -167,7 +167,7 @@
       d.resuelto = true;
       guardar();
       MA.progreso.marcar('m1.prac.' + ej.id);
-      ponerMensaje('ok', 'Correcto.', primera ? 'A la primera y sin ayudas: muy bien.' : 'Bien hecho. Lo importante es que entiendas el procedimiento; si quieres, compáralo con la solución.');
+      ponerMensaje('ok', '¡Correcto!', primera ? 'A la primera y sin ayudas: ¡muy bien!' : '¡Bien hecho! Lo importante es entender el procedimiento: vale la pena compararlo con la solución.');
       const sig = $('[data-accion="siguiente"]', raiz);
       sig.classList.remove('btn-secundario');
       $('.pr-cabeza', raiz).insertAdjacentHTML('beforeend', $('.pr-estado', raiz) ? '' : `<span class="pildora pildora-exito pr-estado">${icono('check')}Resuelto</span>`);
@@ -176,24 +176,24 @@
     function fallo(ej, d, texto) {
       d.intentos++;
       guardar();
-      const extra = d.intentos >= 2 && d.pistas < ej.pistas.length ? ' Si quieres, pide una pista: para eso están.' : '';
+      const extra = d.intentos >= 2 && d.pistas < ej.pistas.length ? ' Una pista puede ayudar: para eso están.' : '';
       ponerMensaje('error', 'Todavía no.', texto + extra);
     }
     function comprobar() {
       const ej = lista[actual], d = datosDe(ej);
       const campo = $('#pr-campo', raiz);
       const cands = MA.leerNumeros(campo.value);
-      if (!cands.length) { ponerMensaje('aviso', 'Escribe solo el número.', 'Sin unidades. Ejemplos válidos: 20 · 2,5 · 1/3'); campo.focus(); return; }
+      if (!cands.length) { ponerMensaje('aviso', 'Solo el número.', 'Sin unidades. Ejemplos válidos: 20 · 2,5 · 1/3'); campo.focus(); return; }
       if (cands.some(c => MA.casiIgual(c, ej.respuesta, ej.tolerancia || 0.01))) { acierto(ej, d); return; }
       const err = (ej.errores || []).find(er => cands.some(c => MA.casiIgual(c, er.valor, 0.01)));
-      fallo(ej, d, err ? err.msg : 'Revisa el planteamiento: ¿se cancelan bien las unidades? ¿El tamaño del número tiene sentido?');
+      fallo(ej, d, err ? err.msg : 'Conviene revisar el planteamiento: ¿se cancelan bien las unidades? ¿El tamaño del número tiene sentido?');
     }
     function elegirOpcion(btn) {
       const ej = lista[actual], d = datosDe(ej);
       const k = Number(btn.dataset.k);
       $$('.pr-opcion', raiz).forEach(b => b.classList.remove('incorrecta'));
       if (k === ej.correcta) { btn.classList.add('correcta'); acierto(ej, d); }
-      else { btn.classList.add('incorrecta'); fallo(ej, d, (ej.porQue && ej.porQue[k]) || 'Esa no es. Compruébala reemplazando números sencillos.'); }
+      else { btn.classList.add('incorrecta'); fallo(ej, d, (ej.porQue && ej.porQue[k]) || 'Esa no es. Se puede comprobar reemplazando números sencillos.'); }
     }
 
     /* ---------- Borrador ---------- */

@@ -75,7 +75,7 @@
         <div class="bz-reto-texto"></div>
         <div class="bz-libre" hidden>
           <label>Fórmula <select class="bz-sel-formula" id="bz-sel-formula"></select></label>
-          <label>Variable que quieres dejar sola <select class="bz-sel-meta" id="bz-sel-meta"></select></label>
+          <label>Variable a despejar <select class="bz-sel-meta" id="bz-sel-meta"></select></label>
         </div>
       </div>
       <div class="bz-escenario">
@@ -105,7 +105,7 @@
       <div class="bz-inferior">
         <section class="bz-valores" aria-label="Valores de prueba">
           <h4>Valores de prueba</h4>
-          <p class="texto-3">Mueve los valores: mientras hagas lo mismo en los dos platos, la balanza sigue en equilibrio con cualquier número.</p>
+          <p class="texto-3">Al mover los valores, la balanza sigue en equilibrio con cualquier número, siempre que se haga lo mismo en los dos platos.</p>
           <div class="bz-deslizadores"></div>
         </section>
         <section class="bz-bitacora" aria-label="Bitácora de pasos">
@@ -181,7 +181,7 @@
       st.pendiente = null; st.enMano = null; st.resuelto = false; st.historial = [];
       st.bitacora = [{ etiqueta: 'Inicio', html: ecHtml(st.ec) }];
       $('.bz-exito', raiz).hidden = true;
-      ponerMensaje('info', 'Elige una operación y aplícala a un plato.', 'Toca la operación y luego el plato, o arrástrala hasta el plato.');
+      ponerMensaje('info', 'Elegir una operación y aplicarla a un plato.', 'Se toca la operación y luego el plato, o se arrastra hasta el plato.');
       refrescar(true);
     }
     function cargarReto(id) {
@@ -189,7 +189,7 @@
       st.retoId = id;
       $('.bz-libre', raiz).hidden = true;
       $('.bz-reto-texto', raiz).innerHTML = `
-        <div class="bz-meta"><span class="pildora pildora-primaria">${icono('objetivo')}Meta: deja sola la <span class="vr">${r.meta === 'v0' ? 'v<sub>0</sub>' : C.FORMULAS[r.formula].vars[r.meta].html}</span></span></div>
+        <div class="bz-meta"><span class="pildora pildora-primaria">${icono('objetivo')}Meta: dejar sola la <span class="vr">${r.meta === 'v0' ? 'v<sub>0</sub>' : C.FORMULAS[r.formula].vars[r.meta].html}</span></span></div>
         <h4>Reto ${C.RETOS_BALANZA.indexOf(r) + 1}. ${r.titulo}</h4>
         <p>${r.contexto}</p>`;
       preparar(r.formula, r.meta);
@@ -209,9 +209,9 @@
       selM.innerHTML = posibles.map(k => `<option value="${k}">${plano(k)} · ${F.vars[k].nombre}</option>`).join('');
       selM.value = meta;
       $('.bz-reto-texto', raiz).innerHTML = `
-        <div class="bz-meta"><span class="pildora pildora-primaria">${icono('objetivo')}Meta: deja sola la <span class="vr">${F.vars[meta].html}</span></span></div>
+        <div class="bz-meta"><span class="pildora pildora-primaria">${icono('objetivo')}Meta: dejar sola la <span class="vr">${F.vars[meta].html}</span></span></div>
         <h4>Modo libre</h4>
-        <p>Elige cualquier fórmula y la variable que quieres despejar.</p>`;
+        <p>Cualquier fórmula, cualquier variable.</p>`;
       preparar(formulaId, meta);
       pintarRetos();
     }
@@ -295,8 +295,8 @@
         plato[l].classList.toggle('aplicado', !!(st.pendiente && st.pendiente.lado === l));
         plato[l].setAttribute('aria-disabled', String(!valido));
         const aplicar = $('.bz-aplicar', plato[l]);
-        if (st.pendiente && st.pendiente.lado !== l) aplicar.innerHTML = `Aplica ${opHtml(st.pendiente.op)} aquí también`;
-        else if (st.pendiente) aplicar.innerHTML = `Aplicaste ${opHtml(st.pendiente.op)}`;
+        if (st.pendiente && st.pendiente.lado !== l) aplicar.innerHTML = `Aplicar ${opHtml(st.pendiente.op)} aquí también`;
+        else if (st.pendiente) aplicar.innerHTML = `${opHtml(st.pendiente.op)} aplicado`;
         else if (st.enMano) aplicar.innerHTML = `Aplicar ${opHtml(st.enMano)} aquí`;
         else aplicar.innerHTML = '';
         plato[l].setAttribute('aria-label', `Plato ${LADO_TXT[l]}: ${$('.bz-expr', plato[l]).textContent.replace(/\s+/g, ' ').trim()}${valido ? '. Aplicar la operación aquí' : ''}`);
@@ -357,12 +357,12 @@
     function elegir(op) {
       if (st.resuelto) return;
       if (st.pendiente) {
-        if (mismaOp(op, st.pendiente.op)) ponerMensaje('aviso', `Ahora toca el plato ${LADO_TXT[otro(st.pendiente.lado)]}.`, 'Ahí falta aplicar la misma operación.');
+        if (mismaOp(op, st.pendiente.op)) ponerMensaje('aviso', `Falta el plato ${LADO_TXT[otro(st.pendiente.lado)]}.`, 'Ahí falta aplicar la misma operación.');
         return;
       }
       st.enMano = mismaOp(op, st.enMano) ? null : op;
-      if (st.enMano) ponerMensaje('info', `Tienes ${opHtml(op)} en la mano.`, 'Toca el plato donde quieres aplicarla.');
-      else ponerMensaje('info', 'Elige una operación y aplícala a un plato.', 'Toca la operación y luego el plato, o arrástrala hasta el plato.');
+      if (st.enMano) ponerMensaje('info', `${opHtml(op)} en la mano.`, 'Ahora, tocar el plato donde se quiere aplicar.');
+      else ponerMensaje('info', 'Elegir una operación y aplicarla a un plato.', 'Se toca la operación y luego el plato, o se arrastra hasta el plato.');
       refrescar();
     }
 
@@ -391,7 +391,7 @@
 
     function aplicarEn(lado) {
       if (!platoValido(lado)) {
-        if (!st.enMano && !st.pendiente && !st.resuelto) ponerMensaje('info', 'Primero elige una operación.', 'Están debajo de la balanza: multiplicar, dividir, sumar o restar.');
+        if (!st.enMano && !st.pendiente && !st.resuelto) ponerMensaje('info', 'Primero hay que elegir una operación.', 'Están debajo de la balanza: multiplicar, dividir, sumar o restar.');
         return;
       }
       const op = st.pendiente ? st.pendiente.op : st.enMano;
@@ -406,7 +406,7 @@
         animarPlato(lado, intermedio);
         const val = valoresCompletos();
         ponerMensaje('aviso', 'La balanza se desequilibró.',
-          `Aplicaste ${opHtml(op)} solo al plato ${LADO_TXT[lado]}: ahora ${lectura('izq', val).texto} no es igual a ${lectura('der', val).texto}. Para recuperar el equilibrio, aplica ${opHtml(op)} también al plato ${LADO_TXT[otro(lado)]}.`);
+          `${opHtml(op)} se aplicó solo al plato ${LADO_TXT[lado]}: ahora ${lectura('izq', val).texto} no es igual a ${lectura('der', val).texto}. Para recuperar el equilibrio, falta aplicar ${opHtml(op)} también al plato ${LADO_TXT[otro(lado)]}.`);
         return;
       }
       const cancelo = st.pendiente.cancelo || !!intermedio;
@@ -420,7 +420,7 @@
       refrescar();
       animarPlato(lado, intermedio);
       if (!comprobarMeta()) {
-        ponerMensaje('ok', 'Equilibrio recuperado.', `Hiciste lo mismo en los dos lados, así que la igualdad sigue siendo cierta.${cancelo ? ' ' + nota : ''}`);
+        ponerMensaje('ok', 'Equilibrio recuperado.', `Se hizo lo mismo en los dos lados, así que la igualdad sigue siendo cierta.${cancelo ? ' ' + nota : ''}`);
       }
     }
 
@@ -428,9 +428,9 @@
       if (st.pendiente || st.resuelto) return;
       guardar();
       st.ec = { izq: st.ec.der, der: st.ec.izq };
-      st.bitacora.push({ etiqueta: `Paso ${st.bitacora.length} · intercambias los lados`, html: ecHtml(st.ec), nota: 'Si a = b, también b = a.' });
+      st.bitacora.push({ etiqueta: `Paso ${st.bitacora.length} · se intercambian los lados`, html: ecHtml(st.ec), nota: 'Si a = b, también b = a.' });
       refrescar();
-      if (!comprobarMeta()) ponerMensaje('info', 'Lados intercambiados.', 'La balanza sigue igual: solo cambiaste qué plato miras primero.');
+      if (!comprobarMeta()) ponerMensaje('info', 'Lados intercambiados.', 'La balanza sigue igual: solo cambia qué plato se mira primero.');
     }
 
     function deshacer() {
@@ -443,28 +443,28 @@
       st.resuelto = false;
       st.animando = { izq: false, der: false };
       $('.bz-exito', raiz).hidden = true;
-      if (st.pendiente) ponerMensaje('aviso', 'Volviste un paso atrás.', `Falta aplicar ${opHtml(st.pendiente.op)} al plato ${LADO_TXT[otro(st.pendiente.lado)]}.`);
-      else ponerMensaje('info', 'Volviste un paso atrás.', 'Elige otra operación.');
+      if (st.pendiente) ponerMensaje('aviso', 'Un paso atrás.', `Falta aplicar ${opHtml(st.pendiente.op)} al plato ${LADO_TXT[otro(st.pendiente.lado)]}.`);
+      else ponerMensaje('info', 'Un paso atrás.', 'Se puede elegir otra operación.');
       refrescar();
     }
 
     function pista() {
       if (st.pendiente) {
-        ponerMensaje('aviso', 'Primero termina la operación.', `Aplica ${opHtml(st.pendiente.op)} también al plato ${LADO_TXT[otro(st.pendiente.lado)]}.`);
+        ponerMensaje('aviso', 'Primero hay que terminar la operación.', `Falta aplicar ${opHtml(st.pendiente.op)} también al plato ${LADO_TXT[otro(st.pendiente.lado)]}.`);
         return;
       }
       const r = A.siguientePaso(st.ec, st.meta, st.ops);
       const M = `<span class="vr">${st.N[st.meta]}</span>`;
-      if (!r) { ponerMensaje('aviso', 'Este camino se complicó.', 'Usa «Deshacer» hasta volver a un paso conocido o reinicia la balanza.'); return; }
-      if (r.listo) { ponerMensaje('info', 'Ya está despejada.', 'Si quieres leerla mejor, intercambia los lados.'); return; }
+      if (!r) { ponerMensaje('aviso', 'Este camino se complicó.', 'Con «Deshacer» se vuelve a un paso conocido; también se puede reiniciar la balanza.'); return; }
+      if (r.listo) { ponerMensaje('info', 'Ya está despejada.', 'Para leerla mejor, se pueden intercambiar los lados.'); return; }
       const op = r.op, X = `<span class="vr">${st.N[op.v]}</span>`;
       let texto;
-      if (op.v === st.meta && op.tipo === 'mul') texto = `Tu meta, ${M}, está abajo, dividiendo. Multiplica los dos platos por ${M} para subirla.`;
-      else if (op.tipo === 'div') texto = `La ${X} está multiplicando. Lo contrario de multiplicar es dividir: aplica ${opHtml(op)} en los dos platos.`;
-      else if (op.tipo === 'mul') texto = `La ${X} está dividiendo. Lo contrario de dividir es multiplicar: aplica ${opHtml(op)} en los dos platos.`;
-      else if (op.tipo === 'res') texto = `La ${X} está sumando. Lo contrario de sumar es restar: aplica ${opHtml(op)} en los dos platos.`;
-      else texto = `La ${X} está restando. Lo contrario de restar es sumar: aplica ${opHtml(op)} en los dos platos.`;
-      ponerMensaje('info', r.pasos > 1 ? `Te faltan ${r.pasos} pasos.` : 'Te falta un paso.', texto);
+      if (op.v === st.meta && op.tipo === 'mul') texto = `La meta, ${M}, está abajo, dividiendo. Al multiplicar los dos platos por ${M}, sube.`;
+      else if (op.tipo === 'div') texto = `La ${X} está multiplicando. Lo contrario de multiplicar es dividir: hay que aplicar ${opHtml(op)} en los dos platos.`;
+      else if (op.tipo === 'mul') texto = `La ${X} está dividiendo. Lo contrario de dividir es multiplicar: hay que aplicar ${opHtml(op)} en los dos platos.`;
+      else if (op.tipo === 'res') texto = `La ${X} está sumando. Lo contrario de sumar es restar: hay que aplicar ${opHtml(op)} en los dos platos.`;
+      else texto = `La ${X} está restando. Lo contrario de restar es sumar: hay que aplicar ${opHtml(op)} en los dos platos.`;
+      ponerMensaje('info', r.pasos > 1 ? `Faltan ${r.pasos} pasos.` : 'Falta un paso.', texto);
       refrescar();
       const chip = $(`.bz-op[data-tipo="${op.tipo}"][data-v="${op.v}"]`, raiz);
       if (chip) chip.classList.add('sugerida');
@@ -489,10 +489,10 @@
       const exito = $('.bz-exito', raiz);
       exito.hidden = false;
       exito.innerHTML = `
-        <div class="bz-exito-cabeza">${icono('checkCirculo')}<div><span class="etiqueta">Despeje completo</span><h4>Dejaste sola la ${M}</h4></div></div>
+        <div class="bz-exito-cabeza">${icono('checkCirculo')}<div><span class="etiqueta">Despeje completo</span><h4>La ${M} quedó sola</h4></div></div>
         <div class="bz-exito-formula mt">${M} <span class="op">=</span> ${A.ladoHtml(otroLado, st.N)}</div>
-        <p><b>Comprobación con tus valores de prueba:</b> <span class="mt">${M} <span class="op">=</span> ${A.ladoValoresHtml(otroLado, valores)} <span class="op">=</span> <span class="num">${MA.fmtSig(resultado, 4)}</span> <span class="un">${unidad}</span></span>, que es justo el valor de ${M} en el deslizador.</p>
-        ${atajos.length ? `<p class="texto-2">El atajo del colegio, ${atajos.join(' y ')}, es exactamente lo que acabas de hacer: aplicar la misma operación a los dos lados.</p>` : ''}
+        <p><b>Comprobación con los valores de prueba:</b> <span class="mt">${M} <span class="op">=</span> ${A.ladoValoresHtml(otroLado, valores)} <span class="op">=</span> <span class="num">${MA.fmtSig(resultado, 4)}</span> <span class="un">${unidad}</span></span>, que es justo el valor de ${M} en el deslizador.</p>
+        ${atajos.length ? `<p class="texto-2">El atajo del colegio, ${atajos.join(' y ')}, es exactamente lo que se acaba de hacer: aplicar la misma operación a los dos lados.</p>` : ''}
         <div class="fila-botones"></div>`;
       const botones = $('.fila-botones', exito);
       const idx = C.RETOS_BALANZA.findIndex(r => r.id === st.retoId);
@@ -505,7 +505,7 @@
       }
       if (st.origen) botones.insertAdjacentHTML('beforeend', `<button type="button" class="btn" data-ir="origen">${icono('flechaI')}Volver al ejercicio ${st.origen.numero}</button>`);
       botones.insertAdjacentHTML('beforeend', `<button type="button" class="btn btn-secundario" data-accion="reiniciar">${icono('reiniciar')}Repetir</button>`);
-      ponerMensaje('ok', '¡Lo lograste!', `La ${M} quedó sola y la balanza está en equilibrio.`);
+      ponerMensaje('ok', '¡Muy bien!', `La ${M} quedó sola y la balanza está en equilibrio.`);
       refrescar();
       if (window.innerWidth < 900) exito.scrollIntoView({ behavior: reducido ? 'auto' : 'smooth', block: 'nearest' });
       return true;

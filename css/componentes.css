@@ -312,3 +312,46 @@
 .as-enlaces { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 .as-enlaces a { font-size: 0.85rem; display: inline-flex; align-items: center; gap: 4px; }
 .as-enlaces svg { width: 14px; height: 14px; }
+
+/* ---------- Pizarrón (hoja en blanco y barra de herramientas de dibujo) ---------- */
+.pizarron {
+  position: fixed; inset: 0; z-index: 95;
+  display: flex; flex-direction: column;
+  background: var(--fondo);
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+.pz-barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  padding: 10px 16px; background: var(--superficie); border-bottom: 1px solid var(--borde);
+}
+.pz-titulo { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.pz-titulo svg { width: 20px; height: 20px; color: var(--primario); }
+.pz-herramientas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-right: auto; }
+.pz-grupo { display: inline-flex; align-items: center; gap: 4px; }
+.pz-color {
+  width: 32px; height: 32px; padding: 0; display: grid; place-items: center;
+  border: 2px solid var(--borde); border-radius: 50%; background: var(--superficie);
+}
+.pz-color span { width: 18px; height: 18px; border-radius: 50%; display: block; }
+.pz-color[aria-pressed="true"] { border-color: var(--primario); box-shadow: var(--foco); }
+.pz-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 32px; padding: 0 10px;
+  border: 1px solid var(--borde); border-radius: 8px;
+  background: var(--superficie); color: var(--texto-2); font-size: 0.85rem;
+}
+.pz-btn svg { width: 16px; height: 16px; }
+.pz-btn:hover { color: var(--texto); border-color: var(--borde-fuerte); }
+.pz-btn[aria-pressed="true"] { background: var(--primario-suave); border-color: var(--primario); color: var(--primario); }
+.pz-hoja {
+  flex: 1; min-height: 0; margin: 12px;
+  border: 1px solid var(--borde); border-radius: var(--radio); overflow: hidden;
+  background-color: var(--superficie);
+  background-image:
+    linear-gradient(var(--cuadricula) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cuadricula) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.pz-hoja canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+body.con-pizarron { overflow: hidden; }
+@media (max-width: 640px) { .pz-btn span { display: none; } .pz-barra { padding: 8px 12px; } .pz-hoja { margin: 8px; } }

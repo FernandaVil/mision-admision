@@ -2,7 +2,7 @@
    PLATAFORMA · rutas, navegación, tema, cajones y panel general
    Rutas (anclas simples, para que también funcionen como enlace directo):
      #inicio · #m1 · #m1-ideas · #m1-ideas-p2 · #m1-despejes ·
-     #m1-conversion · #m1-practica · #m2 … #m6 · #guia (guía del tutor)
+     #m1-conversion · #m1-practica · #m2 … #m6
    ===================================================================== */
 (function () {
   'use strict';
@@ -59,7 +59,7 @@
     const p1 = vm ? vm.progreso() : null;
     $('#lateral').innerHTML = `
       <button type="button" class="btn-icono lat-cerrar" data-cerrar aria-label="Cerrar el menú">${icono('cerrar')}</button>
-      <div class="lat-titulo">Tu preparación</div>
+      <div class="lat-titulo">Preparación</div>
       <a class="nav-item ${ruta.mod === 'inicio' ? 'activo' : ''}" href="#inicio" ${ruta.mod === 'inicio' ? 'aria-current="page"' : ''}>
         <span class="nav-num">${icono('objetivo')}</span>
         <span class="nav-nombre">Panel general</span>
@@ -83,7 +83,7 @@
           </a>${sub}`;
       }).join('')}
       <div class="lat-pie">
-        <p>Tu avance se guarda solo en este dispositivo.</p>
+        <p>El avance se guarda solo en este dispositivo.</p>
         <div class="lat-reinicio"><button type="button" data-reiniciar>Borrar mi progreso</button></div>
       </div>`;
   }
@@ -107,8 +107,8 @@
       <div class="tarjeta portada">
         <div>
           <span class="etiqueta">Panel general</span>
-          <h1>Tu preparación para el examen de admisión</h1>
-          <p class="entrada">Seis módulos, de la base hacia el examen. Empieza por el módulo 1: despejar y convertir unidades es la base de toda la física y la química que vienen después.</p>
+          <h1>Preparación para el examen de admisión</h1>
+          <p class="entrada">Seis módulos, de la base hacia el examen. El punto de partida es el módulo 1: despejar y convertir unidades es la base de toda la física y la química que vienen después.</p>
           <div class="fila-botones">
             <a class="btn" href="#m1">Continuar con el módulo 1${icono('flechaD')}</a>
             <button type="button" class="btn btn-secundario" data-abrir-asistente>${icono('chat')}Centro de comando IA</button>
@@ -134,9 +134,9 @@
       <section class="seccion">
         <div class="seccion-cabeza"><h2>Cómo estudiar aquí</h2></div>
         <div class="consejos">
-          <div class="tarjeta"><h3>${icono('balanza')}Entiende antes de memorizar</h3><p>Cada tema empieza con una herramienta que puedes mover. Juega con ella hasta que puedas explicar por qué funciona.</p></div>
-          <div class="tarjeta"><h3>${icono('hoja')}Practica como en el examen</h3><p>Sin calculadora y con papel. Pide pistas en orden; la solución completa es el último recurso.</p></div>
-          <div class="tarjeta"><h3>${icono('chat')}Usa la IA como tutor</h3><p>Cuando estudies solo, las plantillas del centro de comando hacen que la IA te guíe sin darte la respuesta.</p></div>
+          <div class="tarjeta"><h3>${icono('balanza')}Entender antes de memorizar</h3><p>Cada tema empieza con una herramienta que se puede mover. La idea es probarla hasta poder explicar por qué funciona.</p></div>
+          <div class="tarjeta"><h3>${icono('hoja')}Practicar como en el examen</h3><p>Sin calculadora y con papel. Las pistas se piden en orden; la solución completa es el último recurso.</p></div>
+          <div class="tarjeta"><h3>${icono('chat')}Usar la IA como tutor</h3><p>Para estudiar solo, las plantillas del centro de comando hacen que la IA guíe sin dar la respuesta.</p></div>
         </div>
       </section>`;
     return v;
@@ -158,12 +158,12 @@
       <p class="entrada">${m.resumen}</p>
       <div class="tarjeta">
         <span class="pildora">${icono('reloj')}En preparación</span>
-        <h3 style="margin-top:12px">Lo que verás en este módulo</h3>
+        <h3 style="margin-top:12px">Lo que trae este módulo</h3>
         <ul class="temario">${m.temario.map(t => `<li>${t}</li>`).join('')}</ul>
       </div>
       <div class="caja">
         <div class="caja-titulo">${icono('info')}Mientras tanto</div>
-        <p>Termina el módulo 1: todo lo que viene después usa despejes y conversiones de unidades. <a href="#m1">Ir al módulo 1</a></p>
+        <p>Primero, terminar el módulo 1: todo lo que viene después usa despejes y conversiones de unidades. <a href="#m1">Ir al módulo 1</a></p>
       </div>`;
     return v;
   }
@@ -172,7 +172,6 @@
   function leerRuta() {
     // Acepta #m1-despejes y también el formato anterior #/m1/despejes
     const partes = location.hash.replace(/^#\/?/, '').split(/[-/]/).filter(Boolean);
-    if (partes[0] === 'guia') return { mod: 'guia' };
     const mod = MA.MODULOS.some(m => m.id === partes[0]) ? partes[0] : 'inicio';
     return { mod, sec: partes[1] || null, extra: partes[2] || null };
   }
@@ -185,10 +184,6 @@
       if (!vistas.inicio) { vistas.inicio = vistaInicio(); cont.appendChild(vistas.inicio); }
       vistas.inicio.hidden = false;
       pintarInicio();
-    } else if (ruta.mod === 'guia') {
-      if (!vistas.guia) vistas.guia = MA.Clase1.montarGuia(cont);
-      vistas.guia.hidden = false;
-      titulo = 'Guía de la clase 1';
     } else {
       const m = MA.MODULOS.find(x => x.id === ruta.mod);
       const vm = m.disponible && MA.vistasModulo[m.id];
@@ -215,6 +210,8 @@
     $('#btn-menu').innerHTML = icono('menu');
     $('.marca-logo').innerHTML = icono('avion');
     $('#btn-asistente .ico').innerHTML = icono('chat');
+    $('#btn-pizarra').innerHTML = icono('pizarra');
+    $('#btn-pizarra').addEventListener('click', () => MA.Pizarra.abrir());
     pintarTema();
     $('#btn-tema').addEventListener('click', alternarTema);
     if (window.matchMedia) {
