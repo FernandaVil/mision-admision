@@ -1,24 +1,27 @@
 /* =====================================================================
-   MÓDULO 2 · página completa (clase 2)
-   Secciones: 1) calentamiento (repaso del módulo 1), 2) ideas clave,
-   3) fracciones, 4) operaciones (signos y orden), 5) potencias y
-   notación científica, 6) práctica. La factorización (clase 3) se
-   agrega después como otra sección.
-   Rutas: #m2-calentamiento · #m2-ideas (-p1, -p2, -p3) · #m2-fracciones ·
-          #m2-operaciones · #m2-potencias · #m2-practica
+   MÓDULO 2 · página completa (álgebra básica)
+   Secciones: 1) ideas clave, 2) fracciones (sumar y restar; multiplicar
+   y dividir), 3) signos y orden, 4) potencias con letras, 5) práctica.
+   La factorización es el módulo 3; la notación científica, el módulo 5.
+   Rutas: #m2-ideas (-p1, -p2, -p3) · #m2-fracciones · #m2-operaciones ·
+          #m2-potencias · #m2-practica
    ===================================================================== */
 (function () {
   'use strict';
   const MA = window.MA;
   const { $, $$, crear, icono } = MA;
-  const { vr, un, n, op, fr, mt, q, tach, doble, ext, med } = MA.f;
-  const por = op('·'), igual = op('='), entre = op('÷');
+  const { vr, un, n, op, fr, mt, tach, doble, ext, med, pega } = MA.f;
+  const por = op('·'), igual = op('='), entre = op('÷'), mas = op('+'), menos = op('−');
+  const { pot, neg } = MA.M2;
+  const prod = (...xs) => xs.join(` ${por} `);
   // 6 ÷ 1/2 con extremos y medios, de colores
   const seisSandwich = () => doble(fr(ext(n(6)), med(n(1))), fr(med(n(1)), ext(n(2))));
   const seisResultado = () => fr(`${ext(n(6))} ${por} ${ext(n(2))}`, `${med(n(1))} ${por} ${med(n(1))}`);
+  // 1/2 + 1/3 con la mariposa, de colores: azul va arriba, ámbar va abajo
+  const mariposa = () => fr(`${ext(prod(n(1), n(3)))} ${mas} ${ext(prod(n(2), n(1)))}`, med(prod(n(2), n(3))));
+  const xs = k => Array.from({ length: k }, () => vr('x')).join(` ${por} `);
 
   const SECCIONES = [
-    { id: 'calentamiento', nombre: 'Calentamiento', corto: 'Repaso', icono: 'objetivo' },
     { id: 'ideas', nombre: 'Ideas clave', corto: 'Ideas', icono: 'libro' },
     { id: 'fracciones', nombre: 'Fracciones', corto: 'Fracciones', icono: 'regla' },
     { id: 'operaciones', nombre: 'Signos y orden', corto: 'Signos', icono: 'objetivo' },
@@ -30,11 +33,10 @@
     const C = MA.M2;
     const cuenta = (pref, ids) => [MA.progreso.contar(pref, ids), ids.length];
     const res = {
-      calentamiento: cuenta('m2.cal.', C.CALENTAMIENTO.map(x => x.id)),
       ideas: cuenta('m2.ideas.', MA.Clase2.PARTES.map(p => p.id)),
-      fracciones: cuenta('m2.frac.', C.RETOS_FRACCIONES.map(x => x.id)),
+      fracciones: cuenta('m2.frac.', [...C.RETOS_SUMAS, ...C.RETOS_FRACCIONES].map(x => x.id)),
       operaciones: cuenta('m2.op.', C.RETOS_OPERACIONES.map(x => x.id)),
-      potencias: cuenta('m2.coma.', C.RETOS_COMA.map(x => x.id)),
+      potencias: cuenta('m2.pot.', C.RETOS_EXPONENTES.map(x => x.id)),
       practica: cuenta('m2.prac.', C.EJERCICIOS.map(x => x.id))
     };
     const todos = SECCIONES.map(s => res[s.id]);
@@ -47,25 +49,14 @@
 
   const cabeza = (paso, titulo, entrada) => `
     <div class="seccion-cabeza">
-      <span class="etiqueta">Paso ${paso} de 6</span>
+      <span class="etiqueta">Paso ${paso} de ${SECCIONES.length}</span>
       <h2>${titulo}</h2>
       <p class="entrada">${entrada}</p>
     </div>`;
-  const sup = MA.M2.sup, pot = MA.M2.pot, p10 = MA.M2.p10, neg = MA.M2.neg, cien = MA.M2.cien;
-
-  function htmlCalentamiento() {
-    return `
-      ${cabeza(1, 'Calentamiento: de cabeza y en papel', 'Cinco conversiones del módulo 1. Cada una se responde dos veces: primero de cabeza, rápido y sin escribir; después en papel, con factores. Al final se comparan las dos respuestas.')}
-      <div class="m2-calentamiento"></div>
-      <div class="caja caja-neutra">
-        <div class="caja-titulo">${icono('info')}¿Para qué escribir si sale de cabeza?</div>
-        <p>El cálculo mental sirve para estimar y para revisar: si en papel sale 5000 y de cabeza «más o menos miles», todo bien. Pero en el examen las trampas están justo donde la cabeza se salta un paso: el área (el factor va dos veces), el tiempo (va de 60 en 60) y las fracciones de unidades.</p>
-      </div>`;
-  }
 
   function htmlIdeas() {
     return `
-      ${cabeza(2, 'Ideas clave', 'Tres partes cortas. Cada una va justo antes de su herramienta: la primera antes de las fracciones, la segunda antes de las operaciones con signos y la tercera antes de las potencias.')}
+      ${cabeza(1, 'Ideas clave', 'Tres partes cortas. Cada una va justo antes de su herramienta: la primera antes de las fracciones, la segunda antes de los signos y la tercera antes de las potencias.')}
       <div class="m2-presentacion"></div>
       <section class="tarjeta m2-reglas" aria-labelledby="m2-reglas-titulo">
         <h3 id="m2-reglas-titulo">Resumen de reglas</h3>
@@ -75,6 +66,8 @@
             <h4>Fracciones</h4>
             <ul>
               <li>La raya es un ÷: ${mt(un('km/h'), igual, un('km'), entre, un('h'))}.</li>
+              <li>Sumar y restar con el mismo abajo: se suman los de arriba. ${mt(fr(n(1), n(5)), mas, fr(n(2), n(5)), igual, fr(n(3), n(5)))}</li>
+              <li>Con distinto abajo, la mariposa: en cruz arriba, abajo con abajo. ${mt(fr(n(1), n(2)), mas, fr(n(1), n(3)), igual, mariposa(), igual, fr(n(5), n(6)))}</li>
               <li>Multiplicar: arriba con arriba, abajo con abajo. Conviene tachar antes.</li>
               <li>Dividir: una encima de la otra; <span class="ext">extremos</span> arriba, <span class="med">medios</span> abajo. ${mt(seisSandwich(), igual, seisResultado(), igual, n(12))}</li>
             </ul>
@@ -82,8 +75,8 @@
           <div>
             <h4>Signos</h4>
             <ul>
-              <li>Sumar y restar: pensar en plata. ${mt(n('−5'), op('+'), n(3), igual, n('−2'))}</li>
-              <li>Restar un negativo es sumar: ${mt(op('−'), neg(-2), igual, op('+'), n(2))}.</li>
+              <li>Sumar y restar: pensar en plata. ${mt(n('−5'), mas, n(3), igual, n('−2'))}</li>
+              <li>Restar un negativo es sumar: ${mt(menos, neg(-2), igual, mas, n(2))}.</li>
               <li>Multiplicar y dividir: iguales dan +, distintos dan −.</li>
             </ul>
           </div>
@@ -99,9 +92,10 @@
           <div>
             <h4>Potencias</h4>
             <ul>
-              <li>Al multiplicar, los exponentes se suman: ${mt(`${pot(vr('x'), 2)}`, por, `${pot(vr('x'), 3)}`, igual, `${pot(vr('x'), 5)}`)}.</li>
-              <li>Al dividir, se restan: ${mt(fr(`${pot(vr('x'), 5)}`, `${pot(vr('x'), 2)}`), igual, `${pot(vr('x'), 3)}`)}.</li>
-              <li>${mt(p10(-3), igual, fr(n(1), n(1000)), igual, n('0,001'))}</li>
+              <li>Un exponente cuenta: ${mt(pot(vr('x'), 3), igual, xs(3))}.</li>
+              <li>Al multiplicar, los exponentes se suman: ${mt(pot(vr('x'), 2), por, pot(vr('x'), 3), igual, pot(vr('x'), 5))}.</li>
+              <li>Al dividir, se restan: ${mt(fr(pot(vr('x'), 5), pot(vr('x'), 2)), igual, pot(vr('x'), 3))}.</li>
+              <li>Números con números, letras con letras: ${mt(pega(n(3), pot(vr('x'), 2)), por, pega(n(2), pot(vr('x'), 3)), igual, pega(n(6), pot(vr('x'), 5)))}.</li>
             </ul>
           </div>
         </div>
@@ -110,11 +104,24 @@
 
   function htmlFracciones() {
     return `
-      ${cabeza(3, 'Dividir entre una fracción', 'Una fracción es una división, y las unidades también son fracciones: km/h es km ÷ h. Por eso, cuando en una fórmula aparece una fracción dividiendo, hay que saber qué pasa con lo que está abajo.')}
+      ${cabeza(2, 'Fracciones: las cuatro operaciones', 'Una fracción es una división, y las unidades también son fracciones: km/h es km ÷ h. Primero sumar y restar; después multiplicar y dividir, también con unidades.')}
+      <h3 class="m2-bloque-titulo">Sumar y restar</h3>
       <ol class="pasos-concepto">
-        <li><span class="pc-num">01</span><h3>Una encima de la otra</h3><p>La raya también es un ÷. Lo que no es fracción lleva un 1 abajo: ${mt(n(6), igual, fr(n(6), n(1)))}.</p><div class="mt mt-bloque">${n(6)} ${entre} ${fr(n(1), n(2))} ${igual} ${seisSandwich()}</div></li>
-        <li><span class="pc-num">02</span><h3>Extremos arriba, medios abajo</h3><p>Los <span class="ext">extremos</span> (las dos puntas) se multiplican arriba; los <span class="med">medios</span> (los dos pegados a la raya grande), abajo:</p><div class="mt mt-bloque">${seisResultado()} ${igual} ${n(12)}</div></li>
-        <li><span class="pc-num">03</span><h3>Tachar y multiplicar</h3><p>Un número de arriba y uno de abajo se dividen entre lo mismo; una unidad arriba y la misma abajo se cancelan. La unidad que queda dice si la cuenta tiene sentido.</p></li>
+        <li><span class="pc-num">01</span><h3>Mismo abajo</h3><p>Son pedazos del mismo tamaño: se suman (o restan) los de arriba y abajo queda igual.</p><div class="mt mt-bloque">${fr(n(1), n(5))} ${mas} ${fr(n(2), n(5))} ${igual} ${fr(n(3), n(5))}</div></li>
+        <li><span class="pc-num">02</span><h3>Distinto abajo: la mariposa</h3><p>En cruz <span class="ext">arriba</span> y abajo con <span class="med">abajo</span>:</p><div class="mt mt-bloque">${fr(n(1), n(2))} ${mas} ${fr(n(1), n(3))} ${igual} ${mariposa()} ${igual} ${fr(n(5), n(6))}</div></li>
+        <li><span class="pc-num">03</span><h3>Simplificar</h3><p>Si arriba y abajo se pueden dividir entre el mismo número, se dividen, hasta que ya no se pueda.</p><div class="mt mt-bloque">${fr(n(4), n(8))} ${igual} ${fr(n(2), n(4))} ${igual} ${fr(n(1), n(2))}</div></li>
+      </ol>
+      <div class="m2-sumas"></div>
+      <div class="caja caja-ojo">
+        <div class="caja-titulo">${icono('pista')}El error más común: sumar arriba con arriba y abajo con abajo</div>
+        <p>${mt(fr(n(1), n(2)), mas, fr(n(1), n(3)))} no es ${mt(fr(n(2), n(5)))}. Medio más un tercio no puede dar menos que medio: ${mt(fr(n(2), n(5)))} es menos que ${mt(fr(n(1), n(2)))}. Antes de seguir, conviene preguntarse si el resultado tiene sentido.</p>
+      </div>
+
+      <h3 class="m2-bloque-titulo">Multiplicar y dividir</h3>
+      <ol class="pasos-concepto">
+        <li><span class="pc-num">01</span><h3>Multiplicar</h3><p>Arriba con arriba y abajo con abajo. Antes de multiplicar, conviene tachar.</p><div class="mt mt-bloque">${fr(n(2), n(3))} ${por} ${fr(n(9), n(4))} ${igual} ${fr(prod(n(2), n(9)), prod(n(3), n(4)))} ${igual} ${fr(n(3), n(2))}</div></li>
+        <li><span class="pc-num">02</span><h3>Dividir: una encima de la otra</h3><p>La raya también es un ÷. Lo que no es fracción lleva un 1 abajo: ${mt(n(6), igual, fr(n(6), n(1)))}.</p><div class="mt mt-bloque">${n(6)} ${entre} ${fr(n(1), n(2))} ${igual} ${seisSandwich()}</div></li>
+        <li><span class="pc-num">03</span><h3>Extremos arriba, medios abajo</h3><p>Los <span class="ext">extremos</span> (las dos puntas) se multiplican arriba; los <span class="med">medios</span> (los dos pegados a la raya grande), abajo:</p><div class="mt mt-bloque">${seisResultado()} ${igual} ${n(12)}</div></li>
       </ol>
       <div class="m2-fracciones"></div>
       <div class="caja">
@@ -136,7 +143,7 @@
 
   function htmlOperaciones() {
     return `
-      ${cabeza(4, 'Signos y orden de las operaciones', 'Casi todos los errores de signo en el examen vienen de dos cosas: restar un negativo y hacer las operaciones en otro orden. Aquí se practican las dos, eligiendo antes qué operación va primero.')}
+      ${cabeza(3, 'Signos y orden de las operaciones', 'Casi todos los errores de signo en el examen vienen de dos cosas: restar un negativo y hacer las operaciones en otro orden. Aquí se practican las dos, eligiendo antes qué operación va primero.')}
       <div class="tarjeta m1-contrarias">
         <h3>Signos al multiplicar y dividir</h3>
         <div class="tabla-envoltura">
@@ -148,42 +155,38 @@
             </tbody>
           </table>
         </div>
-        <p class="m1-orden"><b>Ojo con el paréntesis:</b> ${mt(`${pot(neg(-3), 2)}`, igual, n(9))}, pero ${mt(`${pot(n('−3'), 2)}`, igual, n('−9'))}: sin paréntesis, el cuadrado es solo del 3.</p>
+        <p class="m1-orden"><b>Ojo con el paréntesis:</b> ${mt(pot(neg(-3), 2), igual, n(9))}, pero ${mt(pot(n('−3'), 2), igual, n('−9'))}: sin paréntesis, el cuadrado es solo del 3.</p>
       </div>
       <div class="m2-operaciones"></div>
       <div class="caja caja-ojo">
         <div class="caja-titulo">${icono('pista')}La trampa de izquierda a derecha</div>
-        <p>${mt(n(8), entre, n(4), por, n(2), igual, n(4))}, no 1. Multiplicar no va antes que dividir: tienen el mismo rango y se hacen en el orden en que aparecen. Lo mismo pasa con sumar y restar: ${mt(n(10), op('−'), n(3), op('+'), n(2), igual, n(9))}, no 5.</p>
+        <p>${mt(n(8), entre, n(4), por, n(2), igual, n(4))}, no 1. Multiplicar no va antes que dividir: tienen el mismo rango y se hacen en el orden en que aparecen. Lo mismo pasa con sumar y restar: ${mt(n(10), menos, n(3), mas, n(2), igual, n(9))}, no 5.</p>
       </div>`;
   }
 
   function htmlPotencias() {
     return `
-      ${cabeza(5, 'Potencias y notación científica', 'Un exponente cuenta cuántas veces se multiplica la base. Con potencias de 10 se escriben números muy grandes o muy pequeños, y las cuentas del examen se hacen sin calculadora.')}
-      <div class="tarjeta m1-contrarias">
-        <h3>Reglas de los exponentes (no hay que memorizarlas: basta con contar)</h3>
-        <div class="tabla-envoltura">
-          <table class="tabla">
-            <thead><tr><th scope="col">Regla</th><th scope="col">Por qué</th><th scope="col">Ejemplo</th></tr></thead>
-            <tbody>
-              <tr><td>al multiplicar, se suman</td><td>se juntan todas las x</td><td>${mt(`${pot(vr('x'), 2)}`, por, `${pot(vr('x'), 3)}`, igual, `${pot(vr('x'), 5)}`)}</td></tr>
-              <tr><td>al dividir, se restan</td><td>se tachan por parejas</td><td>${mt(fr(`${pot(vr('x'), 5)}`, `${pot(vr('x'), 2)}`), igual, `${pot(vr('x'), 3)}`)}</td></tr>
-              <tr><td>potencia de potencia, se multiplican</td><td>el grupo se repite</td><td>${mt(`${op('(')}${pot(vr('x'), 2)}${pot(op(')'), 3)}`, igual, `${pot(vr('x'), 6)}`)}</td></tr>
-              <tr><td>exponente negativo</td><td>«uno dividido entre»</td><td>${mt(p10(-3), igual, fr(n(1), p10(3)), igual, n('0,001'))}</td></tr>
-            </tbody>
-          </table>
-        </div>
+      ${cabeza(4, 'Potencias con letras', 'Un exponente cuenta cuántas veces se multiplica la letra. Con eso alcanza para simplificar las fórmulas: no hay reglas que memorizar, basta con contar.')}
+      <ol class="pasos-concepto">
+        <li><span class="pc-num">01</span><h3>Contar</h3><p>${mt(pot(vr('x'), 3))} es ${vr('x')} escrita tres veces. Una letra sola está una vez: ${mt(vr('a'), igual, pot(vr('a'), 1))}.</p><div class="mt mt-bloque">${pot(vr('x'), 3)} ${igual} ${xs(3)}</div></li>
+        <li><span class="pc-num">02</span><h3>Multiplicar: se suman</h3><p>Se juntan todas las letras y se cuentan.</p><div class="mt mt-bloque">${pot(vr('x'), 2)} ${por} ${pot(vr('x'), 3)} ${igual} ${op('(')}${xs(2)}${op(')')} ${por} ${op('(')}${xs(3)}${op(')')} ${igual} ${pot(vr('x'), 5)}</div></li>
+        <li><span class="pc-num">03</span><h3>Dividir: se restan</h3><p>Una letra de arriba y la misma de abajo se tachan, igual que las unidades.</p><div class="mt mt-bloque">${fr(pot(vr('x'), 5), pot(vr('x'), 2))} ${igual} ${fr(`${tach(vr('x'))} ${por} ${tach(vr('x'))} ${por} ${xs(3)}`, `${tach(vr('x'))} ${por} ${tach(vr('x'))}`)} ${igual} ${pot(vr('x'), 3)}</div></li>
+      </ol>
+      <div class="m2-exponentes"></div>
+      <div class="caja">
+        <div class="caja-titulo">${icono('pista')}En las fórmulas: números con números, letras con letras</div>
+        <div class="mt mt-bloque">${fr(pega(n(6), pot(vr('x'), 5)), pega(n(2), pot(vr('x'), 2)))} ${igual} ${pega(n(3), pot(vr('x'), 3))} <span class="m2-separa"></span> ${fr(prod(vr('m'), pot(vr('v'), 2)), vr('v'))} ${igual} ${prod(vr('m'), vr('v'))}</div>
+        <p>Los números se dividen (6 ÷ 2 = 3) y cada letra se tacha solo con la misma letra. Así se simplifican las fórmulas de física antes de reemplazar los valores.</p>
       </div>
-      <div class="m2-coma"></div>
       <div class="caja caja-ojo">
-        <div class="caja-titulo">${icono('pista')}Truco para el examen, sin calculadora</div>
-        <p>Números con números y potencias con potencias: ${mt(op('('), cien(3, 4), op(')'), por, op('('), cien(2, -6), op(')'), igual, cien(6, -2))}. Si el número queda en 10 o más, se corre la coma y el exponente compensa: ${mt(n(12), op('×'), p10(-2), igual, cien(1.2, -1))}.</p>
+        <div class="caja-titulo">${icono('pista')}Ojo: el exponente no multiplica</div>
+        <p>${mt(pot(n(2), 3), igual, prod(n(2), n(2), n(2)), igual, n(8))}, no 6. Y ${mt(pot(vr('x'), 2), por, pot(vr('x'), 3))} es ${mt(pot(vr('x'), 5))}, no ${mt(pot(vr('x'), 6))}: los exponentes se suman al multiplicar.</p>
       </div>`;
   }
 
   function htmlPractica() {
     return `
-      ${cabeza(6, 'Práctica progresiva', 'Dieciséis ejercicios, del más sencillo al más parecido al examen; los dos últimos son retos. Sin calculadora: con papel o con el borrador. Ante una duda, primero una pista; la solución completa es el último recurso.')}
+      ${cabeza(5, 'Práctica progresiva', 'Quince ejercicios de fracciones, signos y potencias, del más sencillo al más parecido al examen; los dos últimos son retos. Sin calculadora: con papel o con el borrador. Ante una duda, primero una pista; la solución completa es el último recurso.')}
       <div class="m2-practica"></div>`;
   }
 
@@ -199,10 +202,9 @@
           <div>
             <span class="etiqueta">Módulo 2 de 6</span>
             <h1>Álgebra básica</h1>
-            <p class="entrada">Fracciones, signos, orden de las operaciones y potencias: las cuentas que aparecen dentro de cada fórmula del examen. La factorización viene en la próxima clase.</p>
+            <p class="entrada">Fracciones, signos, orden de las operaciones y potencias con letras: las cuentas que aparecen dentro de cada fórmula del examen. La factorización viene en el módulo 3.</p>
           </div>
           <div class="mod-resumen" aria-label="Avance en el módulo">
-            <div class="dato"><small>Calentamiento</small><b data-prog="calentamiento"></b></div>
             <div class="dato"><small>Ideas clave</small><b data-prog="ideas"></b></div>
             <div class="dato"><small>Herramientas</small><b data-prog="herramientas"></b></div>
             <div class="dato"><small>Práctica</small><b data-prog="practica"></b></div>
@@ -215,8 +217,7 @@
         <div class="pestanas" role="tablist" aria-label="Secciones del módulo">
           ${SECCIONES.map((s, i) => `<a class="pestana" role="tab" href="#m2-${s.id}" data-sec="${s.id}" aria-controls="m2-${s.id}"><span class="pt-num">${i + 1}</span><span class="pt-largo">${s.nombre}</span><span class="pt-corto">${s.corto}</span><span class="pt-ok"></span></a>`).join('')}
         </div>
-        <section class="m1-seccion m2-seccion" id="m2-calentamiento" data-sec="calentamiento" role="tabpanel">${htmlCalentamiento()}</section>
-        <section class="m1-seccion m2-seccion" id="m2-ideas" data-sec="ideas" role="tabpanel" hidden>${htmlIdeas()}</section>
+        <section class="m1-seccion m2-seccion" id="m2-ideas" data-sec="ideas" role="tabpanel">${htmlIdeas()}</section>
         <section class="m1-seccion m2-seccion" id="m2-fracciones" data-sec="fracciones" role="tabpanel" hidden>${htmlFracciones()}</section>
         <section class="m1-seccion m2-seccion" id="m2-operaciones" data-sec="operaciones" role="tabpanel" hidden>${htmlOperaciones()}</section>
         <section class="m1-seccion m2-seccion" id="m2-potencias" data-sec="potencias" role="tabpanel" hidden>${htmlPotencias()}</section>
@@ -225,31 +226,34 @@
       cont.appendChild(raiz);
       this.raiz = raiz;
 
-      MA.Calentamiento.crear($('.m2-calentamiento', raiz));
       this.presentacion = MA.Presentacion.crear($('.m2-presentacion', raiz), {
         diapositivas: MA.Clase2.DIAPOSITIVAS,
         partes: MA.Clase2.PARTES,
         clave: 'm2.diapositiva',
         alTerminarParte: id => MA.progreso.marcar('m2.ideas.' + id)
       });
-      const herramientas = {
-        fracciones: MA.Fracciones.crear($('.m2-fracciones', raiz)),
-        operaciones: MA.Operaciones.crear($('.m2-operaciones', raiz)),
-        potencias: MA.Coma.crear($('.m2-coma', raiz))
+      const desplazar = sel => $(sel, raiz).scrollIntoView({ behavior: MA.movimientoReducido() ? 'auto' : 'smooth', block: 'start' });
+      // Cada mesa, con la sección donde vive y adónde lleva su último reto
+      const MESAS = {
+        sumas: { seccion: 'fracciones', clase: '.m2-sumas', crear: MA.Sumas, final: { texto: 'Seguir con multiplicar y dividir', ir: () => desplazar('.m2-fracciones') } },
+        fracciones: { seccion: 'fracciones', clase: '.m2-fracciones', crear: MA.Fracciones, final: { texto: 'Seguir con las ideas clave, parte 2', ir: () => { location.hash = '#m2-ideas-p2'; } } },
+        operaciones: { seccion: 'operaciones', clase: '.m2-operaciones', crear: MA.Operaciones, final: { texto: 'Seguir con las ideas clave, parte 3', ir: () => { location.hash = '#m2-ideas-p3'; } } },
+        exponentes: { seccion: 'potencias', clase: '.m2-exponentes', crear: MA.Exponentes, final: { texto: 'Ir a la práctica', ir: () => { location.hash = '#m2-practica'; } } }
       };
-      const clases = { fracciones: '.m2-fracciones', operaciones: '.m2-operaciones', potencias: '.m2-coma' };
+      const herramientas = {};
+      Object.keys(MESAS).forEach(k => { herramientas[k] = MESAS[k].crear.crear($(MESAS[k].clase, raiz), { final: MESAS[k].final }); });
       const practica = MA.Practica.crear($('.m2-practica', raiz), {
         datos: C,
         modulo: 'm2',
         teclado: 'text',
         ayudaCampo: 'Solo el número. Los negativos llevan el signo menos (−4); sirven la coma decimal (2,5) y las fracciones (3/2).',
         abrirHerramienta(ej, numero) {
-          const h = ej.herramienta;
+          const h = ej.herramienta, mesa = MESAS[h.mesa];
           const origen = { numero, volver: () => { location.hash = '#m2-practica'; practica.irA(ej.id); } };
-          const problema = h.seccion === 'operaciones' ? { expr: h.expr } : h.problema;
-          if (problema) herramientas[h.seccion].cargarProblema(problema, origen);
-          location.hash = '#m2-' + h.seccion;
-          setTimeout(() => $(clases[h.seccion], raiz).scrollIntoView({ block: 'start' }), 60);
+          const problema = h.mesa === 'operaciones' ? { expr: h.expr } : h.problema;
+          if (problema) herramientas[h.mesa].cargarProblema(problema, origen);
+          location.hash = '#m2-' + mesa.seccion;
+          setTimeout(() => $(mesa.clase, raiz).scrollIntoView({ block: 'start' }), 60);
         }
       });
       this.practica = practica;
@@ -260,14 +264,16 @@
     pintarProgreso() {
       if (!this.raiz) return;
       const p = progreso();
-      ['calentamiento', 'ideas', 'herramientas', 'practica'].forEach(k => { $(`[data-prog="${k}"]`, this.raiz).textContent = `${p[k][0]} de ${p[k][1]}`; });
+      ['ideas', 'herramientas', 'practica'].forEach(k => { $(`[data-prog="${k}"]`, this.raiz).textContent = `${p[k][0]} de ${p[k][1]}`; });
       SECCIONES.forEach(s => {
         const [h, t] = p[s.id];
         $(`.pestana[data-sec="${s.id}"] .pt-ok`, this.raiz).innerHTML = h === t ? icono('check') : '';
       });
     },
     mostrar(seccion, extra) {
-      const sec = SECCIONES.some(s => s.id === seccion) ? seccion : (MA.almacen.leer('m2.seccion', 'calentamiento') || 'calentamiento');
+      const valida = id => SECCIONES.some(s => s.id === id);
+      const guardada = MA.almacen.leer('m2.seccion', 'ideas');
+      const sec = valida(seccion) ? seccion : valida(guardada) ? guardada : 'ideas';
       MA.almacen.guardar('m2.seccion', sec);
       if (sec !== 'ideas' && this.presentacion) this.presentacion.salir();
       $$('.m2-seccion', this.raiz).forEach(el => { el.hidden = el.dataset.sec !== sec; });

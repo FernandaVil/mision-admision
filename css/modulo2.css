@@ -1,12 +1,16 @@
 /* =====================================================================
-   MÓDULO 2 · calentamiento, mesa de fracciones, mesa de operaciones,
-   corredor de la coma y diapositivas nuevas. Reutiliza las piezas del
-   módulo 1 (banco, bitácora, mensajes).
+   MÓDULO 2 · mesa de sumas y restas, mesa de multiplicar y dividir,
+   mesa de operaciones, mesa de exponentes y diapositivas nuevas.
+   Reutiliza las piezas del módulo 1 (banco, bitácora, mensajes).
    ===================================================================== */
 .m2-seccion > .banco { margin: 8px 0 18px; }
 .m2-seccion .pasos-concepto .mt-bloque { margin: 10px 0 0; font-size: 1.05rem; justify-content: flex-start; }
+/* Dos bloques en una sección (fracciones: sumar y restar; multiplicar y dividir) */
+.m2-bloque-titulo { margin: 30px 0 0; padding-top: 20px; border-top: 1px solid var(--borde); font-size: 1.12rem; }
+.m2-seccion .seccion-cabeza + .m2-bloque-titulo { margin-top: 6px; padding-top: 0; border-top: 0; }
+.m2-separa { display: inline-block; width: 1.5em; }
 
-/* Pregunta para predecir (común a las tres herramientas) */
+/* Pregunta para predecir (común a las cuatro herramientas) */
 .mf-pregunta {
   margin: 0 18px 14px; padding: 12px 16px;
   border: 1.5px solid var(--primario); border-radius: var(--radio);
@@ -19,41 +23,35 @@
 .mf-pregunta .fila-botones { gap: 8px; }
 .mf-pregunta .btn svg { width: 16px; height: 16px; }
 
-/* ---------- Calentamiento ---------- */
-.calentamiento .banco-cabeza { justify-content: space-between; }
-.cal-marcador { display: flex; flex-wrap: wrap; gap: 6px; }
-.cal-lista { list-style: none; margin: 0; padding: 16px 18px; display: grid; gap: 12px; }
-.cal-fila {
-  margin: 0; padding: 14px 16px; display: grid; gap: 10px;
-  background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio);
+/* Piezas comunes de las cuatro herramientas */
+.mesa-sm .banco-cabeza, .mesa-fr .banco-cabeza, .mesa-op .banco-cabeza, .mesa-ex .banco-cabeza { justify-content: space-between; }
+.sm-reto .pildora, .mf-reto .pildora, .mo-reto .pildora, .ex-reto .pildora { font-size: 0.78rem; }
+.sm-mensaje:empty, .mf-mensaje:empty, .mo-mensaje:empty, .ex-mensaje:empty { display: none; }
+.banco-pie .sm-mensaje, .banco-pie .mf-mensaje, .banco-pie .mo-mensaje, .banco-pie .ex-mensaje { margin-bottom: 10px; }
+
+/* ---------- Mesa de sumas y restas ---------- */
+.sm-mesa { padding: 22px 18px 16px; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+.sm-expr { font-size: 1.6rem; white-space: normal; flex-wrap: wrap; justify-content: center; row-gap: 12px; }
+.sm-num { padding: 0 0.15em; border-radius: 6px; transition: background 0.15s, box-shadow 0.15s; }
+.sm-num.sm-uno .num { color: var(--texto-3); }
+/* Los dos números que se multiplican: azul si el resultado va arriba, ámbar si va abajo */
+.sm-num.sm-sube { background: var(--primario-suave); box-shadow: 0 0 0 2px var(--primario-borde); }
+.sm-num.sm-sube .num { color: var(--primario); font-weight: 600; }
+.sm-num.sm-baja { background: var(--ambar-suave); box-shadow: 0 0 0 2px var(--ambar-borde); }
+.sm-num.sm-baja .num { color: var(--ambar); font-weight: 600; }
+.sm-casilla {
+  display: inline-grid; place-items: center; min-width: 1.4em; padding: 0 0.2em;
+  border: 1.5px dashed var(--borde-fuerte); border-radius: 6px; color: var(--texto-3); font-size: 0.85em;
 }
-.cal-fila.listo { border-color: var(--exito-borde); }
-.cal-enunciado { display: flex; align-items: baseline; gap: 10px; }
-.cal-enunciado p { margin: 0; font-size: 1.02rem; }
-.cal-num {
-  flex: none; width: 26px; height: 26px; display: inline-grid; place-items: center;
-  border-radius: 50%; background: var(--superficie-2); border: 1px solid var(--borde);
-  font-family: var(--f-mono); font-size: 0.8rem;
-}
-.cal-fila.listo .cal-num { background: var(--exito-suave); border-color: var(--exito-borde); color: var(--exito); }
-.cal-respuestas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
-.cal-paso { display: grid; gap: 6px; padding: 10px 12px; border-radius: var(--radio-chico); border: 1px solid transparent; }
-.cal-paso.activo { border-color: var(--primario-borde); background: var(--primario-suave); }
-.cal-paso label { font-size: 0.86rem; color: var(--texto-2); }
-.cal-paso .campo { max-width: 140px; }
-.cal-mensaje:empty { display: none; }
-.cal-factores { padding: 8px 12px; border-radius: var(--radio-chico); background: var(--superficie-2); }
-.cal-factores small { font-family: var(--f-mono); font-size: 0.74rem; color: var(--primario); }
-.cal-factores .mt-bloque { margin: 6px 0 2px; font-size: 1.05rem; justify-content: flex-start; white-space: normal; }
+.sm-casilla.activa { border-style: solid; border-color: var(--primario); background: var(--primario-suave); color: var(--primario); }
+.sm-resultado { display: inline-flex; padding: 4px 12px; border-radius: var(--radio); border: 1px solid var(--borde-fuerte); }
+.sm-resultado.listo { background: var(--exito-suave); border-color: var(--exito-borde); }
 @media (max-width: 640px) {
-  .cal-lista { padding: 12px; }
-  .cal-respuestas { grid-template-columns: minmax(0, 1fr); }
-  .cal-factores .mt-bloque { font-size: 0.92rem; }
+  .sm-mesa { padding: 16px 10px 12px; }
+  .sm-expr { font-size: 1.25rem; }
 }
 
-/* ---------- Mesa de fracciones ---------- */
-.mesa-fr .banco-cabeza, .mesa-op .banco-cabeza, .corredor .banco-cabeza { justify-content: space-between; }
-.mf-reto .pildora, .mo-reto .pildora, .nc-reto .pildora { font-size: 0.78rem; }
+/* ---------- Mesa de multiplicar y dividir ---------- */
 .mf-mesa { padding: 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; min-height: 150px; }
 .mf-division { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; font-size: 1.5rem; }
 /* La división escrita como una fracción encima de la otra (extremos y medios) */
@@ -94,8 +92,6 @@
 .mf-chip.inerte b { color: var(--texto-3); }
 .mf-resultado { display: flex; align-items: center; gap: 12px; font-size: 1.45rem; }
 .mf-resultado .mt { padding: 6px 14px; border-radius: var(--radio); background: var(--exito-suave); border: 1px solid var(--exito-borde); }
-.mf-mensaje:empty, .mo-mensaje:empty, .nc-mensaje:empty { display: none; }
-.banco-pie .mf-mensaje, .banco-pie .mo-mensaje, .banco-pie .nc-mensaje { margin-bottom: 10px; }
 @media (max-width: 640px) {
   .mf-mesa { padding: 14px 10px; }
   .mf-division { font-size: 1.2rem; gap: 8px; }
@@ -117,6 +113,7 @@
 .mo-exp .mo-op { font-size: 1em; min-width: 1.3em; padding: 0 0.2em; }
 .mo-sel { padding: 0.08em 0.25em; border-radius: 8px; background: var(--ambar-suave); box-shadow: 0 0 0 2px var(--ambar-borde); }
 .mo-nuevo { padding: 0 0.15em; border-radius: 6px; background: var(--exito-suave); box-shadow: 0 0 0 2px var(--exito-borde); }
+/* Recuadro para escribir un resultado (también en sumas y exponentes) */
 .mo-calculo {
   margin: 0 18px 14px; padding: 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
   border: 1.5px solid var(--ambar-borde); border-radius: var(--radio); background: var(--ambar-suave);
@@ -132,31 +129,16 @@
   .mo-calculo { margin: 0 12px 12px; }
 }
 
-/* ---------- Corredor de la coma ---------- */
-.nc-pista-meta { padding: 12px 18px 0; }
-.nc-pista-meta .pildora { white-space: normal; }
-.nc-mesa { padding: 20px 18px 8px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; }
-.nc-numero { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; min-height: 64px; }
-.nc-cifras { display: inline-flex; align-items: flex-end; font-family: var(--f-mono); font-size: 1.9rem; }
-.nc-cifra {
-  display: inline-grid; place-items: center; width: 1.25em; height: 1.55em; margin: 0 1px;
-  border: 1px solid var(--borde); border-radius: 6px; background: var(--superficie);
-}
-.nc-coma {
-  display: inline-grid; place-items: end center; width: 0.55em; height: 1.55em;
-  color: var(--ambar); font-weight: 700; font-size: 1.1em; line-height: 1;
-}
-.nc-coma.implicita { color: var(--texto-3); opacity: 0.55; }
-.nc-pot { font-size: 1.7rem; display: inline-flex; align-items: center; gap: 8px; }
-.nc-pot .exp { font-size: 0.6em; align-self: flex-start; }
-.nc-igual { text-align: center; margin: 0 18px 12px; font-size: 0.88rem; }
-.nc-mover svg { width: 18px; height: 18px; }
+/* ---------- Mesa de exponentes ---------- */
+.ex-expr { font-size: 1.8rem; }
+.ex-factor { display: inline-flex; align-items: center; }
+.ex-grupo { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.ex-grupo.con-parentesis { padding: 4px 6px; border: 1.5px solid var(--borde); border-radius: 12px; }
+/* Las letras que se están contando */
+.mf-chip.ex-cuenta { border-style: solid; border-color: var(--primario); background: var(--primario-suave); }
+.mf-chip.ex-cuenta b { color: var(--primario); }
 @media (max-width: 640px) {
-  .nc-mesa { padding: 14px 10px 6px; }
-  .nc-cifras { font-size: 1.35rem; }
-  .nc-pot { font-size: 1.25rem; }
-  .nc-mover span { display: none; }
-  .nc-pista-meta { padding: 10px 12px 0; }
+  .ex-expr { font-size: 1.35rem; }
 }
 
 /* ---------- Resumen de reglas ---------- */
@@ -176,13 +158,4 @@
 .d-tarjeta-mal .d-num { color: var(--error); }
 .d-tarjetas:has(> .d-tarjeta:nth-child(3)) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .d-orden { margin: 0; padding-left: 1.4em; display: grid; gap: 0.35em; font-size: 1.1em; }
-.d-escala10 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.5em; }
-.d-escala10 > div {
-  display: grid; justify-items: center; gap: 0.2em; padding: 0.6em 0.3em;
-  border: 1px solid var(--borde-fuerte); border-radius: 10px; background: var(--superficie);
-}
-.d-escala10 b { font-family: var(--f-mono); font-weight: 500; font-size: 0.95em; }
-.d-escala10 small { font-size: 0.65em; color: var(--primario); min-height: 1em; }
-.d-escala10 .d-escala-cero { border-color: var(--primario); background: var(--primario-suave); }
 .pot { display: inline-flex; align-items: flex-start; }
-.nc-pista-meta .pildora svg { width: 14px; height: 14px; flex: none; }

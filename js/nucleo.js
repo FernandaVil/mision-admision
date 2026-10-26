@@ -252,6 +252,7 @@
     doble: (a, b) => `<span class="fr fr-doble"><span class="fr-n">${a}</span><span class="fr-d">${b}</span></span>`,
     ext: html => `<span class="ext">${html}</span>`,
     med: html => `<span class="med">${html}</span>`,
+    pega: (...partes) => `<span class="pega">${partes.join('')}</span>`,   // 3x², sin espacio entre el número y la letra
     mt: (...partes) => `<span class="mt">${partes.join(' ')}</span>`,
     q: (valor, unidad) => `<span class="mt"><span class="num">${typeof valor === 'number' ? MA.fmt(valor) : valor}</span>${unidad ? ' <span class="un">' + unidad + '</span>' : ''}</span>`,
     tach: html => `<span class="tachado">${html}</span>`,

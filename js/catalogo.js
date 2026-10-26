@@ -22,53 +22,51 @@
     },
     {
       id: 'm2', num: '02',
-      titulo: 'Álgebra básica y factorización',
-      resumen: 'Fracciones, signos, orden de las operaciones, potencias y factorización.',
+      titulo: 'Álgebra básica',
+      resumen: 'Fracciones, signos, orden de las operaciones y potencias con letras.',
       disponible: true,
       temario: [
-        'Fracciones: dividir entre una fracción, también con unidades',
-        'Leyes de los signos y jerarquía de operaciones',
-        'Potencias, exponentes negativos y notación científica',
-        'Factor común y diferencia de cuadrados',
+        'Fracciones: sumar, restar, multiplicar y dividir, también con unidades',
+        'Ley de los signos y jerarquía de las operaciones',
+        'Potencias con letras: los exponentes se suman y se restan',
+        'Simplificar fórmulas antes de reemplazar los valores'
+      ]
+    },
+    {
+      id: 'm3', num: '03',
+      titulo: 'Factorización',
+      resumen: 'Factor común, productos notables y ecuaciones de segundo grado.',
+      disponible: false,
+      temario: [
+        'Factor común',
+        'Diferencia de cuadrados',
         'Trinomios de la forma x² + bx + c',
         'Ecuaciones de segundo grado y fórmula cuadrática'
       ]
     },
     {
-      id: 'm3', num: '03',
-      titulo: 'Física mecánica I (cinemática)',
-      resumen: 'Cómo se describe el movimiento: MRU, MRUV y caída libre.',
-      disponible: false,
-      temario: [
-        'Posición, desplazamiento, velocidad y aceleración',
-        'Movimiento rectilíneo uniforme (MRU)',
-        'Movimiento uniformemente acelerado (MRUV)',
-        'Caída libre y lanzamiento vertical',
-        'Lectura de gráficas de movimiento'
-      ]
-    },
-    {
       id: 'm4', num: '04',
-      titulo: 'Física mecánica II (dinámica)',
-      resumen: 'Por qué se mueven las cosas: fuerzas, leyes de Newton y energía.',
+      titulo: 'Física mecánica',
+      resumen: 'Cómo se describe el movimiento y por qué se mueven las cosas.',
       disponible: false,
       temario: [
-        'Las tres leyes de Newton',
-        'Diagrama de cuerpo libre, peso y fricción',
-        'Trabajo, energía cinética y potencial',
+        'Velocidad y aceleración: movimiento uniforme y acelerado',
+        'Caída libre y lanzamiento vertical',
+        'Las tres leyes de Newton, el peso y la fricción',
+        'Trabajo y energía',
         'Las cuatro fuerzas sobre una aeronave en vuelo'
       ]
     },
     {
       id: 'm5', num: '05',
-      titulo: 'Estequiometría',
-      resumen: 'El mol, la masa molar y las cantidades en una reacción química.',
+      titulo: 'Estequiometría y notación científica',
+      resumen: 'El mol, las cantidades en una reacción química y los números muy grandes o muy pequeños.',
       disponible: false,
       temario: [
+        'Notación científica y potencias de 10, con calculadora',
         'El mol y la masa molar',
         'Gramos ↔ moles con el mismo factor unitario del módulo 1',
-        'Balanceo de ecuaciones por tanteo',
-        'Relaciones molares y reactivo límite'
+        'Balanceo de ecuaciones y relaciones molares'
       ]
     },
     {

@@ -208,6 +208,7 @@ small { font-size: 0.85em; }
 /* Una fracción encima de otra: la raya del medio, más larga y más gruesa */
 .fr-doble > .fr-n, .fr-doble > .fr-d { padding: 0.12em 0.35em; }
 .fr-doble > .fr-d { border-top-width: 2.5px; }
+.pega { display: inline-flex; align-items: center; }
 /* Extremos (arriba) y medios (abajo), cada uno con su color */
 .ext, .ext .num, .ext .un { color: var(--primario); font-weight: 600; }
 .med, .med .num, .med .un { color: var(--ambar); font-weight: 600; }

@@ -125,7 +125,7 @@
     return 'Revisar la cuenta.';
   }
 
-  function crearOperaciones(raiz) {
+  function crearOperaciones(raiz, opciones = {}) {
     const C = MA.M2;
     const st = { reto: null, arbol: null, pendiente: null, fallos: 0, origen: null, escribir: MA.almacen.leer('m2.op.escribir', true) !== false, nuevo: null };
 
@@ -133,7 +133,7 @@
     raiz.innerHTML = `
       <div class="banco-cabeza">
         <div>
-          <span class="etiqueta">Herramienta 2</span>
+          <span class="etiqueta">Herramienta 3</span>
           <h3>Mesa de operaciones</h3>
         </div>
         <div class="segmentado mo-retos" role="group" aria-label="Retos de operaciones"></div>
@@ -224,7 +224,7 @@
       const i = C.RETOS_OPERACIONES.indexOf(st.reto), sig = C.RETOS_OPERACIONES[i + 1];
       const seguir = st.origen ? `<button type="button" class="btn" data-accion="volver">${icono('flechaI')}Volver al ejercicio ${st.origen.numero}</button>`
         : sig ? `<button type="button" class="btn" data-sig="${sig.id}">Siguiente reto${icono('flechaD')}</button>`
-        : i >= 0 ? `<a class="btn" href="#m2-ideas-p3">Seguir con las ideas clave, parte 3${icono('flechaD')}</a>` : '';
+        : i >= 0 && opciones.final ? `<button type="button" class="btn" data-accion="final">${opciones.final.texto}${icono('flechaD')}</button>` : '';
       cont.innerHTML = `${seguir}<button type="button" class="btn btn-secundario" data-accion="reiniciar">${icono('reiniciar')}Repetir</button>`;
     }
 
@@ -330,6 +330,7 @@
       else if (a === 'pista') pista();
       else if (a === 'reiniciar') cargar(st.reto, st.origen);
       else if (a === 'volver' && st.origen) st.origen.volver();
+      else if (a === 'final' && opciones.final) opciones.final.ir();
     });
     raiz.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'mo-campo') calcular(); });
     $('.mo-escribir', raiz).addEventListener('change', e => {

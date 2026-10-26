@@ -1,9 +1,11 @@
 /* =====================================================================
-   HERRAMIENTA · MESA DE FRACCIONES (dividir entre una fracción)
+   HERRAMIENTA · MESA DE MULTIPLICAR Y DIVIDIR (fracciones)
    ---------------------------------------------------------------------
-   Para cada a ÷ b, con extremos y medios:
+   Para cada a · b o a ÷ b:
      1) si hay unidades, predecir en qué unidad queda el resultado;
-     2) la división se escribe como una fracción encima de la otra (lo
+     2) a · b: elegir cómo se juntan (arriba con arriba y abajo con
+        abajo; la cruz es para sumar). a ÷ b, con extremos y medios:
+        la división se escribe como una fracción encima de la otra (lo
         que no es fracción lleva un 1 abajo) y se tocan los dos
         extremos: el de más arriba y el de más abajo;
      3) los extremos quedan arriba y los medios abajo; se tacha por
@@ -37,8 +39,10 @@
   }
   // Extremos: lo de arriba de la primera y lo de abajo de la segunda
   const EXTREMOS = ['an', 'bd'];
+  const multiplica = reto => reto.op === '·';
+  const primeraFase = reto => (multiplica(reto) ? 'juntar' : 'extremos');
 
-  function crearFracciones(raiz) {
+  function crearFracciones(raiz, opciones = {}) {
     const C = MA.M2;
     const st = { reto: null, fase: null, chips: [], sel: null, prediccion: null, origen: null, ext: [] };
 
@@ -46,10 +50,10 @@
     raiz.innerHTML = `
       <div class="banco-cabeza">
         <div>
-          <span class="etiqueta">Herramienta 1</span>
-          <h3>Mesa de fracciones</h3>
+          <span class="etiqueta">Herramienta 2</span>
+          <h3>Mesa de multiplicar y dividir</h3>
         </div>
-        <div class="segmentado mf-retos" role="group" aria-label="Retos de fracciones"></div>
+        <div class="segmentado mf-retos" role="group" aria-label="Retos de multiplicar y dividir"></div>
       </div>
       <div class="bz-origen mf-origen" hidden></div>
       <div class="cv-reto mf-reto"></div>
@@ -95,7 +99,7 @@
       st.chips = [];
       st.ext = [];
       pasos.length = 0;
-      st.fase = reto.unidades ? 'unidad' : 'extremos';
+      st.fase = reto.unidades ? 'unidad' : primeraFase(reto);
       if (!origen && reto.id) MA.almacen.guardar('m2.frac.reto', reto.id);
       const i = C.RETOS_FRACCIONES.indexOf(reto);
       $('.mf-reto', raiz).innerHTML = `
@@ -107,7 +111,7 @@
       if (origen) {
         ori.innerHTML = `<span>${icono('hoja')}Ejercicio ${origen.numero} de la práctica</span><button type="button" class="btn btn-secundario btn-chico" data-accion="volver">${icono('flechaI')}Volver a la práctica</button>`;
       }
-      agregarPaso(`${fraccionHtml(reto.a)} ${op('÷')} ${fraccionHtml(reto.b)}`, 'El planteamiento.');
+      agregarPaso(`${fraccionHtml(reto.a)} ${op(multiplica(reto) ? '·' : '÷')} ${fraccionHtml(reto.b)}`, 'El planteamiento.');
       ponerMensaje(null);
       pintarRetos();
       pintar();
@@ -133,6 +137,18 @@
       const r = st.reto;
       preg.hidden = true;
       pintarBotones();
+      if (multiplica(r) && (st.fase === 'unidad' || st.fase === 'juntar')) {
+        mesa.innerHTML = `<div class="mf-division"><span class="mt">${fraccionHtml(r.a)} ${op('·')} ${fraccionHtml(r.b)}</span></div>`;
+        preg.hidden = false;
+        preg.innerHTML = st.fase === 'unidad' ? preguntaUnidad(r) : `
+          <p class="cv-preg-titulo">${icono('pista')}Para multiplicar fracciones, ¿cómo se juntan?</p>
+          <div class="fila-botones">
+            <button type="button" class="btn btn-secundario btn-chico" data-juntar="recto">Arriba con arriba, abajo con abajo</button>
+            <button type="button" class="btn btn-secundario btn-chico" data-juntar="cruz">En cruz, como la mariposa</button>
+          </div>
+          ${r.b.den.length ? '' : `<p class="texto-3">Lo que no es fracción lleva un 1 abajo: ${mt(parte(r.b.num))} es lo mismo que ${mt(fr(parte(r.b.num), n(1)))}.</p>`}`;
+        return;
+      }
       if (st.fase === 'unidad' || st.fase === 'extremos') {
         const activa = st.fase === 'extremos';
         const celda = (clave, xs) => {
@@ -155,10 +171,7 @@
         const unos = [r.a, r.b].filter(f => !f.den.length).map(f => `${mt(parte(f.num))} es lo mismo que ${mt(fr(parte(f.num), n(1)))}`);
         const notaUno = unos.length ? `<p class="texto-3">Lo que no es fracción lleva un 1 abajo: ${unos.join(' y ')}.</p>` : '';
         if (st.fase === 'unidad') {
-          preg.innerHTML = `
-            <p class="cv-preg-titulo">${icono('pista')}Antes de empezar: ¿en qué unidad va a quedar el resultado?</p>
-            <div class="fila-botones">${r.unidades.map(u => `<button type="button" class="btn btn-secundario btn-chico" data-predice="${MA.esc(u)}">${u}</button>`).join('')}</div>
-            <p class="texto-3">Es una predicción: al final se compara con lo que quede.</p>`;
+          preg.innerHTML = preguntaUnidad(r);
         } else {
           preg.innerHTML = `
             <p class="cv-preg-titulo">${icono('mano')}${st.ext.length ? 'Ahora, el otro extremo.' : 'Extremos arriba, medios abajo. Tocar los dos extremos: el de más arriba y el de más abajo.'}</p>
@@ -180,6 +193,13 @@
         preg.hidden = false;
         preg.innerHTML = `<p class="cv-preg-titulo">${icono('mano')}${st.sel == null ? 'Tachar por parejas: tocar algo de arriba y después algo de abajo.' : 'Ahora, su pareja en el otro piso.'}</p>`;
       }
+    }
+
+    function preguntaUnidad(r) {
+      return `
+        <p class="cv-preg-titulo">${icono('pista')}Antes de empezar: ¿en qué unidad va a quedar el resultado?</p>
+        <div class="fila-botones">${r.unidades.map(u => `<button type="button" class="btn btn-secundario btn-chico" data-predice="${MA.esc(u)}">${u}</button>`).join('')}</div>
+        <p class="texto-3">Es una predicción: al final se compara con lo que quede.</p>`;
     }
 
     /* ---------- Resultado ---------- */
@@ -205,7 +225,7 @@
     /* ---------- Acciones ---------- */
     function predecir(u) {
       st.prediccion = u;
-      st.fase = 'extremos';
+      st.fase = primeraFase(st.reto);
       ponerMensaje('info', `Predicción: ${MA.esc(u)}.`, 'Ahora, a resolverlo.');
       pintar();
     }
@@ -219,11 +239,29 @@
       if (st.ext.length < EXTREMOS.length) { ponerMensaje('ok', 'Ese es un extremo.', 'Va arriba.'); pintar(); return; }
       armar();
     }
+    let idChip = 0;
+    const mk = (x, piso) => (esNum(x) ? { id: idChip++, tipo: 'n', v: x, hist: [], piso } : { id: idChip++, tipo: 'u', u: x, tachada: false, piso });
+    // Multiplicar: arriba con arriba, abajo con abajo
+    function juntar(modo) {
+      const r = st.reto;
+      if (modo === 'cruz') {
+        ponerMensaje('error', 'En cruz, no.', 'La cruz (la mariposa) es para sumar y restar. Para multiplicar: arriba con arriba y abajo con abajo.');
+        return;
+      }
+      idChip = 0;
+      st.chips = [...r.a.num.map(x => mk(x, 'arriba')), ...r.b.num.map(x => mk(x, 'arriba')), ...r.a.den.map(x => mk(x, 'abajo')), ...r.b.den.map(x => mk(x, 'abajo'))];
+      const por = op('·');
+      agregarPaso(fr(`${parte(r.a.num)} ${por} ${parte(r.b.num)}`, `${parte(r.a.den)} ${por} ${parte(r.b.den)}`),
+        `Arriba con arriba, abajo con abajo.${r.a.den.length && r.b.den.length ? '' : ' Lo que no era fracción lleva un 1 abajo.'}`);
+      ponerMensaje('ok', '¡Correcto!', 'Arriba con arriba y abajo con abajo: ahora todo es una sola fracción.');
+      st.fase = 'tachar';
+      revisarFin();
+      pintar();
+    }
     // Extremos arriba, medios abajo: queda una sola fracción
     function armar() {
       const r = st.reto;
-      let id = 0;
-      const mk = (x, piso) => (esNum(x) ? { id: id++, tipo: 'n', v: x, hist: [], piso } : { id: id++, tipo: 'u', u: x, tachada: false, piso });
+      idChip = 0;
       st.chips = [
         ...r.a.num.map(x => mk(x, 'arriba')), ...r.b.den.map(x => mk(x, 'arriba')),
         ...r.a.den.map(x => mk(x, 'abajo')), ...r.b.num.map(x => mk(x, 'abajo'))
@@ -254,7 +292,7 @@
       if (st.prediccion != null) {
         extra = st.prediccion === r0.unidad
           ? ` La predicción (${MA.esc(st.prediccion)}) era correcta.`
-          : ` Se predijo ${MA.esc(st.prediccion)} y quedó ${MA.esc(unidadFinal)}: ${r0.unidad === 'm/s²' ? 'las dos s son medios, así que las dos quedan abajo.' : 'la unidad que estaba abajo del abajo es un extremo y terminó arriba.'}`;
+          : ` Se predijo ${MA.esc(st.prediccion)} y quedó ${MA.esc(unidadFinal)}: ${r0.porQue || 'la unidad que estaba abajo del abajo es un extremo y terminó arriba.'}`;
       }
       ponerMensaje('ok', '¡Listo!', `Queda ${r.D === 1 ? MA.fmt(r.N) : `${r.N}/${r.D}`}${unidadFinal ? ' ' + MA.esc(unidadFinal) : ''}.${extra}`);
       if (r0.id && !st.origen) {
@@ -321,13 +359,14 @@
       const i = C.RETOS_FRACCIONES.indexOf(st.reto), sig = C.RETOS_FRACCIONES[i + 1];
       const seguir = st.origen ? `<button type="button" class="btn" data-accion="volver">${icono('flechaI')}Volver al ejercicio ${st.origen.numero}</button>`
         : sig ? `<button type="button" class="btn" data-sig="${sig.id}">Siguiente reto${icono('flechaD')}</button>`
-        : i >= 0 ? `<a class="btn" href="#m2-ideas-p2">Seguir con las ideas clave, parte 2${icono('flechaD')}</a>` : '';
+        : i >= 0 && opciones.final ? `<button type="button" class="btn" data-accion="final">${opciones.final.texto}${icono('flechaD')}</button>` : '';
       cont.innerHTML = `${seguir}<button type="button" class="btn btn-secundario" data-accion="reiniciar">${icono('reiniciar')}Repetir</button>`;
     }
 
     function pista() {
       const r = st.reto;
       if (st.fase === 'unidad') ponerMensaje('info', 'Pista.', 'Con una fracción encima de la otra, los extremos quedan arriba y los medios abajo. ¿Qué unidades quedan arriba y cuáles abajo? ¿Cuáles se tachan?');
+      else if (st.fase === 'juntar') ponerMensaje('info', 'Pista.', 'La cruz es para sumar y restar. Para multiplicar, cada piso con su piso: arriba con arriba y abajo con abajo.');
       else if (st.fase === 'extremos') ponerMensaje('info', 'Pista.', 'Los extremos son las dos puntas: el de más arriba y el de más abajo. Como un sándwich: el pan va arriba y el relleno, abajo.');
       else if (st.fase === 'tachar') {
         const vivos = st.chips.filter(c => !c.tachada && !(c.tipo === 'n' && c.v === 1));
@@ -352,10 +391,12 @@
       }
       if (b.dataset.predice) { predecir(b.dataset.predice); return; }
       if (b.dataset.celda) { tocarCelda(b.dataset.celda); return; }
+      if (b.dataset.juntar) { juntar(b.dataset.juntar); return; }
       if (b.dataset.chip != null) { tocarChip(Number(b.dataset.chip)); return; }
       if (b.dataset.accion === 'pista') pista();
       else if (b.dataset.accion === 'reiniciar') cargar(st.reto, st.origen);
       else if (b.dataset.accion === 'volver' && st.origen) st.origen.volver();
+      else if (b.dataset.accion === 'final' && opciones.final) opciones.final.ir();
     });
     MA.bus.on('progreso', clave => { if (clave === null) pintarRetos(); });
 

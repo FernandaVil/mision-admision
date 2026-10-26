@@ -5,7 +5,8 @@ Plataforma de estudio para preparar el examen de admisión a Ingeniería Aeroná
 ## Contenido
 
 - **Módulo 1 · conversión de unidades y despejes** (disponible): ideas clave en diapositivas, balanza de despejes, mesa de conversión con factor unitario, práctica de 14 ejercicios y centro de comando IA con plantillas para pedir pistas.
-- **Módulos 2 a 6** (en preparación): álgebra y factorización, cinemática, dinámica, estequiometría, pH y simulacro final.
+- **Módulo 2 · álgebra básica** (disponible): fracciones (sumar, restar, multiplicar y dividir), signos y orden de las operaciones, y potencias con letras. Trae una mesa para cada tema y una práctica de 15 ejercicios.
+- **Módulos 3 a 6** (en preparación): factorización; física mecánica; estequiometría y notación científica; pH y simulacro final.
 
 ## Cómo abrirla
 
@@ -18,12 +19,13 @@ El avance se guarda en el navegador de cada dispositivo.
 
 ```
 index.html            página principal
-css/                  estilos (base, layout, componentes, módulo 1 y clase)
+css/                  estilos (base, layout, componentes, módulos 1 y 2, y clase)
 js/nucleo.js          utilidades compartidas
 js/catalogo.js        los 6 módulos
 js/m1/                módulo 1: contenido, motores y herramientas
+js/m2/                módulo 2: contenido, diapositivas y las cuatro mesas
 js/asistente.js       centro de comando IA
 js/plataforma.js      rutas, navegación y tema
 ```
 
-Los textos, retos y ejercicios del módulo 1 se editan en `js/m1/contenido.js`; las diapositivas de ideas clave, en `js/m1/clase.js`.
+Los textos, retos y ejercicios de cada módulo se editan en `js/m1/contenido.js` y `js/m2/contenido.js`; las diapositivas de ideas clave, en `clase.js`, dentro de la misma carpeta.
