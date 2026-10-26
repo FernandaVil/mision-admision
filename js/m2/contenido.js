@@ -6,6 +6,7 @@
    - RETOS_SUMAS, RETOS_FRACCIONES, RETOS_OPERACIONES, RETOS_EXPONENTES:
      las cuatro herramientas.
    - EJERCICIOS: práctica progresiva (ids: m2.prac.*).
+   - RADAR: primera ronda del radar de signos (ids: m2.radar.*).
    Los ids de retos y ejercicios no se cambian: el avance se guarda
    con ellos en el navegador.
    ===================================================================== */
@@ -300,6 +301,26 @@
     }
   ];
 
+  /* ---------- Radar de signos (práctica extra) ----------
+     Diez casillas: del 1 al 5, sumas y restas con negativos; del 6 al 10,
+     parejas con los mismos números (−3 · (−2) y −3 − 2) para fijarse en
+     la operación. Esta es la primera ronda; las siguientes cambian los números
+     con las mismas trampas (js/m2/radar.js).
+     tipo: paga (−5 + 3), endeuda (−4 − 4), sobra (−7 + 10), gasta (2 − 9),
+     por (−3 · (−2)), juntos (2 − (−2)) y entre (−a·b ÷ b: −12 ÷ 3). */
+  const RADAR = [
+    { id: 'r1', tipo: 'paga', a: 5, b: 3 },
+    { id: 'r2', tipo: 'endeuda', a: 4, b: 4 },
+    { id: 'r3', tipo: 'sobra', a: 7, b: 10 },
+    { id: 'r4', tipo: 'gasta', a: 2, b: 9 },
+    { id: 'r5', tipo: 'endeuda', a: 6, b: 3 },
+    { id: 'r6', tipo: 'por', a: 3, b: 2 },
+    { id: 'r7', tipo: 'endeuda', a: 3, b: 2 },
+    { id: 'r8', tipo: 'juntos', a: 2, b: 2 },
+    { id: 'r9', tipo: 'entre', a: 4, b: 3 },
+    { id: 'r10', tipo: 'paga', a: 12, b: 3 }
+  ];
+
   const NIVELES = { basico: 'Básico', intermedio: 'Intermedio', examen: 'Tipo examen', reto: 'Reto' };
   const TEMAS = { fracciones: 'Fracciones', signos: 'Signos y orden', potencias: 'Potencias' };
 
@@ -315,5 +336,5 @@
     ['10 min', 'Práctica: ejercicios 1 a 5 en papel. De tarea quedan los demás.']
   ];
 
-  MA.M2 = { RETOS_SUMAS, RETOS_FRACCIONES, RETOS_OPERACIONES, RETOS_EXPONENTES, EJERCICIOS, NIVELES, TEMAS, PLAN_CLASE, sup, pot, neg };
+  MA.M2 = { RETOS_SUMAS, RETOS_FRACCIONES, RETOS_OPERACIONES, RETOS_EXPONENTES, EJERCICIOS, RADAR, NIVELES, TEMAS, PLAN_CLASE, sup, pot, neg };
 })();

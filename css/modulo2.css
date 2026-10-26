@@ -151,6 +151,41 @@
 @media (max-width: 1100px) { .m2-reglas-grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .m2-reglas-grilla { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---------- Radar de signos (práctica extra) ---------- */
+/* Recordatorio: A (aplica la regla) en azul, B (plata, la trampa) en ámbar */
+.rd-situaciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
+.rd-situacion { padding: 12px 16px 14px; border: 1px solid var(--borde); border-top: 3px solid var(--primario); border-radius: var(--radio-chico); background: var(--superficie-2); }
+.rd-sit-b { border-top-color: var(--ambar); }
+.rd-letra { font-family: var(--f-mono); font-size: 0.78rem; font-weight: 500; color: var(--primario); }
+.rd-sit-b .rd-letra { color: var(--ambar); }
+.rd-situacion h4 { margin: 2px 0 6px; font-size: 0.98rem; }
+.rd-situacion p { font-size: 0.92rem; color: var(--texto-2); }
+.rd-ejemplos { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+.rd-ejemplos li { margin: 0; display: grid; gap: 2px; justify-items: start; }
+.rd-ejemplos li > span:last-child { font-size: 0.85rem; color: var(--texto-3); }
+.rd-ejemplos .mt { white-space: normal; flex-wrap: wrap; }
+.rd-trampa { display: flex; gap: 8px; align-items: flex-start; margin: 14px 0 0; font-size: 0.93rem; }
+.rd-trampa > svg { width: 18px; height: 18px; flex: none; margin-top: 3px; color: var(--ambar); }
+@media (max-width: 700px) { .rd-situaciones { grid-template-columns: minmax(0, 1fr); } }
+
+/* Gimnasia rápida */
+.m2-radar { margin-top: 18px; }
+.mesa-radar .banco-cabeza { justify-content: space-between; }
+.rd-instruccion { margin: 0 0 12px; font-size: 0.93rem; max-width: 72ch; }
+.rd-numero { display: block; text-align: center; margin-top: 6px; }
+.rd-cuenta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; padding: 10px 0 14px; font-size: 2rem; }
+.rd-cuenta .campo { width: 120px; min-height: 52px; font-size: 1.5rem; text-align: center; }
+.rd-cuenta .campo-grupo.rd-bien { border-color: var(--exito-borde); background: var(--exito-suave); }
+.rd-cuenta .campo-grupo.rd-bien .campo { color: var(--exito); }
+.rd-acciones { justify-content: center; margin-bottom: 14px; }
+.rd-mensaje { max-width: 680px; margin: 0 auto; }
+.rd-final { display: grid; gap: 10px; margin-bottom: 12px; }
+.rd-nav { justify-content: space-between; }
+@media (max-width: 640px) {
+  .rd-cuenta { font-size: 1.5rem; gap: 10px; }
+  .rd-cuenta .campo { width: 96px; font-size: 1.3rem; }
+}
+
 /* ---------- Diapositivas de la clase 2 ---------- */
 .d-nuevo { font-size: 0.6em; color: var(--ambar); font-weight: 600; margin-left: 0.1em; }
 .d-pie-tarjeta { display: block; margin-top: 0.4em; font-size: 0.62em; color: var(--texto-3); }

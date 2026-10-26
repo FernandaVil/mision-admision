@@ -227,6 +227,9 @@
   .pestana { flex: 1 1 0; min-width: 0; padding: 9px 6px; gap: 6px; font-size: 0.88rem; }
   .pt-largo { display: none; }
   .pt-corto { display: inline; }
+  /* Seis pestañas no caben en una fila: dos filas de tres */
+  .pestanas:has(> .pestana:nth-child(6)) { flex-wrap: wrap; }
+  .pestanas:has(> .pestana:nth-child(6)) > .pestana { flex: 1 1 30%; }
 }
 
 /* ---------- Panel general (inicio) ---------- */

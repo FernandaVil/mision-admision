@@ -1,10 +1,11 @@
 /* =====================================================================
    MÓDULO 2 · página completa (álgebra básica)
    Secciones: 1) ideas clave, 2) fracciones (sumar y restar; multiplicar
-   y dividir), 3) signos y orden, 4) potencias con letras, 5) práctica.
+   y dividir), 3) signos y orden, 4) potencias con letras, 5) práctica,
+   6) radar de signos (práctica extra).
    La factorización es el módulo 3; la notación científica, el módulo 5.
    Rutas: #m2-ideas (-p1, -p2, -p3) · #m2-fracciones · #m2-operaciones ·
-          #m2-potencias · #m2-practica
+          #m2-potencias · #m2-practica · #m2-radar
    ===================================================================== */
 (function () {
   'use strict';
@@ -26,7 +27,8 @@
     { id: 'fracciones', nombre: 'Fracciones', corto: 'Fracciones', icono: 'regla' },
     { id: 'operaciones', nombre: 'Signos y orden', corto: 'Signos', icono: 'objetivo' },
     { id: 'potencias', nombre: 'Potencias', corto: 'Potencias', icono: 'flechaD' },
-    { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' }
+    { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' },
+    { id: 'radar', nombre: 'Radar de signos', corto: 'Radar', icono: 'radar' }
   ];
 
   function progreso() {
@@ -37,7 +39,8 @@
       fracciones: cuenta('m2.frac.', [...C.RETOS_SUMAS, ...C.RETOS_FRACCIONES].map(x => x.id)),
       operaciones: cuenta('m2.op.', C.RETOS_OPERACIONES.map(x => x.id)),
       potencias: cuenta('m2.pot.', C.RETOS_EXPONENTES.map(x => x.id)),
-      practica: cuenta('m2.prac.', C.EJERCICIOS.map(x => x.id))
+      practica: cuenta('m2.prac.', C.EJERCICIOS.map(x => x.id)),
+      radar: cuenta('m2.radar.', C.RADAR.map(x => x.id))
     };
     const todos = SECCIONES.map(s => res[s.id]);
     res.hechos = todos.reduce((s, x) => s + x[0], 0);
@@ -190,6 +193,37 @@
       <div class="m2-practica"></div>`;
   }
 
+  function htmlRadar() {
+    return `
+      ${cabeza(6, 'Práctica focalizada: el radar de signos', 'Un error muy común es usar «menos y menos da más» en una resta como −2 − 4. Esa regla es para multiplicar y dividir. Primero, un recordatorio corto; después, diez cuentas de cabeza para entrenar el ojo.')}
+      <section class="tarjeta rd-recordatorio" aria-labelledby="rd-recordatorio-titulo">
+        <h3 id="rd-recordatorio-titulo">Antes de calcular: ¿se multiplican o se suman?</h3>
+        <div class="rd-situaciones">
+          <div class="rd-situacion rd-sit-a">
+            <span class="rd-letra">Situación A</span>
+            <h4>Se multiplican, se dividen o hay signos pegados</h4>
+            <p><b>Aquí sí</b> aplica la regla: signos iguales dan +; signos distintos dan −.</p>
+            <ul class="rd-ejemplos">
+              <li>${mt(n(-3), por, neg(-2), igual, n(6))}<span>iguales: +</span></li>
+              <li>${mt(n(-8), entre, n(2), igual, n(-4))}<span>distintos: −</span></li>
+              <li>${mt(n(2), menos, neg(-2), igual, n(2), mas, n(2), igual, n(4))}<span>pegados: − y − dan +</span></li>
+            </ul>
+          </div>
+          <div class="rd-situacion rd-sit-b">
+            <span class="rd-letra">Situación B</span>
+            <h4>Se suman o se restan números separados</h4>
+            <p><b>Aquí no</b> aplica la regla: se piensa en plata. Los positivos son plata en el bolsillo; los negativos, deudas.</p>
+            <ul class="rd-ejemplos">
+              <li>${mt(n(-2), menos, n(4), igual, n(-6))}<span>«Debo 2 y me endeudo con 4 más: ahora debo 6».</span></li>
+              <li>${mt(n(-5), mas, n(3), igual, n(-2))}<span>«Debo 5 y pago 3: todavía debo 2».</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="rd-trampa">${icono('alerta')}<span><b>La trampa:</b> ${mt(n(-2), menos, n(4))} no da +6. Ahí no hay nada que multiplicar: son dos deudas que se juntan.</span></p>
+      </section>
+      <div class="m2-radar"></div>`;
+  }
+
   const vista = {
     secciones: SECCIONES,
     progreso,
@@ -222,6 +256,7 @@
         <section class="m1-seccion m2-seccion" id="m2-operaciones" data-sec="operaciones" role="tabpanel" hidden>${htmlOperaciones()}</section>
         <section class="m1-seccion m2-seccion" id="m2-potencias" data-sec="potencias" role="tabpanel" hidden>${htmlPotencias()}</section>
         <section class="m1-seccion m2-seccion" id="m2-practica" data-sec="practica" role="tabpanel" hidden>${htmlPractica()}</section>
+        <section class="m1-seccion m2-seccion" id="m2-radar" data-sec="radar" role="tabpanel" hidden>${htmlRadar()}</section>
         <nav class="pie-seccion" aria-label="Navegación entre secciones"></nav>`;
       cont.appendChild(raiz);
       this.raiz = raiz;
@@ -257,6 +292,7 @@
         }
       });
       this.practica = practica;
+      MA.Radar.crear($('.m2-radar', raiz));
 
       MA.bus.on('progreso', () => this.pintarProgreso());
       this.pintarProgreso();
