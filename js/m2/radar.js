@@ -6,7 +6,9 @@
    divisiones que usan los mismos números, para obligar a mirar la
    operación antes de calcular.
    Si la respuesta sale de usar «menos y menos da más» en una suma o una
-   resta, salta una alerta con la analogía de la plata. La primera ronda
+   resta, salta una alerta con la analogía de la plata. Los signos
+   pegados (−4 − (−2)) solo se cambian por uno; el signo del resultado
+   sale después, con la plata, y puede ser negativo. La primera ronda
    es fija (MA.M2.RADAR); las siguientes cambian los números con las
    mismas trampas y se repiten igual al recargar (azar con semilla).
    ===================================================================== */
@@ -19,12 +21,15 @@
   const { neg } = MA.M2;
 
   /* ---------- Tipos de ejercicio ----------
-     sit: A (se multiplican o los signos están pegados: aplica la regla)
-     o B (números separados que se suman o se restan: plata).
+     sit: A (se multiplican o se dividen: la regla da el signo del
+     resultado), B (números separados que se suman o se restan: plata) o
+     C (signos pegados: se cambian por uno solo y queda una cuenta B).
      pregunta: la idea de plata sin la respuesta; plata: con la respuesta.
-     errores: respuestas típicas y su mensaje; aviso: true es la alerta
-     de «no se están multiplicando». */
+     C: cambio (cómo queda escrito) y pasa (la cuenta B que queda).
+     errores: respuestas típicas y su mensaje; aviso: true es una alerta
+     del radar (ámbar). */
   const CUIDADO = 'Cuidado, no se están multiplicando.';
+  const PEGADOS = 'Cuidado, los signos pegados no dicen el signo del resultado.';
   const TIPOS = {
     paga: {
       sit: 'B', ver: (a, b) => [n(-a), mas, n(b)], da: (a, b) => b - a,
@@ -69,6 +74,13 @@
         { v: -a * b, aviso: true, titulo: CUIDADO, texto: `Ese resultado sale de multiplicar ${a} por ${b} con «distintos dan −».` }
       ]
     },
+    // Solo aparece después de cambiar los signos pegados de 2 − (−2)
+    gana: {
+      sit: 'B', ver: (a, b) => [n(a), mas, n(b)], da: (a, b) => a + b,
+      pregunta: (a, b) => `si tengo ${a} y recibo ${b}, ¿cuánto tengo?`,
+      plata: (a, b) => `tengo ${a} y recibo ${b}: ahora tengo ${a + b}`,
+      errores: () => []
+    },
     por: {
       sit: 'A', ver: (a, b) => [n(-a), por, neg(-b)], da: (a, b) => a * b,
       regla: () => 'se multiplican con signos iguales, así que da +.',
@@ -87,17 +99,45 @@
         { v: -a * b + b, titulo: 'Aquí sí se dividen.', texto: `El ÷ quiere decir «entre»: ¿cuántas veces cabe ${b} en ${a * b}? Signos distintos dan −.` }
       ]
     },
+    // −a − (−b): dos menos, pero el resultado es negativo si b < a
+    quita: {
+      sit: 'C', ver: (a, b) => [n(-a), menos, neg(-b)], da: (a, b) => b - a,
+      cambio: (a, b) => `−${a} + ${b}`, pasa: (a, b) => ({ tipo: b < a ? 'paga' : 'sobra', a, b }),
+      errores: (a, b) => [
+        b < a
+          ? { v: a - b, aviso: true, titulo: PEGADOS, texto: `Los dos menos solo se cambian por un +: queda −${a} + ${b}.` }
+          : { v: a - b, titulo: 'El número está bien, pero el signo no.', texto: `Los dos menos se cambian por un +: queda −${a} + ${b}.` },
+        { v: a + b, aviso: true, titulo: PEGADOS, texto: `Los dos menos solo se cambian por un +: queda −${a} + ${b}, no ${a} + ${b}.` },
+        { v: a * b, aviso: true, titulo: CUIDADO, texto: `Ese resultado sale de multiplicar ${a} por ${b} con «menos y menos da más».` },
+        { v: -a - b, titulo: 'Los signos pegados se cambian por uno solo.', texto: `− (−${b}) se vuelve + ${b}: queda −${a} + ${b}.` }
+      ]
+    },
     juntos: {
-      sit: 'A', ver: (a, b) => [n(a), menos, neg(-b)], da: (a, b) => a + b,
-      regla: (a, b) => `hay signos pegados, y − (−${b}) se vuelve + ${b}.`,
+      sit: 'C', ver: (a, b) => [n(a), menos, neg(-b)], da: (a, b) => a + b,
+      cambio: (a, b) => `${a} + ${b}`, pasa: (a, b) => ({ tipo: 'gana', a, b }),
       errores: (a, b) => [a - b, b - a, -a - b].map(v => ({
-        v, titulo: 'Los signos están pegados.', texto: `− (−${b}) se vuelve + ${b}: aquí sí aplica la regla, iguales dan +. Quitar una deuda es como ganar plata.`
+        v, titulo: 'Los signos pegados se cambian por uno solo.', texto: `− (−${b}) se vuelve + ${b}: queda ${a} + ${b}.`
       }))
+    },
+    masneg: {
+      sit: 'C', ver: (a, b) => [n(a), mas, neg(-b)], da: (a, b) => a - b,
+      cambio: (a, b) => `${a} − ${b}`, pasa: (a, b) => ({ tipo: 'gasta', a, b }),
+      errores: (a, b) => [
+        { v: b - a, titulo: 'El número está bien, pero el signo no.', texto: `+ (−${b}) se vuelve − ${b}: queda ${a} − ${b}.` },
+        { v: a + b, titulo: 'Los signos pegados se cambian por uno solo.', texto: `+ (−${b}) se vuelve − ${b}: queda ${a} − ${b}.` },
+        { v: -a * b, aviso: true, titulo: CUIDADO, texto: `Ese resultado sale de multiplicar ${a} por ${b} con «distintos dan −».` }
+      ]
     }
   };
   const GRUPOS = [['Sumas y restas', 0, 5], ['Todo mezclado', 5, 10]];
   const plano = ej => TIPOS[ej.tipo].ver(ej.a, ej.b).join(' ').replace(/<[^>]+>/g, '');
   const da = ej => TIPOS[ej.tipo].da(ej.a, ej.b);
+  // La cuenta de plata que hay que pensar: la misma (B) o la que queda al cambiar los signos pegados (C)
+  const plataDe = ej => {
+    const t = TIPOS[ej.tipo];
+    const p = t.sit === 'C' ? t.pasa(ej.a, ej.b) : t.sit === 'B' ? ej : null;
+    return p && { pregunta: TIPOS[p.tipo].pregunta(p.a, p.b), plata: TIPOS[p.tipo].plata(p.a, p.b) };
+  };
 
   /* ---------- Rondas ----------
      La 1 es la de contenido.js. Las demás: mismo esquema con números al
@@ -120,11 +160,19 @@
       () => { const a = e(1, 8); return { tipo: 'gasta', a, b: e(a + 1, a + 9) }; },
       () => ({ tipo: 'endeuda', a: e(2, 9), b: e(2, 9) })
     ]).map(f => f());
-    // Todo mezclado: parejas con los mismos números, en cualquier orden
+    // Signos pegados: la mitad de las veces −a − (−b), que da negativo o positivo según la plata
+    function pegados() {
+      const x = azar();
+      if (x < 0.5) { const a = e(2, 9); let b = e(1, 8); if (b >= a) b++; return { tipo: 'quita', a, b }; }
+      if (x < 0.75) return { tipo: 'juntos', a: e(1, 9), b: e(1, 9) };
+      const a = e(1, 8);
+      return { tipo: 'masneg', a, b: e(a + 1, a + 9) };
+    }
+    // Todo mezclado: parejas con los mismos números, en cualquier orden, y unos signos pegados en el medio
     const a = e(2, 7), b = e(2, 7), c = e(2, 6), d = e(2, 5);
     const cambio = [
       ...mezclar([{ tipo: 'por', a, b }, { tipo: 'endeuda', a, b }]),
-      { tipo: 'juntos', a: e(1, 9), b: e(1, 9) },
+      pegados(),
       ...mezclar([{ tipo: 'entre', a: c, b: d }, { tipo: 'paga', a: c * d, b: d }])
     ];
     return [...sumas, ...cambio].map((ej, i) => ({ ...ej, id: base[i].id }));
@@ -148,7 +196,7 @@
         </div>
       </div>
       <div class="banco-cuerpo">
-        <p class="texto-2 rd-instruccion">Solo el resultado, sin papel. Del 1 al 5 hay solo sumas y restas. Del 6 al 10 se mezclan con multiplicaciones y divisiones que usan los mismos números, así que antes de calcular hay que fijarse en qué operación es.</p>
+        <p class="texto-2 rd-instruccion">Solo el resultado, sin papel. Del 1 al 5 hay solo sumas y restas. Del 6 al 10 se mezclan con multiplicaciones, divisiones y signos pegados, a veces con los mismos números, así que antes de calcular hay que fijarse en qué operación es.</p>
         <nav class="pr-mapa rd-mapa" aria-label="Ejercicios del radar"></nav>
         <span class="etiqueta rd-numero"></span>
         <div class="rd-cuenta">
@@ -172,8 +220,11 @@
     const campo = $('.campo', raiz);
     const msj = $('.rd-mensaje', raiz);
     const guardar = () => MA.almacen.guardar('m2.radar', st);
-    const datos = ej => (st.estado[ej.id] = st.estado[ej.id] || { resuelto: false, intentos: 0, alerta: false });
-    const resuelto = ej => !!(st.estado[ej.id] && st.estado[ej.id].resuelto);
+    // La firma evita dar por resuelto un ejercicio que cambió (por ejemplo, al ajustar la ronda 1)
+    const firma = ej => `${ej.tipo} ${ej.a} ${ej.b}`;
+    const vigente = ej => st.estado[ej.id] && st.estado[ej.id].firma === firma(ej);
+    const datos = ej => (vigente(ej) ? st.estado[ej.id] : (st.estado[ej.id] = { firma: firma(ej), resuelto: false, intentos: 0, alerta: false }));
+    const resuelto = ej => !!(vigente(ej) && st.estado[ej.id].resuelto);
 
     function ponerMensaje(tipo, titulo, texto) {
       const ico = { ok: 'checkCirculo', aviso: 'radar', info: 'info', error: 'errorCirculo' }[tipo];
@@ -181,8 +232,10 @@
       msj.innerHTML = `${icono(ico)}<div><span class="m-titulo">${titulo}</span>${texto}</div>`;
     }
     const explicar = ej => {
-      const t = TIPOS[ej.tipo];
-      return `Situación ${t.sit}: ${t.sit === 'A' ? t.regla(ej.a, ej.b) : `«${t.plata(ej.a, ej.b)}».`}`;
+      const t = TIPOS[ej.tipo], p = plataDe(ej);
+      if (t.sit === 'A') return `Situación A: ${t.regla(ej.a, ej.b)}`;
+      if (t.sit === 'B') return `Situación B: «${p.plata}».`;
+      return `Situación C: los signos pegados se cambian por uno solo y queda ${t.cambio(ej.a, ej.b)}. Después, plata: «${p.plata}».`;
     };
 
     function pintarMapa() {
@@ -254,10 +307,14 @@
       d.intentos++;
       const err = t.errores(ej.a, ej.b).filter(x => x.v !== r).find(x => cands.includes(x.v));
       if (err && err.aviso) d.alerta = true;
-      let texto = err ? err.texto : t.sit === 'A' ? 'Aquí sí aplica la regla de los signos: iguales dan +, distintos dan −. Primero el signo y después el número.' : 'Aquí no aplica la regla de los signos: es plata.';
+      let texto = err ? err.texto : {
+        A: 'Aquí sí aplica la regla de los signos: iguales dan +, distintos dan −. Primero el signo y después el número.',
+        B: 'Aquí no aplica la regla de los signos: es plata.',
+        C: `Primero los signos pegados se cambian por uno solo: queda ${t.cambio(ej.a, ej.b)}.`
+      }[t.sit];
       // A la segunda vez, la idea completa y el resultado
-      const revelar = d.intentos >= 2;
-      if (t.sit === 'B') texto += revelar ? ` Así se piensa: «${t.plata(ej.a, ej.b)}».` : ` Pensarlo así: «${t.pregunta(ej.a, ej.b)}».`;
+      const revelar = d.intentos >= 2, p = plataDe(ej);
+      if (p) texto += revelar ? ` Así se piensa: «${p.plata}».` : ` Pensarlo así: «${p.pregunta}».`;
       if (revelar) texto += ` Resultado: ${MA.fmt(r)}.`;
       guardar();
       ponerMensaje(err && err.aviso ? 'aviso' : 'error', err ? err.titulo : 'Todavía no.', texto.trim());

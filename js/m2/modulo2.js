@@ -195,31 +195,43 @@
 
   function htmlRadar() {
     return `
-      ${cabeza(6, 'Práctica focalizada: el radar de signos', 'Un error muy común es usar «menos y menos da más» en una resta como −2 − 4. Esa regla es para multiplicar y dividir. Primero, un recordatorio corto; después, diez cuentas de cabeza para entrenar el ojo.')}
+      ${cabeza(6, 'Práctica focalizada: el radar de signos', 'La regla «menos por menos da más» dice el signo del resultado solo al multiplicar y al dividir. En una suma o una resta no lo dice: −2 − 4 da −6, y −4 − (−2) da −2. Primero, un recordatorio corto; después, diez cuentas de cabeza para entrenar el ojo.')}
       <section class="tarjeta rd-recordatorio" aria-labelledby="rd-recordatorio-titulo">
-        <h3 id="rd-recordatorio-titulo">Antes de calcular: ¿se multiplican o se suman?</h3>
+        <h3 id="rd-recordatorio-titulo">Antes de calcular: ¿qué operación es?</h3>
         <div class="rd-situaciones">
           <div class="rd-situacion rd-sit-a">
             <span class="rd-letra">Situación A</span>
-            <h4>Se multiplican, se dividen o hay signos pegados</h4>
-            <p><b>Aquí sí</b> aplica la regla: signos iguales dan +; signos distintos dan −.</p>
+            <h4>Se multiplican o se dividen</h4>
+            <p>La regla dice el <b>signo del resultado</b>: signos iguales dan +; signos distintos dan −.</p>
             <ul class="rd-ejemplos">
-              <li>${mt(n(-3), por, neg(-2), igual, n(6))}<span>iguales: +</span></li>
-              <li>${mt(n(-8), entre, n(2), igual, n(-4))}<span>distintos: −</span></li>
-              <li>${mt(n(2), menos, neg(-2), igual, n(2), mas, n(2), igual, n(4))}<span>pegados: − y − dan +</span></li>
+              <li>${mt(n(-3), por, neg(-2), igual, n(6))}<span>iguales: el resultado es positivo</span></li>
+              <li>${mt(n(-8), entre, n(2), igual, n(-4))}<span>distintos: el resultado es negativo</span></li>
             </ul>
           </div>
           <div class="rd-situacion rd-sit-b">
             <span class="rd-letra">Situación B</span>
             <h4>Se suman o se restan números separados</h4>
-            <p><b>Aquí no</b> aplica la regla: se piensa en plata. Los positivos son plata en el bolsillo; los negativos, deudas.</p>
+            <p>La regla <b>no</b> dice el signo del resultado: se piensa en plata. Los positivos son plata en el bolsillo; los negativos, deudas.</p>
             <ul class="rd-ejemplos">
               <li>${mt(n(-2), menos, n(4), igual, n(-6))}<span>«Debo 2 y me endeudo con 4 más: ahora debo 6».</span></li>
               <li>${mt(n(-5), mas, n(3), igual, n(-2))}<span>«Debo 5 y pago 3: todavía debo 2».</span></li>
             </ul>
           </div>
+          <div class="rd-situacion rd-sit-c">
+            <span class="rd-letra">Situación C</span>
+            <h4>Signos pegados: se cambian por uno solo</h4>
+            <p>Dos signos pegados se reemplazan por uno: ${mt(menos, neg(-2))} se vuelve ${mt(mas, n(2))}, y ${mt(mas, neg(-2))} se vuelve ${mt(menos, n(2))}. Eso <b>no</b> dice el signo del resultado: solo deja una suma o una resta, que se resuelve con plata, como en la situación B.</p>
+            <ul class="rd-ejemplos">
+              <li>${mt(n(2), menos, neg(-2), igual, n(2), mas, n(2), igual, n(4))}<span>«Tengo 2 y recibo 2: ahora tengo 4».</span></li>
+              <li>${mt(n(-4), menos, neg(-2), igual, n(-4), mas, n(2), igual, n(-2))}<span>«Debo 4 y pago 2: todavía debo 2». Hay dos menos, y el resultado es negativo.</span></li>
+              <li>${mt(n(3), mas, neg(-5), igual, n(3), menos, n(5), igual, n(-2))}<span>«Tengo 3 y gasto 5: no me alcanza y quedo debiendo 2».</span></li>
+            </ul>
+          </div>
         </div>
-        <p class="rd-trampa">${icono('alerta')}<span><b>La trampa:</b> ${mt(n(-2), menos, n(4))} no da +6. Ahí no hay nada que multiplicar: son dos deudas que se juntan.</span></p>
+        <ul class="rd-trampas">
+          <li>${icono('alerta')}<span><b>Trampa 1:</b> ${mt(n(-2), menos, n(4))} no da +6. No hay nada que multiplicar: son dos deudas que se juntan.</span></li>
+          <li>${icono('alerta')}<span><b>Trampa 2:</b> ${mt(n(-4), menos, neg(-2))} no da positivo. Los dos menos solo se cambian por un +, y queda ${mt(n(-4), mas, n(2), igual, n(-2))}.</span></li>
+        </ul>
       </section>
       <div class="m2-radar"></div>`;
   }

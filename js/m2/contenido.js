@@ -307,7 +307,9 @@
      la operación. Esta es la primera ronda; las siguientes cambian los números
      con las mismas trampas (js/m2/radar.js).
      tipo: paga (−5 + 3), endeuda (−4 − 4), sobra (−7 + 10), gasta (2 − 9),
-     por (−3 · (−2)), juntos (2 − (−2)) y entre (−a·b ÷ b: −12 ÷ 3). */
+     por (−3 · (−2)), entre (−a·b ÷ b: −12 ÷ 3) y signos pegados: quita
+     (−4 − (−2): dos menos y el resultado es negativo), juntos (2 − (−2))
+     y masneg (3 + (−5)). */
   const RADAR = [
     { id: 'r1', tipo: 'paga', a: 5, b: 3 },
     { id: 'r2', tipo: 'endeuda', a: 4, b: 4 },
@@ -316,7 +318,7 @@
     { id: 'r5', tipo: 'endeuda', a: 6, b: 3 },
     { id: 'r6', tipo: 'por', a: 3, b: 2 },
     { id: 'r7', tipo: 'endeuda', a: 3, b: 2 },
-    { id: 'r8', tipo: 'juntos', a: 2, b: 2 },
+    { id: 'r8', tipo: 'quita', a: 4, b: 2 },
     { id: 'r9', tipo: 'entre', a: 4, b: 3 },
     { id: 'r10', tipo: 'paga', a: 12, b: 3 }
   ];

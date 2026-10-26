@@ -152,7 +152,7 @@
 @media (max-width: 560px) { .m2-reglas-grilla { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- Radar de signos (práctica extra) ---------- */
-/* Recordatorio: A (aplica la regla) en azul, B (plata, la trampa) en ámbar */
+/* Recordatorio: A (la regla da el signo) en azul, B (plata, la trampa) en ámbar, C (signos pegados) neutra y a lo ancho */
 .rd-situaciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
 .rd-situacion { padding: 12px 16px 14px; border: 1px solid var(--borde); border-top: 3px solid var(--primario); border-radius: var(--radio-chico); background: var(--superficie-2); }
 .rd-sit-b { border-top-color: var(--ambar); }
@@ -164,8 +164,13 @@
 .rd-ejemplos li { margin: 0; display: grid; gap: 2px; justify-items: start; }
 .rd-ejemplos li > span:last-child { font-size: 0.85rem; color: var(--texto-3); }
 .rd-ejemplos .mt { white-space: normal; flex-wrap: wrap; }
-.rd-trampa { display: flex; gap: 8px; align-items: flex-start; margin: 14px 0 0; font-size: 0.93rem; }
-.rd-trampa > svg { width: 18px; height: 18px; flex: none; margin-top: 3px; color: var(--ambar); }
+.rd-sit-c { grid-column: 1 / -1; border-top-color: var(--texto-3); }
+.rd-sit-c .rd-letra { color: var(--texto-2); }
+.rd-sit-c .rd-ejemplos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 18px; }
+.rd-trampas { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; font-size: 0.93rem; }
+.rd-trampas li { margin: 0; display: flex; gap: 8px; align-items: flex-start; }
+.rd-trampas li > svg { width: 18px; height: 18px; flex: none; margin-top: 3px; color: var(--ambar); }
+@media (max-width: 900px) { .rd-sit-c .rd-ejemplos { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 700px) { .rd-situaciones { grid-template-columns: minmax(0, 1fr); } }
 
 /* Gimnasia rápida */
