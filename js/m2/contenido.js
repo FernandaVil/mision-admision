@@ -13,7 +13,7 @@
 (function () {
   'use strict';
   const MA = window.MA;
-  const { vr, un, n, op, fr, mt, q, tach, cuad } = MA.f;
+  const { vr, un, n, op, fr, mt, q, tach, cuad, doble, ext, med } = MA.f;
   const por = op('·'), igual = op('='), entre = op('÷');
   const qn = (valor, unidad) => `${n(valor)} ${un(unidad)}`;
   const qt = (valor, unidad) => `${n(valor)} ${tach(un(unidad))}`;
@@ -119,9 +119,9 @@
       id: 'e1', nivel: 'basico', tema: 'fracciones', tipo: 'numero', respuesta: 20,
       enunciado: `Calcular ${mt(n(5), entre, fr(n(1), n(4)))}.`,
       plano: 'Calcular 5 ÷ 1/4.',
-      errores: [{ valor: 1.25, msg: 'Ese resultado sale de dividir 5 entre 4. Dividir entre 1/4 es multiplicar por 4/1.' }],
-      pistas: ['¿Cuántos cuartos caben en 5 unidades?', `Dividir entre una fracción es multiplicar por la fracción dada vuelta: ${mt(n(5), por, fr(n(4), n(1)))}.`],
-      solucion: [`${mt(n(5), entre, fr(n(1), n(4)), igual, n(5), por, fr(n(4), n(1)), igual, n(20))}`, 'Respuesta: 20. En cada unidad caben 4 cuartos; en 5 unidades, 20.'],
+      errores: [{ valor: 1.25, msg: 'Ese resultado sale de dividir 5 entre 4. El 4 está abajo del abajo: es un extremo y sube, así que multiplica.' }],
+      pistas: ['¿Cuántos cuartos caben en 5 unidades?', `Una encima de la otra, con un 1 debajo del 5: ${mt(doble(fr(n(5), n(1)), fr(n(1), n(4))))}. Extremos arriba, medios abajo.`],
+      solucion: [`${mt(n(5), entre, fr(n(1), n(4)), igual, doble(fr(ext(n(5)), med(n(1))), fr(med(n(1)), ext(n(4)))), igual, fr(`${ext(n(5))} ${por} ${ext(n(4))}`, `${med(n(1))} ${por} ${med(n(1))}`), igual, n(20))}`, 'Respuesta: 20. En cada unidad caben 4 cuartos; en 5 unidades, 20.'],
       herramienta: { boton: 'Probarlo en la mesa de fracciones', icono: 'regla', seccion: 'fracciones', problema: { a: { num: [5], den: [] }, b: { num: [1], den: [4] } } }
     },
     {
@@ -164,11 +164,11 @@
       enunciado: `Calcular ${mt(fr(n(2), n(5)), entre, fr(n(4), n(15)))}. Se puede responder con fracción (3/2) o con decimal.`,
       plano: 'Calcular 2/5 ÷ 4/15.',
       errores: [
-        { valor: 8 / 75, msg: 'Ese resultado sale de multiplicar sin dar vuelta la segunda fracción.' },
-        { valor: 2 / 3, msg: 'Ese resultado sale de dar vuelta la primera fracción. Se da vuelta la que divide: 4/15.' }
+        { valor: 8 / 75, msg: 'Ese resultado sale de multiplicar las dos fracciones tal como están. Para dividir: extremos arriba (2 · 15) y medios abajo (5 · 4).' },
+        { valor: 2 / 3, msg: 'Ese resultado está al revés: quedaron arriba los medios. Arriba van los extremos, 2 · 15, y abajo los medios, 5 · 4.' }
       ],
-      pistas: [`${mt(fr(n(2), n(5)), por, fr(n(15), n(4)))}. Antes de multiplicar, conviene tachar.`, 'El 15 de arriba y el 5 de abajo se dividen entre 5; el 2 de arriba y el 4 de abajo, entre 2.'],
-      solucion: [`${mt(fr(n(2), n(5)), entre, fr(n(4), n(15)), igual, fr(n(2), n(5)), por, fr(n(15), n(4)))}`, `Simplificando: ${mt(fr(`${n(1)} ${por} ${n(3)}`, `${n(1)} ${por} ${n(2)}`), igual, fr(n(3), n(2)), igual, n(1.5))}`],
+      pistas: [`${mt(doble(fr(n(2), n(5)), fr(n(4), n(15))))}: extremos arriba (2 · 15), medios abajo (5 · 4). Antes de multiplicar, conviene tachar.`, 'El 15 de arriba y el 5 de abajo se dividen entre 5; el 2 de arriba y el 4 de abajo, entre 2.'],
+      solucion: [`${mt(doble(fr(ext(n(2)), med(n(5))), fr(med(n(4)), ext(n(15)))), igual, fr(`${ext(n(2))} ${por} ${ext(n(15))}`, `${med(n(5))} ${por} ${med(n(4))}`))}`, `Simplificando: ${mt(fr(`${n(1)} ${por} ${n(3)}`, `${n(1)} ${por} ${n(2)}`), igual, fr(n(3), n(2)), igual, n(1.5))}`],
       herramienta: { boton: 'Probarlo en la mesa de fracciones', icono: 'regla', seccion: 'fracciones', problema: { a: { num: [2], den: [5] }, b: { num: [4], den: [15] } } }
     },
     {
@@ -218,7 +218,7 @@
         { valor: 37500, msg: 'Ese resultado sale de multiplicar d · v. El tiempo es t = d ÷ v.' },
         { valor: 1 / 60, msg: 'Esa es la división al revés: t = 1500 ÷ 25.' }
       ],
-      pistas: [`${mt(vr('t'), igual, vr('d'), entre, vr('v'))}. ¿En qué unidad queda ${mt(un('m'), entre, un('m/s'))}?`, `${mt(un('m'), entre, fr(un('m'), un('s')), igual, tach(un('m')), por, fr(un('s'), tach(un('m'))), igual, un('s'))}. Queda ${mt(n(1500), entre, n(25))}.`],
+      pistas: [`${mt(vr('t'), igual, vr('d'), entre, vr('v'))}. ¿En qué unidad queda ${mt(un('m'), entre, un('m/s'))}?`, `${mt(doble(fr(un('m'), n(1)), fr(un('m'), un('s'))), igual, fr(`${tach(un('m'))} ${por} ${un('s')}`, `${n(1)} ${por} ${tach(un('m'))}`), igual, un('s'))}: la s está abajo del abajo y sube. Queda ${mt(n(1500), entre, n(25))}.`],
       solucion: [`${mt(vr('t'), igual, qt(1500, 'm'), entre, fr(qt(25, 'm'), un('s')), igual, fr(n(1500), n(25)), un('s'))}`, `${mt(fr(n(1500), n(25)), igual, fr(n(6000), n(100)), igual, n(60))}. Respuesta: ${q(60, 's')}, un minuto.`]
     },
     {
@@ -270,8 +270,8 @@
         { valor: 1250000, msg: 'Ese resultado sale de multiplicar. Tiempo = energía ÷ potencia.' },
         { valor: 0.05, msg: 'Esa es la división al revés: 5000 ÷ 250.' }
       ],
-      pistas: [`Tiempo = energía ÷ potencia: ${mt(qn(5000, 'J'), entre, fr(qn(250, 'J'), un('s')))}.`, `Dar vuelta y multiplicar: ${mt(un('J'), por, fr(un('s'), un('J')), igual, un('s'))}. Queda ${mt(n(5000), entre, n(250))}.`],
-      solucion: [`${mt(qt(5000, 'J'), por, fr(un('s'), qt(250, 'J')), igual, fr(n(5000), n(250)), un('s'))}`, `${mt(fr(n(5000), n(250)), igual, fr(n(500), n(25)), igual, n(20))}. Respuesta: ${q(20, 's')}.`],
+      pistas: [`Tiempo = energía ÷ potencia: ${mt(qn(5000, 'J'), entre, fr(qn(250, 'J'), un('s')))}.`, `Extremos arriba, medios abajo: ${mt(doble(fr(un('J'), n(1)), fr(un('J'), un('s'))), igual, fr(`${tach(un('J'))} ${por} ${un('s')}`, `${n(1)} ${por} ${tach(un('J'))}`), igual, un('s'))}. Queda ${mt(n(5000), entre, n(250))}.`],
+      solucion: [`${mt(doble(fr(qn(5000, 'J'), n(1)), fr(qn(250, 'J'), un('s'))), igual, fr(`${qt(5000, 'J')} ${por} ${un('s')}`, `${n(1)} ${por} ${qt(250, 'J')}`), igual, fr(n(5000), n(250)), un('s'))}`, `${mt(fr(n(5000), n(250)), igual, fr(n(500), n(25)), igual, n(20))}. Respuesta: ${q(20, 's')}.`],
       herramienta: { boton: 'Probarlo en la mesa de fracciones', icono: 'regla', seccion: 'fracciones', problema: { a: { num: [5000, 'J'], den: [] }, b: { num: [250, 'J'], den: ['s'] }, unidades: ['s', 'J²/s', '1/s', 'W'], unidad: 's' } }
     },
     {

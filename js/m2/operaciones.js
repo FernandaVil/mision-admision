@@ -148,10 +148,7 @@
           <label class="cv-predecir"><input type="checkbox" class="mo-escribir" ${st.escribir ? 'checked' : ''}><span>Escribir cada resultado</span></label>
         </div>
         <div class="mensaje mo-mensaje" role="status" aria-live="polite"></div>
-        <div class="fila-botones">
-          <button type="button" class="btn btn-secundario btn-chico" data-accion="pista">${icono('pista')}Pista</button>
-          <button type="button" class="btn btn-fantasma btn-chico" data-accion="reiniciar">${icono('reiniciar')}Reiniciar</button>
-        </div>
+        <div class="fila-botones mo-botones"></div>
       </div>
       <section class="cv-bitacora" aria-label="Pasos">
         <h4>Pasos</h4>
@@ -215,8 +212,25 @@
     }
     const resultadoDe = nodo => (nodo.t === 'neg' ? rat(-nodo.x.v.a, nodo.x.v.b) : R[nodo.o](nodo.l.v, nodo.r.v));
 
+    // Botones del pie: ayudas mientras se resuelve; al terminar, cómo seguir
+    function pintarBotones(terminado) {
+      const cont = $('.mo-botones', raiz);
+      if (!terminado) {
+        cont.innerHTML = `
+          <button type="button" class="btn btn-secundario btn-chico" data-accion="pista">${icono('pista')}Pista</button>
+          <button type="button" class="btn btn-fantasma btn-chico" data-accion="reiniciar">${icono('reiniciar')}Reiniciar</button>`;
+        return;
+      }
+      const i = C.RETOS_OPERACIONES.indexOf(st.reto), sig = C.RETOS_OPERACIONES[i + 1];
+      const seguir = st.origen ? `<button type="button" class="btn" data-accion="volver">${icono('flechaI')}Volver al ejercicio ${st.origen.numero}</button>`
+        : sig ? `<button type="button" class="btn" data-sig="${sig.id}">Siguiente reto${icono('flechaD')}</button>`
+        : i >= 0 ? `<a class="btn" href="#m2-ideas-p3">Seguir con las ideas clave, parte 3${icono('flechaD')}</a>` : '';
+      cont.innerHTML = `${seguir}<button type="button" class="btn btn-secundario" data-accion="reiniciar">${icono('reiniciar')}Repetir</button>`;
+    }
+
     function pintar() {
       const terminado = st.arbol.t === 'num';
+      pintarBotones(terminado);
       $('.mo-expr', raiz).innerHTML = html(st.arbol, { activa: !terminado && !st.pendiente, sel: st.pendiente ? st.pendiente.id : null, nuevo: st.nuevo });
       $('.mo-instruccion', raiz).textContent = terminado ? 'Resuelto.' : st.pendiente ? 'Escribir cuánto da la parte resaltada.' : 'Tocar la operación que va primero.';
       const calc = $('.mo-calculo', raiz);
@@ -304,6 +318,11 @@
       const b = e.target.closest('button');
       if (!b || !raiz.contains(b)) return;
       if (b.dataset.reto) { cargar(C.RETOS_OPERACIONES.find(x => x.id === b.dataset.reto)); return; }
+      if (b.dataset.sig) {
+        cargar(C.RETOS_OPERACIONES.find(x => x.id === b.dataset.sig));
+        raiz.scrollIntoView({ behavior: MA.movimientoReducido() ? 'auto' : 'smooth', block: 'start' });
+        return;
+      }
       if (b.dataset.op != null) { elegir(Number(b.dataset.op)); return; }
       const a = b.dataset.accion;
       if (a === 'calcular') calcular();

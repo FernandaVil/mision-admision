@@ -22,7 +22,7 @@
       'Ten a mano lo que anotaste al final de la clase 1: lo que le costó (fracciones de unidades, N y J) se trabaja hoy.'
     ],
     objetivos: [
-      'Dividir entre una fracción dando vuelta la que divide, y explicar por qué km ÷ km/h da horas.',
+      'Dividir entre una fracción con extremos y medios, y explicar por qué km ÷ km/h da horas.',
       'Resolver expresiones con signos y paréntesis en el orden correcto, diciendo por qué cada operación va antes.',
       'Pasar números a notación científica y multiplicar potencias de 10 sin calculadora.'
     ],
@@ -34,7 +34,7 @@
     ],
     minimo: [
       ['Una fracción es una división', 'La raya es un ÷: km/h es km ÷ h.'],
-      ['Dividir entre una fracción', 'Se da vuelta la que divide y se multiplica. Lo que está abajo del abajo, sube.'],
+      ['Dividir entre una fracción', 'Una encima de la otra: extremos arriba, medios abajo. Lo que está abajo del abajo, sube.'],
       ['Signos', 'Sumar y restar: plata. Multiplicar y dividir: iguales +, distintos −. Restar un negativo es sumar.'],
       ['Orden', 'Paréntesis, potencias, multiplicar y dividir (de izquierda a derecha), sumar y restar (de izquierda a derecha).'],
       ['Potencias de 10', 'Al multiplicar se suman los exponentes; 10⁻³ = 1/1000. Si la coma se mueve, el exponente compensa.']
@@ -76,10 +76,13 @@
           { t: 'diapo', n: 4 },
           { t: 'pregunta', x: '¿Cuántas mitades salen de 6 pizzas?', r: '12.' },
           { t: 'tu', x: 'Entonces 6 ÷ ½ = 12. Dividir entre algo menor que 1 agranda el número.' },
+          { t: 'tu', x: 'Para hacerlo en papel: una fracción encima de la otra, y al 6 se le pone un 1 abajo. Los de las puntas, los extremos, se multiplican arriba; los del medio, abajo. Es la del colegio, la del sándwich: el pan arriba, el relleno abajo.' },
+          { t: 'pregunta', x: 'En 6/1 sobre 1/2, ¿cuáles son los extremos?', r: 'El 6 y el 2: van arriba. Los medios, 1 y 1, abajo. 12/1 = 12, igual que con las mitades.' },
+          { t: 'ojo', x: 'Si en un video o con la IA le explican «multiplicar por el inverso», dile que es la misma regla con otras palabras (6 · 2/1 = 12). Que use la que le quede más fácil; en la plataforma está extremos y medios.' },
           { t: 'ojo', x: 'Esto es lo que la clase pasada no salió bien. Ve lento: que él diga el porqué con sus palabras antes de seguir.' },
           { t: 'pizarra', x: 'Abre el pizarrón (B) y escribe «1 ÷ (1/h)». Pregúntale cuánto da. Espera «h». Después escribe «km ÷ (km/h)».' },
           { t: 'diapo', n: 5 },
-          { t: 'pregunta', x: '¿Por qué la h termina arriba?', r: 'Porque dividía a algo que dividía: al dar vuelta la fracción, sube.' },
+          { t: 'pregunta', x: '¿Por qué la h termina arriba?', r: 'Porque estaba abajo del abajo: es un extremo, y los extremos van arriba.' },
           { t: 'ojo', x: 'Si se enreda, vuelve a los números: 6 ÷ ½. Las unidades se portan igual que los números.' },
           { t: 'diapo', n: 6 },
           { t: 'tu', x: 'Ahora usted: comparta la pantalla y abra «Fracciones».' },
@@ -89,13 +92,13 @@
       {
         tiempo: '21–33 min', titulo: 'Mesa de fracciones, retos 1 a 7', comparte: 'Él', ruta: 'index.html#m2-fracciones', boton: 'Abrir la mesa de fracciones',
         pasos: [
-          { t: 'ojo', x: 'La mesa pide dos predicciones: en qué unidad va a quedar (retos 4 a 7) y cuál fracción se da vuelta. No le soples: que diga en voz alta por qué.' },
+          { t: 'ojo', x: 'La mesa pide dos cosas antes de resolver: en qué unidad va a quedar (retos 4 a 7) y cuáles son los extremos. No le soples: que diga en voz alta por qué.' },
           { t: 'el', x: 'Retos 1 a 3: solo números.' },
           { t: 'pregunta', x: 'Reto 2: ¿qué tacha primero?', r: 'Los 3 (entre 3) y después el 8 con el 4 (entre 4). Queda 2.' },
           { t: 'pregunta', x: 'Reto 4, antes de tocar: ¿en qué unidad va a quedar 150 km ÷ 60 km/h?', r: 'h. Si dice km²/h o km, déjalo: al final la mesa le muestra dónde se equivocó.' },
           { t: 'pregunta', x: 'Reto 6: ¿qué es un vatio?', r: 'J/s, joules por segundo. Está en el enunciado: no hace falta saberlo de memoria.' },
           { t: 'tu', x: 'En el examen pasa lo mismo con N o J: si aparecen, dan la fórmula. Usted solo tiene que tratarlas como unidades.' },
-          { t: 'pregunta', x: 'Reto 7: ¿por qué queda m/s² y no m?', r: 'Porque la s que divide queda abajo junto a la otra: s · s = s².' },
+          { t: 'pregunta', x: 'Reto 7: ¿por qué queda m/s² y no m?', r: 'Porque la s que divide lleva un 1 abajo: las dos s son medios y quedan abajo, s · s = s².' },
           { t: 'pizarra', x: 'Si sobra un minuto, escribe «F = m · a, con m en kg y a en m/s²». Pregúntale qué unidad tiene la fuerza. Espera «kg · m/s²», y dile: «Eso es un newton, N».' }
         ]
       },

@@ -11,7 +11,7 @@
   'use strict';
   const MA = window.MA;
   const { icono } = MA;
-  const { vr, un, n, op, fr, mt, q, tach } = MA.f;
+  const { vr, un, n, op, fr, mt, q, tach, doble, ext, med } = MA.f;
   const { p10, sup, pot, cien, neg } = MA.M2;
   const por = op('·'), igual = op('='), entre = op('÷');
   const qn = (valor, unidad) => `${n(valor)} ${un(unidad)}`;
@@ -57,14 +57,16 @@
     {
       titulo: 'Dividir entre una fracción',
       html: `
-        <h2>Dividir entre una fracción: dar vuelta y multiplicar</h2>
+        <h2>Dividir entre una fracción: extremos y medios</h2>
         <div class="d-pasos d-pasos-grandes">
           ${mt(n(6), entre, fr(n(1), n(2)))}
-          <span class="d-flecha">se da vuelta la que divide</span>
-          ${mt(n(6), por, fr(n(2), n(1)), igual, n(12))}
+          <span class="d-flecha"></span>
+          ${mt(doble(fr(ext(n(6)), med(n(1))), fr(med(n(1)), ext(n(2)))))}
+          <span class="d-flecha"></span>
+          ${mt(fr(`${ext(n(6))} ${por} ${ext(n(2))}`, `${med(n(1))} ${por} ${med(n(1))}`), igual, n(12))}
         </div>
-        <p>¿Por qué? Porque la pregunta es <b>cuántas mitades caben en 6</b>. En cada entero caben 2 mitades: en 6 enteros, 12.</p>
-        <p class="d-destacado d-ojo">Se da vuelta <b>solo la fracción que divide</b> (la de la derecha del ÷), nunca la primera.</p>`
+        <p>Se escribe una encima de la otra (el 6 lleva un 1 abajo). Los <b class="ext">extremos</b>, las dos puntas, van arriba; los <b class="med">medios</b>, pegados a la raya grande, abajo. Como un sándwich: el pan arriba y el relleno abajo.</p>
+        <p class="d-destacado">¿Tiene sentido? Es preguntar <b>cuántas mitades caben en 6</b>: 12.</p>`
     },
     {
       titulo: 'Abajo del abajo',
@@ -72,9 +74,9 @@
         <h2>Lo que está abajo del abajo, sube</h2>
         <p>Con ${mt(vr('t'), igual, fr(vr('d'), vr('v')))}, si ${mt(vr('d'), igual, qn(150, 'km'))} y ${mt(vr('v'), igual, qn(60, 'km/h'))}:</p>
         <div class="mt mt-bloque d-formula">
-          ${un('km')} ${entre} ${fr(un('km'), un('h'))} ${igual} ${tach(un('km'))} ${por} ${fr(un('h'), tach(un('km')))} ${igual} ${un('h')}
+          ${un('km')} ${entre} ${fr(un('km'), un('h'))} ${igual} ${doble(fr(ext(un('km')), med(n(1))), fr(med(un('km')), ext(un('h'))))} ${igual} ${fr(`${tach(un('km'))} ${por} ${ext(un('h'))}`, `${med(n(1))} ${por} ${tach(un('km'))}`)} ${igual} ${un('h')}
         </div>
-        <p>La h estaba dividiendo a algo que dividía: dos divisiones se cancelan y la h <b>termina arriba</b>.</p>
+        <p>La h estaba abajo del abajo: es un <b class="ext">extremo</b> y <b>termina arriba</b>.</p>
         <p class="d-destacado">Por eso ${mt(n(150), entre, n(60), igual, q(2.5, 'h'))}: el resultado sale en horas, y la unidad lo confirma.</p>`
     },
     {
@@ -85,7 +87,7 @@
         <h2>Su turno: la mesa de fracciones</h2>
         <ul class="d-lista">
           <li>Abra <b>Fracciones</b> y haga los retos 1 a 7.</li>
-          <li>Antes de tocar, diga cuál fracción se da vuelta y por qué.</li>
+          <li>Antes de tocar, diga cuáles son los extremos y qué va a quedar arriba.</li>
           <li>En los que tienen unidades, diga primero en qué unidad va a quedar.</li>
         </ul>`
     },

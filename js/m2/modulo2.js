@@ -11,8 +11,11 @@
   'use strict';
   const MA = window.MA;
   const { $, $$, crear, icono } = MA;
-  const { vr, un, n, op, fr, mt, q, tach } = MA.f;
+  const { vr, un, n, op, fr, mt, q, tach, doble, ext, med } = MA.f;
   const por = op('·'), igual = op('='), entre = op('÷');
+  // 6 ÷ 1/2 con extremos y medios, de colores
+  const seisSandwich = () => doble(fr(ext(n(6)), med(n(1))), fr(med(n(1)), ext(n(2))));
+  const seisResultado = () => fr(`${ext(n(6))} ${por} ${ext(n(2))}`, `${med(n(1))} ${por} ${med(n(1))}`);
 
   const SECCIONES = [
     { id: 'calentamiento', nombre: 'Calentamiento', corto: 'Repaso', icono: 'objetivo' },
@@ -73,7 +76,7 @@
             <ul>
               <li>La raya es un ÷: ${mt(un('km/h'), igual, un('km'), entre, un('h'))}.</li>
               <li>Multiplicar: arriba con arriba, abajo con abajo. Conviene tachar antes.</li>
-              <li>Dividir: se da vuelta la que divide y se multiplica. ${mt(n(6), entre, fr(n(1), n(2)), igual, n(6), por, fr(n(2), n(1)))}</li>
+              <li>Dividir: una encima de la otra; <span class="ext">extremos</span> arriba, <span class="med">medios</span> abajo. ${mt(seisSandwich(), igual, seisResultado(), igual, n(12))}</li>
             </ul>
           </div>
           <div>
@@ -109,18 +112,25 @@
     return `
       ${cabeza(3, 'Dividir entre una fracción', 'Una fracción es una división, y las unidades también son fracciones: km/h es km ÷ h. Por eso, cuando en una fórmula aparece una fracción dividiendo, hay que saber qué pasa con lo que está abajo.')}
       <ol class="pasos-concepto">
-        <li><span class="pc-num">01</span><h3>Dar vuelta la que divide</h3><p>El ÷ se vuelve · y la fracción de la derecha se da vuelta: ${mt(n(6), entre, fr(n(1), n(2)), igual, n(6), por, fr(n(2), n(1)))}.</p></li>
-        <li><span class="pc-num">02</span><h3>Tachar por parejas</h3><p>Un número de arriba y uno de abajo se dividen entre lo mismo; una unidad arriba y la misma abajo se cancelan.</p></li>
-        <li><span class="pc-num">03</span><h3>Multiplicar lo que queda</h3><p>Arriba con arriba y abajo con abajo. La unidad que queda dice si la cuenta tiene sentido.</p></li>
+        <li><span class="pc-num">01</span><h3>Una encima de la otra</h3><p>La raya también es un ÷. Lo que no es fracción lleva un 1 abajo: ${mt(n(6), igual, fr(n(6), n(1)))}.</p><div class="mt mt-bloque">${n(6)} ${entre} ${fr(n(1), n(2))} ${igual} ${seisSandwich()}</div></li>
+        <li><span class="pc-num">02</span><h3>Extremos arriba, medios abajo</h3><p>Los <span class="ext">extremos</span> (las dos puntas) se multiplican arriba; los <span class="med">medios</span> (los dos pegados a la raya grande), abajo:</p><div class="mt mt-bloque">${seisResultado()} ${igual} ${n(12)}</div></li>
+        <li><span class="pc-num">03</span><h3>Tachar y multiplicar</h3><p>Un número de arriba y uno de abajo se dividen entre lo mismo; una unidad arriba y la misma abajo se cancelan. La unidad que queda dice si la cuenta tiene sentido.</p></li>
       </ol>
       <div class="m2-fracciones"></div>
       <div class="caja">
         <div class="caja-titulo">${icono('pista')}Lo que está abajo del abajo, sube</div>
-        <p>${mt(un('km'), entre, fr(un('km'), un('h')), igual, tach(un('km')), por, fr(un('h'), tach(un('km'))), igual, un('h'))}. La h dividía a algo que dividía: dos divisiones se cancelan y la h termina arriba. Por eso ${mt(vr('t'), igual, vr('d'), entre, vr('v'))} da horas.</p>
+        <div class="mt mt-bloque">${un('km')} ${entre} ${fr(un('km'), un('h'))} ${igual} ${doble(fr(ext(un('km')), med(n(1))), fr(med(un('km')), ext(un('h'))))} ${igual} ${fr(`${tach(un('km'))} ${por} ${ext(un('h'))}`, `${med(n(1))} ${por} ${tach(un('km'))}`)} ${igual} ${un('h')}</div>
+        <p>La h estaba abajo del abajo: es un extremo y termina arriba. Por eso ${mt(vr('t'), igual, vr('d'), entre, vr('v'))} da horas.</p>
       </div>
       <div class="caja caja-neutra">
         <div class="caja-titulo">${icono('info')}Cuando lo que divide no es fracción</div>
-        <p>${mt(un('m/s'), entre, un('s'))}: la s que divide es como ${mt(fr(un('s'), n(1)))}. Al darla vuelta queda abajo, junto a la otra s: ${mt(fr(un('m'), `${un('s')} ${por} ${un('s')}`), igual, un('m/s²'))}. Así nace la unidad de la aceleración.</p>
+        <p>${mt(un('m/s'), entre, un('s'))}: la s que divide lleva un 1 abajo.</p>
+        <div class="mt mt-bloque">${doble(fr(ext(un('m')), med(un('s'))), fr(med(un('s')), ext(n(1))))} ${igual} ${fr(`${ext(un('m'))} ${por} ${ext(n(1))}`, `${med(un('s'))} ${por} ${med(un('s'))}`)} ${igual} ${un('m/s²')}</div>
+        <p>Las dos s son medios: las dos quedan abajo. Así nace la unidad de la aceleración.</p>
+      </div>
+      <div class="caja caja-neutra">
+        <div class="caja-titulo">${icono('info')}¿Y «multiplicar por el inverso»?</div>
+        <p>Es la misma regla dicha de otra forma: ${mt(n(6), entre, fr(n(1), n(2)), igual, n(6), por, fr(n(2), n(1)), igual, n(12))}. Si un video o la IA lo explican así, el resultado es el mismo.</p>
       </div>`;
   }
 
@@ -266,7 +276,7 @@
       const ant = SECCIONES[i - 1], sig = SECCIONES[i + 1];
       $('.pie-seccion', this.raiz).innerHTML = `
         ${ant ? `<a class="btn btn-secundario" href="#m2-${ant.id}">${icono('flechaI')}${ant.nombre}</a>` : '<span></span>'}
-        ${sig ? `<a class="btn" href="#m2-${sig.id}">Siguiente: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
+        ${sig ? `<a class="btn" href="#m2-${sig.id}">Siguiente sección: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
       if (sec === 'ideas' && extra && this.presentacion) this.presentacion.irParte(extra);
       if (sec === 'practica' && this.practica) this.practica.anunciar();
       return sec;

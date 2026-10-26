@@ -10,7 +10,7 @@
   'use strict';
   const MA = window.MA;
   const { $, $$, crear, icono } = MA;
-  const { vr, un, n, op, fr, mt, q, tach, raiz, cuad } = MA.f;
+  const { vr, un, n, op, fr, mt, q, tach, raiz, cuad, doble, ext, med } = MA.f;
 
   const SECCIONES = [
     { id: 'ideas', nombre: 'Ideas clave', corto: 'Ideas', icono: 'libro' },
@@ -134,9 +134,9 @@
       </div>
       <div class="caja">
         <div class="caja-titulo">${icono('pista')}Cuando la fracción queda abajo</div>
-        <p>Al calcular ${mt(vr('t'), igual, fr(vr('d'), vr('v')))} con ${q(200, 'km')} y ${q(80, 'km/h')}, la unidad queda ${mt(un('km'), op('÷'), op('('), fr(un('km'), un('h')), op(')'))}: una fracción dentro de otra. Dividir entre una fracción es multiplicar por la misma fracción <b>dada vuelta</b>: ${mt(n(6), op('÷'), fr(n(1), n(2)), igual, n(6), por, fr(n(2), n(1)), igual, n(12))}. Con las unidades pasa lo mismo:</p>
-        <div class="mt mt-bloque">${un('km')} ${op('÷')} ${fr(un('km'), un('h'))} ${igual} ${tach(un('km'))} ${por} ${fr(un('h'), tach(un('km')))} ${igual} ${un('h')}</div>
-        <p>La h, que estaba «abajo del abajo», termina arriba. Por eso el resultado sale en horas.</p>
+        <p>Al calcular ${mt(vr('t'), igual, fr(vr('d'), vr('v')))} con ${q(200, 'km')} y ${q(80, 'km/h')}, la unidad queda ${mt(un('km'), op('÷'), op('('), fr(un('km'), un('h')), op(')'))}: una fracción dentro de otra. Para dividir entre una fracción se escribe una encima de la otra y se aplica <b>extremos y medios</b>: las dos puntas (<span class="ext">extremos</span>) se multiplican arriba y los dos del medio (<span class="med">medios</span>), abajo. Lo que no es fracción lleva un 1 abajo:</p>
+        <div class="mt mt-bloque">${doble(fr(ext(un('km')), med(n(1))), fr(med(un('km')), ext(un('h'))))} ${igual} ${fr(`${tach(un('km'))} ${por} ${ext(un('h'))}`, `${med(n(1))} ${por} ${tach(un('km'))}`)} ${igual} ${un('h')}</div>
+        <p>La h, que estaba «abajo del abajo», es un extremo: termina arriba. Por eso el resultado sale en horas.</p>
       </div>
       <div class="caja caja-neutra">
         <div class="caja-titulo">${icono('info')}¿Y la regla de tres?</div>
@@ -245,7 +245,7 @@
       const ant = SECCIONES[i - 1], sig = SECCIONES[i + 1];
       $('.pie-seccion', this.raiz).innerHTML = `
         ${ant ? `<a class="btn btn-secundario" href="#m1-${ant.id}">${icono('flechaI')}${ant.nombre}</a>` : '<span></span>'}
-        ${sig ? `<a class="btn" href="#m1-${sig.id}">Siguiente: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
+        ${sig ? `<a class="btn" href="#m1-${sig.id}">Siguiente sección: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
       if (sec === 'ideas' && extra && this.presentacion) this.presentacion.irParte(extra);
       if (sec === 'practica' && this.practica) this.practica.anunciar();
       return sec;

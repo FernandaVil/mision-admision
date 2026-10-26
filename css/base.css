@@ -205,6 +205,12 @@ small { font-size: 0.85em; }
 }
 .fr > .fr-n, .fr > .fr-d { display: flex; align-items: center; justify-content: center; gap: 0.25em; padding: 0.08em 0.3em; white-space: nowrap; }
 .fr > .fr-d { border-top: 1.5px solid currentColor; }
+/* Una fracción encima de otra: la raya del medio, más larga y más gruesa */
+.fr-doble > .fr-n, .fr-doble > .fr-d { padding: 0.12em 0.35em; }
+.fr-doble > .fr-d { border-top-width: 2.5px; }
+/* Extremos (arriba) y medios (abajo), cada uno con su color */
+.ext, .ext .num, .ext .un { color: var(--primario); font-weight: 600; }
+.med, .med .num, .med .un { color: var(--ambar); font-weight: 600; }
 .par { font-family: var(--f-texto); font-style: normal; font-weight: 300; font-size: 1.15em; color: var(--texto-2); }
 .mt sup.exp { font-family: var(--f-texto); font-style: normal; font-size: 0.68em; margin-left: -0.15em; align-self: flex-start; }
 .raiz { display: inline-flex; align-items: stretch; vertical-align: middle; }

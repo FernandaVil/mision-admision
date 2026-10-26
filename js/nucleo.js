@@ -239,13 +239,19 @@
   };
 
   /* ---------- Notación matemática en HTML ----------
-     MA.f.vr('v', '0') -> v₀ en itálica · MA.f.fr(a, b) -> fracción   */
+     MA.f.vr('v', '0') -> v₀ en itálica · MA.f.fr(a, b) -> fracción
+     MA.f.doble(fr(..), fr(..)) -> una fracción encima de otra, con la
+     raya del medio más larga · MA.f.ext / MA.f.med -> colores de los
+     extremos y los medios                                             */
   const f = MA.f = {
     vr: (nombre, sub) => `<span class="vr">${nombre}${sub ? `<sub>${sub}</sub>` : ''}</span>`,
     un: u => `<span class="un">${u}</span>`,
     n: x => `<span class="num">${typeof x === 'number' ? MA.fmt(x) : x}</span>`,
     op: s => `<span class="op">${s}</span>`,
     fr: (a, b) => `<span class="fr"><span class="fr-n">${a}</span><span class="fr-d">${b}</span></span>`,
+    doble: (a, b) => `<span class="fr fr-doble"><span class="fr-n">${a}</span><span class="fr-d">${b}</span></span>`,
+    ext: html => `<span class="ext">${html}</span>`,
+    med: html => `<span class="med">${html}</span>`,
     mt: (...partes) => `<span class="mt">${partes.join(' ')}</span>`,
     q: (valor, unidad) => `<span class="mt"><span class="num">${typeof valor === 'number' ? MA.fmt(valor) : valor}</span>${unidad ? ' <span class="un">' + unidad + '</span>' : ''}</span>`,
     tach: html => `<span class="tachado">${html}</span>`,

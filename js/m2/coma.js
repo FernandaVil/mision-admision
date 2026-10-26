@@ -50,11 +50,7 @@
       <div class="mf-pregunta nc-pregunta" hidden></div>
       <div class="banco-pie">
         <div class="mensaje nc-mensaje" role="status" aria-live="polite"></div>
-        <div class="fila-botones">
-          <button type="button" class="btn btn-chico" data-accion="listo">${icono('check')}Listo</button>
-          <button type="button" class="btn btn-secundario btn-chico" data-accion="pista">${icono('pista')}Pista</button>
-          <button type="button" class="btn btn-fantasma btn-chico" data-accion="reiniciar">${icono('reiniciar')}Reiniciar</button>
-        </div>
+        <div class="fila-botones nc-botones"></div>
       </div>
       <section class="cv-bitacora" aria-label="Pasos">
         <h4>Pasos</h4>
@@ -110,7 +106,25 @@
       pintar();
     }
 
+    // Botones del pie: ayudas mientras se resuelve; al terminar, cómo seguir
+    function pintarBotones() {
+      const cont = $('.nc-botones', raiz);
+      if (!st.listo) {
+        cont.innerHTML = `
+          <button type="button" class="btn btn-chico" data-accion="listo" ${st.fase !== 'mover' ? 'disabled' : ''}>${icono('check')}Listo</button>
+          <button type="button" class="btn btn-secundario btn-chico" data-accion="pista">${icono('pista')}Pista</button>
+          <button type="button" class="btn btn-fantasma btn-chico" data-accion="reiniciar">${icono('reiniciar')}Reiniciar</button>`;
+        return;
+      }
+      const i = C.RETOS_COMA.indexOf(st.reto), sig = C.RETOS_COMA[i + 1];
+      const seguir = st.origen ? `<button type="button" class="btn" data-accion="volver">${icono('flechaI')}Volver al ejercicio ${st.origen.numero}</button>`
+        : sig ? `<button type="button" class="btn" data-sig="${sig.id}">Siguiente reto${icono('flechaD')}</button>`
+        : i >= 0 ? `<a class="btn" href="#m2-practica">Ir a la práctica${icono('flechaD')}</a>` : '';
+      cont.innerHTML = `${seguir}<button type="button" class="btn btn-secundario" data-accion="reiniciar">${icono('reiniciar')}Repetir</button>`;
+    }
+
     function pintar() {
+      pintarBotones();
       const { ent, dec } = partes(st.reto.cifras, k());
       const celdas = ent.split('').map(c => `<span class="nc-cifra">${c}</span>`).join('')
         + `<span class="nc-coma ${dec ? '' : 'implicita'}" aria-hidden="true">,</span>`
@@ -121,7 +135,6 @@
       $('.nc-igual', raiz).innerHTML = `Vale lo mismo que al principio: la coma se mueve, pero la potencia de 10 compensa.`;
       const bloqueado = st.fase !== 'mover';
       raiz.querySelectorAll('[data-mover]').forEach(b => { b.disabled = bloqueado || Math.abs(k() + (b.dataset.mover === 'izq' ? -1 : 1)) > LIMITE; });
-      $('[data-accion="listo"]', raiz).disabled = bloqueado;
       const preg = $('.nc-pregunta', raiz);
       preg.hidden = !bloqueado || st.listo;
       if (st.fase === 'dir') {
@@ -183,6 +196,7 @@
           if (MA.progreso.marcar('m2.coma.' + st.reto.id)) MA.aviso('Reto completado.');
           pintarRetos();
         }
+        pintarBotones();
         return;
       }
       const t = textoNum(partes(st.reto.cifras, k()));
@@ -205,6 +219,11 @@
       const b = e.target.closest('button');
       if (!b || !raiz.contains(b)) return;
       if (b.dataset.reto) { cargar(C.RETOS_COMA.find(x => x.id === b.dataset.reto)); return; }
+      if (b.dataset.sig) {
+        cargar(C.RETOS_COMA.find(x => x.id === b.dataset.sig));
+        raiz.scrollIntoView({ behavior: MA.movimientoReducido() ? 'auto' : 'smooth', block: 'start' });
+        return;
+      }
       if (b.dataset.dir) { predecirDir(b.dataset.dir); return; }
       if (b.dataset.exp) { predecirExp(b.dataset.exp); return; }
       if (b.dataset.mover) { mover(b.dataset.mover); return; }

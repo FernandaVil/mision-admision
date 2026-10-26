@@ -157,7 +157,7 @@
           { t: 'el', x: 'Resuelve los ejercicios 1 a 8.' },
           { t: 'ojo', x: 'Si se traba, primero una pista de la plataforma. Si sigue trabado, comparte el pizarrón, escribe el planteamiento a medias y que él lo complete dictándote.' },
           { t: 'pregunta', x: 'Cuando la plataforma le marque un error: ¿qué pasó? Cuénteme con sus palabras.', r: 'Que explique el error, por ejemplo «multipliqué por 3,6 en vez de dividir».' },
-          { t: 'ojo', x: 'Ejercicio 7: si se enreda con km ÷ km/h, abre la caja «Cuando la fracción queda abajo» en Conversión. Dividir entre una fracción es multiplicar por la fracción dada vuelta; pruébalo antes con números: 6 ÷ ½ = 12.' },
+          { t: 'ojo', x: 'Ejercicio 7: si se enreda con km ÷ km/h, abre la caja «Cuando la fracción queda abajo» en Conversión. Para dividir entre una fracción: una encima de la otra, extremos arriba y medios abajo; pruébalo antes con números: 6 ÷ ½ = 12.' },
           { t: 'ojo', x: 'Si se traba con N o J, no es para memorizar: la ficha dice que N = kg · m/s². Para despejar se tratan como cualquier unidad.' },
           { t: 'tu', x: 'En los de opciones, descarte las incorrectas probando con números fáciles.' }
         ]
