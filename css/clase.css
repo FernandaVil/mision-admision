@@ -121,6 +121,35 @@ body.con-presentacion { overflow: hidden; }
 .d-icono { width: 2.6em; height: 2.6em; display: grid; place-items: center; border-radius: 14px; background: var(--primario); color: var(--sobre-primario); }
 .d-icono svg { width: 1.5em; height: 1.5em; }
 
+/* ---------- Respuestas tapadas (MA.f.oculto) ----------
+   La respuesta ocupa su lugar desde el principio, pero no se ve: así
+   nada se mueve al revelarla. El «?» aparece solo en el paso que sigue. */
+.d-oculta { display: inline-grid; vertical-align: middle; }
+.d-oculta > * { grid-area: 1 / 1; }
+.d-oculta:not(.revelada) > .d-oculta-valor { visibility: hidden; }
+.d-oculta > .d-oculta-antes { visibility: hidden; }
+.d-oculta.proxima > .d-oculta-antes {
+  visibility: visible; display: grid; place-items: center; min-width: 1.7em; padding: 0 0.3em;
+  border: 1.5px dashed var(--primario-borde); border-radius: 0.35em; background: var(--primario-suave);
+  color: var(--primario); font-family: var(--f-mono); font-weight: 600; cursor: pointer;
+}
+.d-oculta.proxima > .d-oculta-antes:empty { visibility: hidden; }
+.d-oculta.revelada > .d-oculta-valor { animation: d-aparece 0.35s ease-out; }
+@keyframes d-aparece { from { opacity: 0; } to { opacity: 1; } }
+.d-oculta-bloque { display: grid; }
+.d-oculta-bloque.con-marca.proxima > .d-oculta-antes { font-size: 2.2em; border-radius: 12px; }
+/* Lo que cambia al revelar: lo de antes se ve, sin recuadro. Por dentro se alinea como una fórmula (.mt). */
+.d-cambia > span { display: inline-flex; align-items: center; justify-content: flex-start; gap: 0.28em; }
+.d-cambia:not(.revelada) > .d-oculta-antes, .d-cambia.proxima > .d-oculta-antes { visibility: visible; display: inline-flex; place-items: initial; min-width: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; }
+/* Un pedazo que espera su paso, como el «=» de un segundo renglón */
+.d-aun { visibility: hidden; }
+/* Dentro de un dibujo: una etiqueta o un punto del svg */
+.d-oculta-svg { transition: opacity 0.35s ease; }
+.diapo svg .d-oculta-svg:not(.revelada) { opacity: 0; }
+/* «Siguiente» mientras falta revelar algo */
+.pres-control .pres-revelar { background: var(--ambar-suave); color: var(--ambar); border-color: var(--ambar-borde); }
+.pres-control .pres-revelar:hover { background: var(--ambar-suave); color: var(--ambar); border-color: var(--ambar); }
+
 /* En celular la diapositiva crece en alto para que el texto siga legible */
 @media (max-width: 640px) {
   .pres-escena { aspect-ratio: auto; }

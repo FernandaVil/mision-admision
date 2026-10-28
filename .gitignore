@@ -5,3 +5,7 @@ _version_anterior/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Notas de trabajo con Claude: se quedan solo en este computador
+CONTEXTO.md
+CLAUDE.md

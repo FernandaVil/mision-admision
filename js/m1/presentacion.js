@@ -6,6 +6,11 @@
    E para escribir sobre la diapositiva, B para abrir el pizarrón en
    blanco y Esc para salir. Lo escrito queda guardado en cada
    diapositiva mientras la página siga abierta.
+   Respuestas tapadas: lo que lleva data-paso (MA.f.oculto) se ve como
+   «?» hasta revelarlo. Mientras falte alguno, «Siguiente» dice
+   «Revelar», y la flecha o el espacio revelan el paso que sigue antes
+   de pasar de diapositiva; la flecha hacia atrás lo vuelve a tapar.
+   También se revela con un clic en el «?».
    ===================================================================== */
 (function () {
   'use strict';
@@ -15,7 +20,9 @@
   function crearPresentacion(raiz, { diapositivas, partes, alTerminarParte, clave = 'm1.diapositiva', etiqueta = 'Partes de las ideas clave' }) {
     let actual = MA.clamp(MA.almacen.leer(clave, 0) || 0, 0, diapositivas.length - 1);
     let presentando = false, escribiendo = false;
+    let revelados = 0, totalPasos = 0;   // respuestas tapadas de la diapositiva que se ve
     const tinta = new Map();   // diapositiva -> trazos
+    const conTapadas = diapositivas.some(d => /data-paso=/.test(d.html));
 
     raiz.classList.add('pres');
     raiz.innerHTML = `
@@ -41,7 +48,7 @@
         </div>
         <div class="pres-tinta-barra" hidden>${MA.Pizarra.barraHtml()}</div>
       </div>
-      <p class="pres-ayuda texto-3">También se avanza con las flechas del teclado. «Escribir» permite anotar sobre la diapositiva.</p>`;
+      <p class="pres-ayuda texto-3">También se avanza con las flechas del teclado. «Escribir» permite anotar sobre la diapositiva.${conTapadas ? ' Las respuestas tapadas con «?» aparecen con «Revelar» o con la flecha.' : ''}</p>`;
 
     const escena = $('.pres-escena', raiz);
     const lienzo = MA.Pizarra.crearLienzo($('.pres-tinta', raiz));
@@ -49,7 +56,7 @@
     MA.Pizarra.conectarBarra($('.pres-tinta-barra', raiz), lienzo);
     const parteDe = i => partes.find(p => i >= p.desde && i <= p.hasta);
 
-    function pintar() {
+    function pintar(todoRevelado = false) {
       const d = diapositivas[actual], p = parteDe(actual);
       escena.innerHTML = `
         <article class="diapo ${d.clase || ''}" aria-label="Diapositiva ${actual + 1} de ${diapositivas.length}: ${MA.esc(d.titulo)}">
@@ -62,14 +69,36 @@
         const i = p.desde + k;
         return `<button type="button" class="pres-punto" data-ir="${i}" aria-label="Diapositiva ${i + 1}: ${MA.esc(x.titulo)}" ${i === actual ? 'aria-current="step"' : ''}></button>`;
       }).join('');
-      $('[data-pres="anterior"]', raiz).disabled = actual === 0;
-      $('[data-pres="siguiente"]', raiz).disabled = actual === diapositivas.length - 1;
+      totalPasos = Math.max(0, ...$$('[data-paso]', escena).map(el => Number(el.dataset.paso)));
+      revelados = todoRevelado ? totalPasos : 0;
+      mostrarPasos();
       if (!tinta.has(actual)) tinta.set(actual, []);
       lienzo.usarTrazos(tinta.get(actual));
       MA.almacen.guardar(clave, actual);
       if (actual === p.hasta && alTerminarParte) alTerminarParte(p.id);
     }
-    function ir(i) { actual = MA.clamp(i, 0, diapositivas.length - 1); pintar(); }
+    // Lo revelado queda a la vista; el «?» se ve solo en el paso que sigue
+    function mostrarPasos() {
+      $$('[data-paso]', escena).forEach(el => {
+        const k = Number(el.dataset.paso);
+        el.classList.toggle('revelada', k <= revelados);
+        el.classList.toggle('proxima', k === revelados + 1);
+      });
+      $$('[data-desde]', escena).forEach(el => el.classList.toggle('d-aun', Number(el.dataset.desde) > revelados + 1));
+      const falta = revelados < totalPasos, sig = $('[data-pres="siguiente"]', raiz);
+      $('[data-pres="anterior"]', raiz).disabled = actual === 0 && revelados === 0;
+      sig.disabled = !falta && actual === diapositivas.length - 1;
+      sig.classList.toggle('pres-revelar', falta);
+      sig.innerHTML = falta ? `${icono('pista')}<span class="txt">Revelar</span>` : `<span class="txt">Siguiente</span>${icono('flechaD')}`;
+      sig.setAttribute('aria-label', falta ? 'Revelar la respuesta' : 'Siguiente diapositiva');
+    }
+    function ir(i, todoRevelado) { actual = MA.clamp(i, 0, diapositivas.length - 1); pintar(todoRevelado); }
+    function avanzar() {
+      if (revelados < totalPasos) { revelados++; mostrarPasos(); } else ir(actual + 1);
+    }
+    function retroceder() {
+      if (revelados > 0) { revelados--; mostrarPasos(); } else if (actual > 0) ir(actual - 1, true);
+    }
     function irParte(id) { const p = partes.find(x => x.id === id); if (p) ir(p.desde); }
     function alternarEscritura(forzar) {
       escribiendo = typeof forzar === 'boolean' ? forzar : !escribiendo;
@@ -109,12 +138,15 @@
     });
 
     raiz.addEventListener('click', e => {
+      // Un clic en el «?» revela hasta ese paso
+      const tapada = !escribiendo && e.target.closest('.d-oculta.proxima > .d-oculta-antes');
+      if (tapada) { revelados = Math.max(revelados, Number(tapada.parentElement.dataset.paso)); mostrarPasos(); return; }
       const b = e.target.closest('button');
       if (!b || !raiz.contains(b) || b.closest('.pres-tinta-barra')) return;
       if (b.dataset.parte) irParte(b.dataset.parte);
       else if (b.dataset.ir != null) ir(Number(b.dataset.ir));
-      else if (b.dataset.pres === 'anterior') ir(actual - 1);
-      else if (b.dataset.pres === 'siguiente') ir(actual + 1);
+      else if (b.dataset.pres === 'anterior') retroceder();
+      else if (b.dataset.pres === 'siguiente') avanzar();
       else if (b.dataset.pres === 'presentar') presentar(true);
       else if (b.dataset.pres === 'salir') presentar(false);
       else if (b.dataset.pres === 'escribir') alternarEscritura();
@@ -129,8 +161,8 @@
         if ((k === 'z' || k === 'Z') && escribiendo) { e.preventDefault(); lienzo.deshacer(); }
         return;
       }
-      if (k === 'ArrowRight' || k === 'PageDown' || (k === ' ' && presentando)) { e.preventDefault(); ir(actual + 1); }
-      else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); ir(actual - 1); }
+      if (k === 'ArrowRight' || k === 'PageDown' || (k === ' ' && presentando)) { e.preventDefault(); avanzar(); }
+      else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); retroceder(); }
       else if (k === 'Home' && presentando) { e.preventDefault(); ir(parteDe(actual).desde); }
       else if (k === 'End' && presentando) { e.preventDefault(); ir(parteDe(actual).hasta); }
       else if (k === 'e' || k === 'E') alternarEscritura();

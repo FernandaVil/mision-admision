@@ -1,0 +1,296 @@
+/* =====================================================================
+   Módulo 3 · mesa de áreas, todos contra todos (tc-), diferencia de
+   cuadrados, llave maestra, la gráfica de GeoGebra (gg-) y diapositivas
+   de la clase 3. Reutiliza las piezas de los módulos 1 y 2 (banco,
+   bitácora, mensajes, pregunta para predecir, recuadro de cálculo).
+   Colores por tipo de término en todo el módulo: azul es x², ámbar es x
+   y violeta es un número (en la llave maestra, a, b y c).
+   ===================================================================== */
+.m3-seccion > .banco { margin: 8px 0 18px; }
+.m3-seccion .pasos-concepto .mt-bloque { margin: 10px 0 0; font-size: 1.05rem; justify-content: flex-start; }
+.m3-seccion .pasos-concepto p .mt { white-space: normal; flex-wrap: wrap; }
+
+/* Paréntesis pegados a lo que encierran: (x + 2)(x + 3) */
+.m3-par, .m3-grupo { display: inline-flex; align-items: center; }
+.m3-grupo { gap: 0.28em; }
+
+/* ---------- Rectángulo de áreas ----------
+   Los lados se marcan como cotas de un plano: una línea con topes. */
+.ar-rect {
+  --ar-l: 6.6em; --ar-c: 3em; --ar-u: 5.4em; --ar-cab: 2.4em;
+  display: inline-grid; gap: 3px; font-size: 1rem;
+}
+.ar-lado { position: relative; display: grid; place-items: center; padding: 0 0.15em; color: var(--texto-2); font-size: 1.05em; white-space: nowrap; }
+.ar-columna { padding-bottom: 0.55em; }
+.ar-fila { padding-right: 0.6em; }
+.ar-columna::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: 4px; height: 6px; border: 1.5px solid var(--borde-fuerte); border-top: 0; }
+.ar-fila::after { content: ""; position: absolute; top: 4px; bottom: 4px; right: 4px; width: 6px; border: 1.5px solid var(--borde-fuerte); border-left: 0; }
+.ar-lado.lado-activo { color: var(--primario); font-weight: 600; }
+.ar-lado.lado-activo::after { border-color: var(--primario); }
+.ar-lado.lado-activo .num, .ar-lado.lado-activo .vr, .ar-lado.lado-activo .op { color: var(--primario); }
+/* El lado común del factor común */
+.ar-comun { color: var(--primario); font-weight: 600; }
+.ar-comun::after { border-color: var(--primario); }
+.ar-comun.ar-uno .num { color: var(--texto-3); font-weight: 400; }
+.ar-incognita { color: var(--primario); font-weight: 700; }
+.ar-celda {
+  display: grid; place-items: center; min-width: 0; padding: 2px; overflow: hidden;
+  border: 1.5px solid var(--borde-fuerte); border-radius: 5px;
+  background: var(--superficie); color: var(--texto); font-size: 1.1em;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.ar-celda.t2, .ar-celda.t3 { background: var(--primario-suave); border-color: var(--primario-borde); }
+.ar-celda.t3 { border-color: var(--primario); }
+.ar-celda.t1 { background: var(--ambar-suave); border-color: var(--ambar-borde); }
+.ar-celda.t0 { background: var(--violeta-suave); border-color: var(--violeta-borde); }
+.ar-celda.neg { border-style: dashed; }
+.ar-celda.pendiente { background: var(--superficie); border: 1.5px dashed var(--borde-fuerte); color: var(--texto-3); }
+.ar-celda.activa { border: 2px solid var(--primario); background: var(--primario-suave); color: var(--primario); box-shadow: var(--foco); font-weight: 600; }
+
+/* ---------- Piezas: cuadrado (x²), tira (x) y cuadradito (número) ---------- */
+.ar-pieza {
+  display: inline-grid; place-items: center; padding: 0 0.4em;
+  border: 1.5px solid var(--borde-fuerte); border-radius: 6px;
+  background: var(--superficie); color: var(--texto); font-size: 1.15rem; line-height: 1.1;
+}
+.ar-pieza.t2, .ar-pieza.t3 { min-width: 4.2em; height: 4.2em; background: var(--primario-suave); border-color: var(--primario-borde); }
+.ar-pieza.t1 { min-width: 2.2em; height: 4.2em; background: var(--ambar-suave); border-color: var(--ambar-borde); }
+.ar-pieza.t0 { min-width: 2.2em; height: 2.2em; background: var(--violeta-suave); border-color: var(--violeta-borde); }
+.ar-pieza.neg { border-style: dashed; }
+button.ar-pieza { cursor: pointer; font-family: var(--f-texto); transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease; }
+button.ar-pieza:hover:not(:disabled) { box-shadow: 0 0 0 3px color-mix(in srgb, var(--primario) 25%, transparent); }
+button.ar-pieza:disabled { cursor: default; }
+.ar-pieza.sel { transform: translateY(-4px); border-style: solid; border-color: var(--primario); box-shadow: var(--foco); }
+
+/* ---------- Mesa de áreas ---------- */
+.mesa-ar .banco-cabeza, .mesa-dc .banco-cabeza, .mesa-ll .banco-cabeza { justify-content: space-between; }
+.ar-retos { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.ar-grupo { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.ar-grupo-nombre { font-size: 0.74rem; color: var(--texto-3); margin-right: 2px; }
+.ar-grupo .segmento { min-width: 36px; justify-content: center; padding: 0 10px; }
+.ar-reto-pildoras { display: flex; flex-wrap: wrap; gap: 6px; }
+.ar-reto-pildoras .pildora, .dc-reto .pildora, .ll-reto .pildora { font-size: 0.78rem; }
+.ar-mensaje:empty, .dc-mensaje:empty, .ll-mensaje:empty { display: none; }
+.banco-pie .ar-mensaje, .banco-pie .dc-mensaje, .banco-pie .ll-mensaje { margin-bottom: 10px; }
+.ar-mesa { padding: 18px 18px 10px; display: grid; justify-items: center; align-content: center; gap: 14px; min-height: 140px; }
+.ar-expr { font-size: 1.7rem; }
+.ar-figura { max-width: 100%; overflow-x: auto; padding: 2px; }
+.ar-fichas { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 10px; padding: 4px 0; }
+.ar-linea { font-size: 1.3rem; white-space: normal; flex-wrap: wrap; justify-content: center; row-gap: 8px; }
+.ar-resultado { display: inline-flex; align-items: center; gap: 0.28em; padding: 3px 12px; border-radius: var(--radio); border: 1px solid var(--borde-fuerte); }
+.ar-resultado.listo { background: var(--exito-suave); border-color: var(--exito-borde); }
+.ar-sacar .btn .vr { font-size: 1.12em; }
+/* Un término en dos partes: el número y la letra */
+.ar-campo { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ar-campo .campo { width: 96px; }
+.ar-tipos .segmento { min-width: 48px; justify-content: center; }
+.ar-tipos .segmento .vr { font-size: 1.12em; }
+
+/* Desarmar con negativos: sin rectángulo, cada término dividido entre lo que está en todos */
+.ar-division-titulo { margin: 0; font-weight: 500; color: var(--texto-2); text-align: center; }
+.ar-division { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 0; }
+.ar-div-col { display: grid; justify-items: center; gap: 4px; min-width: 7.5em; padding: 4px 22px; font-size: 1.3rem; }
+.ar-div-col + .ar-div-col { border-left: 1.5px solid var(--borde); }
+.ar-div-entre, .ar-div-entre .num, .ar-div-entre .vr, .ar-div-entre .op { color: var(--primario); font-weight: 600; }
+.ar-div-cociente { align-self: stretch; justify-content: center; padding-top: 4px; border-top: 1.5px solid var(--borde-fuerte); }
+
+/* ---------- Diferencia de cuadrados: cortar y mover ---------- */
+.m3-figura { margin: 8px 0 18px; }
+.dc-lienzo { display: flex; justify-content: center; }
+.dc-svg { width: 100%; max-width: 460px; height: auto; overflow: visible; }
+.dc-texto { text-align: center; max-width: 62ch; min-height: 3.2em; margin: 10px auto 0; color: var(--texto-2); }
+.dc-texto .mt { white-space: normal; flex-wrap: wrap; }
+.dc-botones { justify-content: center; }
+.dc-pieza, .dc-hueco { fill: var(--primario-suave); stroke: transparent; stroke-width: 1.5; transition: fill 0.4s ease, stroke 0.4s ease, opacity 0.4s ease; }
+.dc-p2 { transform-box: fill-box; transform-origin: center; transition: transform 0.9s ease, fill 0.4s ease, stroke 0.4s ease; }
+.dc-svg:not(.paso-0) .dc-hueco { fill: transparent; stroke: var(--ambar); stroke-dasharray: 5 4; }
+.dc-svg.paso-3 .dc-hueco { opacity: 0; }
+.dc-svg.paso-2 .dc-p1, .dc-svg.paso-3 .dc-p1 { stroke: var(--primario); }
+.dc-svg.paso-2 .dc-p2, .dc-svg.paso-3 .dc-p2 { fill: var(--ambar-suave); stroke: var(--ambar); }
+.dc-svg.paso-3 .dc-p2 { transform: translate(129px, -75px) rotate(90deg); }
+.dc-borde { fill: none; stroke: var(--primario); stroke-width: 2; }
+.dc-corte { fill: none; stroke: var(--ambar); stroke-width: 2; stroke-dasharray: 6 4; }
+.dc-borde, .dc-corte, .dc-etq { opacity: 0; transition: opacity 0.4s ease; }
+.dc-svg.paso-0 .v0, .dc-svg.paso-1 .v1, .dc-svg.paso-2 .v2, .dc-svg.paso-3 .v3 { opacity: 1; }
+.dc-svg.paso-3 .v3 { transition-delay: 0.7s; }
+.dc-etq { font-family: var(--f-texto); font-size: 14px; fill: var(--texto-2); }
+.dc-vr { font-family: var(--f-mate); font-style: italic; }
+.dc-area { font-size: 17px; font-weight: 500; fill: var(--texto); }
+.dc-quita { font-weight: 600; fill: var(--ambar); }
+.dc-ecuacion { font-size: 15px; font-weight: 600; fill: var(--texto); }
+.dc-sin-ecuacion .dc-ecuacion { display: none; }
+
+/* ---------- Mesa de cuadrados ---------- */
+.dc-mesa { display: flex; align-items: center; justify-content: center; min-height: 100px; padding: 22px 18px 14px; }
+.dc-expr { font-size: 1.6rem; white-space: normal; flex-wrap: wrap; justify-content: center; row-gap: 10px; }
+
+/* ---------- Llave maestra ---------- */
+.ll-a { --ll: var(--primario); --ll-suave: var(--primario-suave); --ll-borde: var(--primario-borde); }
+.ll-b { --ll: var(--ambar); --ll-suave: var(--ambar-suave); --ll-borde: var(--ambar-borde); }
+.ll-c { --ll: var(--violeta); --ll-suave: var(--violeta-suave); --ll-borde: var(--violeta-borde); }
+.ll-hueco, .ll-coef {
+  display: inline-flex; align-items: center; gap: 0.28em; padding: 0.02em 0.2em;
+  border: 1px solid var(--ll-borde); border-radius: 6px; background: var(--ll-suave); color: var(--ll);
+}
+.ll-hueco .num, .ll-hueco .vr, .ll-hueco .op, .ll-coef .num, .ll-coef .vr, .ll-coef .op, .ll-coef .exp { color: var(--ll); font-weight: 600; }
+/* La llave se resuelve a la vista: titila la parte que se pide ahora y la recién calculada
+   queda en verde un momento. Con movimiento reducido, el resaltado queda quieto. */
+.ll-parte { display: inline-flex; align-items: center; gap: 0.28em; border-radius: 6px; }
+.ll-actual { --anillo: var(--primario); padding: 0.04em 0.22em; background: var(--primario-suave); box-shadow: 0 0 0 2px var(--anillo); animation: ll-titila 1.5s ease-in-out infinite; }
+.ll-hueco.ll-actual { --anillo: var(--ll); background: var(--ll-suave); }
+@keyframes ll-titila {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 2px var(--anillo); }
+  50% { transform: scale(1.07); box-shadow: 0 0 0 6px color-mix(in srgb, var(--anillo) 25%, transparent); }
+}
+.ll-recien { animation: ll-recien 1.6s ease-out; }
+@keyframes ll-recien {
+  from { background: var(--exito-suave); box-shadow: 0 0 0 2px var(--exito); }
+  to { background: transparent; box-shadow: 0 0 0 0 transparent; }
+}
+.ll-atasco { padding: 0.04em 0.22em; background: var(--error-suave); box-shadow: 0 0 0 2px var(--error); }
+.ll-llave.ll-en-raices { display: grid; justify-items: center; gap: 10px; }
+.ll-mesa { display: grid; justify-items: center; gap: 12px; padding: 18px 18px 6px; }
+.ll-tri { font-size: 1.6rem; white-space: normal; flex-wrap: wrap; justify-content: center; row-gap: 8px; }
+.ll-formula { max-width: 100%; overflow-x: auto; padding: 4px 2px 8px; }
+.ll-llave { font-size: 1.45rem; }
+.ll-abc { display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.ll-campo { display: inline-flex; align-items: center; gap: 6px; }
+.ll-letra { display: inline-grid; place-items: center; width: 1.8em; height: 1.8em; border-radius: 7px; border: 1px solid var(--ll-borde); background: var(--ll-suave); }
+.ll-letra .vr { color: var(--ll); font-weight: 600; }
+.ll-campo .campo { width: 86px; }
+.ll-ficha { margin: 0 18px 14px; }
+.ll-ficha > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 500; color: var(--primario); }
+.ll-ficha > summary::-webkit-details-marker { display: none; }
+.ll-ficha .chev { width: 16px; height: 16px; transition: transform 0.2s ease; }
+.ll-ficha[open] .chev { transform: rotate(90deg); }
+.ll-cuadrados { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.ll-cuadrados li { margin: 0; padding: 4px 8px; border: 1px solid var(--borde); border-radius: 6px; background: var(--superficie); font-size: 0.92rem; }
+
+/* ---------- Del dibujo al papel: todos contra todos ----------
+   Las flechas llevan el color del pedazo que dan, como las celdas del
+   rectángulo. */
+.m3-puente { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: 16px 28px; align-items: center; margin: 4px 0 18px; }
+.m3-puente h3, .m3-moneda h3 { font-size: 1.05rem; margin: 0 0 8px; }
+.m3-puente-texto > p { margin: 0 0 10px; color: var(--texto-2); }
+.m3-puente-texto .mt { white-space: normal; }
+.m3-puente .caja { margin: 12px 0 0; }
+.tc-figura {
+  display: grid; justify-items: center; gap: 10px; min-width: 0; padding: 14px 14px 12px;
+  border: 1px solid var(--borde); border-radius: var(--radio);
+  background-color: var(--superficie);
+  background-image:
+    linear-gradient(var(--cuadricula) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cuadricula) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.tc-titulo { justify-self: start; margin: 0; font-size: 0.92rem; font-weight: 600; }
+.tc-lienzo { max-width: 100%; overflow-x: auto; }
+.tc-svg { display: block; max-width: 100%; height: auto; overflow: visible; }
+.tc-t { font-family: var(--f-texto); font-size: 22px; fill: var(--texto); transition: fill 0.2s ease; }
+.tc-op { fill: var(--texto-2); }
+.tc-vr { font-family: var(--f-mate); font-style: italic; }
+.tc-flecha, .tc-punta, .tc-prod, .tc-t { --tc: var(--texto-2); }
+.t2.tc-flecha, .t2.tc-punta, .t2.tc-prod, .t2.tc-t { --tc: var(--primario); }
+.t1.tc-flecha, .t1.tc-punta, .t1.tc-prod, .t1.tc-t { --tc: var(--ambar); }
+.t0.tc-flecha, .t0.tc-punta, .t0.tc-prod, .t0.tc-t { --tc: var(--violeta); }
+.tc-t.activo { fill: var(--tc); font-weight: 600; }
+.tc-flecha { opacity: 0; transition: opacity 0.3s ease; }
+.tc-flecha.visible { opacity: 1; }
+.tc-flecha path { fill: none; stroke: var(--tc); stroke-width: 2; stroke-linecap: round; }
+.tc-flecha.actual path { stroke-width: 2.8; }
+.tc-flecha circle { fill: var(--superficie); stroke: var(--tc); stroke-width: 1.5; }
+.tc-flecha text { font-family: var(--f-mono); font-size: 11px; font-weight: 600; fill: var(--tc); }
+.tc-punta path { fill: var(--tc); }
+.tc-productos { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 8px; }
+.tc-prod {
+  display: inline-flex; align-items: center; gap: 6px; margin: 0; padding: 3px 10px 3px 4px;
+  border: 1px solid var(--borde); border-radius: 999px; background: var(--superficie); font-size: 0.95rem;
+  visibility: hidden;
+}
+.tc-prod.visible { visibility: visible; }
+.tc-prod.actual { border-color: var(--tc); box-shadow: 0 0 0 2px color-mix(in srgb, var(--tc) 22%, transparent); }
+.tc-n { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%; border: 1.5px solid var(--tc); color: var(--tc); font-family: var(--f-mono); font-size: 0.72rem; font-weight: 600; }
+.tc-res { display: none; }
+.tc-prod.resuelta .tc-res { display: inline-flex; align-items: center; gap: 0.28em; }
+.tc-prod.resuelta .tc-falta { display: none; }
+.tc-falta { color: var(--primario); font-weight: 700; }
+.tc-papel { display: grid; justify-items: center; gap: 4px; font-size: 1.12rem; }
+.tc-papel .mt { white-space: normal; flex-wrap: wrap; justify-content: center; row-gap: 6px; }
+.tc-texto { margin: 0; max-width: 60ch; min-height: 3em; text-align: center; color: var(--texto-2); font-size: 0.92rem; }
+.tc-texto .mt { white-space: normal; flex-wrap: wrap; }
+.tc-botones { justify-content: center; }
+/* La comprobación de la llave maestra */
+.ll-comprobar { margin: 0 18px 14px; }
+
+/* ---------- Raíces y factorización: la gráfica de GeoGebra ---------- */
+.m3-moneda { margin: 4px 0 18px; }
+.m3-moneda > p { margin: 0; max-width: 75ch; color: var(--texto-2); }
+.gg-moneda { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px 16px; margin: 14px 0 18px; }
+.gg-cara { display: grid; justify-items: center; gap: 6px; padding: 12px 14px; border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie-2); text-align: center; font-size: 1.15rem; }
+.gg-cara .etiqueta { font-size: 0.72rem; }
+.gg-cara .mt { white-space: normal; flex-wrap: wrap; justify-content: center; }
+.gg-vias { display: grid; gap: 8px; }
+.gg-via { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 0.84rem; color: var(--texto-2); }
+.gg-via svg { width: 18px; height: 18px; flex: none; color: var(--primario); }
+/* La instrucción y los trinomios van pegados encima de la calculadora, que usa todo el ancho:
+   GeoGebra necesita lugar (con menos de unos 600 px de ancho su panel o su teclado tapan la gráfica) */
+.gg-guia { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 12px 18px; align-items: start; margin-bottom: 12px; }
+.gg-clave { margin: 0; padding: 12px 14px; border: 1px solid var(--primario-borde); border-left: 3px solid var(--primario); border-radius: var(--radio-chico); background: var(--primario-suave); font-weight: 500; }
+.gg-guia h4 { margin: 0 0 8px; font-size: 0.92rem; }
+.gg-pruebas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.gg-pruebas li { display: grid; gap: 4px; margin: 0; padding: 8px 10px; border: 1px solid var(--borde); border-radius: var(--radio-chico); background: var(--superficie); font-size: 0.86rem; color: var(--texto-2); }
+.gg-pruebas li .mt { white-space: normal; flex-wrap: wrap; }
+.gg-prueba-cabeza { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
+.gg-prueba-cabeza > .mt { font-size: 1.05rem; color: var(--texto); }
+.gg-marco { position: relative; height: 500px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio); overflow: hidden; background: var(--superficie-2); }
+.gg-cargando { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--texto-3); font-size: 0.88rem; }
+.gg-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.gg-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 10px; }
+.gg-pie .texto-3 { flex: 1 1 380px; margin: 0; font-size: 0.84rem; }
+@media (max-width: 760px) { .m3-puente, .gg-guia { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Resumen de reglas (seis cajas) ---------- */
+.m3-reglas-grilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.m3-reglas-nota { margin: 8px 0 0; font-size: 0.86rem; color: var(--texto-2); }
+@media (max-width: 1100px) { .m3-reglas-grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .m3-reglas-grilla { grid-template-columns: minmax(0, 1fr); } }
+.m3-reglas-grilla .fr { font-size: 0.92em; }
+
+@media (max-width: 640px) {
+  .ar-rect { font-size: 0.86rem; }
+  .ar-mesa { padding: 14px 10px 8px; }
+  .ar-expr { font-size: 1.35rem; }
+  .ar-linea { font-size: 1.1rem; }
+  .ar-pieza { font-size: 1rem; }
+  .dc-mesa { padding: 16px 10px 12px; }
+  .dc-expr, .ll-tri { font-size: 1.3rem; }
+  .ll-llave { font-size: 1.12rem; }
+  .ll-mesa { padding: 14px 10px 6px; }
+  .ll-ficha, .ll-comprobar { margin: 0 12px 12px; }
+  .tc-figura { padding: 12px 10px 10px; }
+  .gg-moneda { grid-template-columns: minmax(0, 1fr); }
+  .gg-vias { justify-items: center; }
+  .gg-via svg { transform: rotate(90deg); }
+  .gg-marco { height: 440px; }
+}
+
+/* ---------- Diapositivas de la clase 3 ---------- */
+.d-rect { display: flex; justify-content: center; }
+.diapo .ar-rect { font-size: 0.8em; }
+.diapo .ar-pieza { font-size: 0.78em; }
+.d-piezas { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.8em 1.8em; }
+.d-piezas > div { display: grid; justify-items: center; gap: 0.3em; }
+.d-piezas small { font-size: 0.62em; color: var(--texto-3); }
+.d-figura svg { max-width: 100%; }
+.d-grafica { width: 100%; height: auto; overflow: visible; }
+.dg-suelo { stroke: var(--texto-3); stroke-width: 2; }
+.dg-curva { fill: none; stroke: var(--primario); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.dg-raiz { fill: var(--ambar); }
+.dg-etq { font-family: var(--f-texto); font-size: 14px; font-weight: 500; fill: var(--texto); }
+.dg-suave { font-weight: 400; fill: var(--texto-3); }
+.d-llave { font-size: 1.25em; }
+.d-dos-grafica { grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr); }
+.diapo .ll-coef, .diapo .ll-hueco { font-size: 1em; }
+@media (max-width: 640px) {
+  .diapo .ar-rect { font-size: 0.72em; }
+}

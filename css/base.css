@@ -30,6 +30,11 @@
   --ambar-suave: #fdf2de;
   --ambar-borde: #efcf95;
 
+  /* Violeta: los números en el módulo 3 (c en la llave maestra) */
+  --violeta: #6c3fb0;
+  --violeta-suave: #f2ecfa;
+  --violeta-borde: #d5c3ee;
+
   /* Estados */
   --exito: #1c7c54;
   --exito-suave: #e3f4ec;
@@ -79,6 +84,9 @@
     --ambar: #f0b54a;
     --ambar-suave: #33270f;
     --ambar-borde: #6b5222;
+    --violeta: #c3a2f2;
+    --violeta-suave: #251c35;
+    --violeta-borde: #4b3a69;
     --exito: #5bc796;
     --exito-suave: #12291f;
     --exito-borde: #275c43;
@@ -110,6 +118,9 @@
   --ambar: #f0b54a;
   --ambar-suave: #33270f;
   --ambar-borde: #6b5222;
+  --violeta: #c3a2f2;
+  --violeta-suave: #251c35;
+  --violeta-borde: #4b3a69;
   --exito: #5bc796;
   --exito-suave: #12291f;
   --exito-borde: #275c43;

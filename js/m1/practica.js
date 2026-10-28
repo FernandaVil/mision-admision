@@ -4,6 +4,9 @@
    Un ejercicio a la vez, sin calculadora. Ayudas en orden:
    pista 1 → pista 2 → solución paso a paso. Si la respuesta coincide
    con un error típico, la retroalimentación explica ese error.
+   Un ejercicio puede traer una pregunta previa (ej.antes: por ejemplo,
+   qué llave logra abrir el candado en el módulo 3). No bloquea:
+   cualquier respuesta muestra el porqué y abre el lugar para responder.
    ===================================================================== */
 (function () {
   'use strict';
@@ -35,6 +38,7 @@
       <article class="tarjeta pr-tarjeta" aria-live="off">
         <header class="pr-cabeza"></header>
         <div class="pr-enunciado"></div>
+        <div class="pr-antes" hidden></div>
         <div class="pr-respuesta"></div>
         <div class="mensaje pr-feedback" role="status" aria-live="polite"></div>
         <div class="fila-botones pr-ayudas">
@@ -146,6 +150,7 @@
       const bh = $('[data-accion="herramienta"]', raiz);
       bh.hidden = !ej.herramienta;
       if (ej.herramienta) bh.innerHTML = ej.herramienta.boton ? `${icono(ej.herramienta.icono || 'regla')}${ej.herramienta.boton}` : ej.herramienta.tipo === 'balanza' ? `${icono('balanza')}Probarlo en la balanza` : `${icono('regla')}Probarlo en la mesa de conversión`;
+      pintarAntes(ej, d);
 
       $('[data-accion="anterior"]', raiz).disabled = actual === 0;
       const sig = $('[data-accion="siguiente"]', raiz);
@@ -155,6 +160,31 @@
       cargarBorrador();
       // Solo se anuncia al asistente si la práctica está a la vista
       if (raiz.offsetParent !== null) anunciarEj();
+    }
+
+    // Pregunta previa: mientras no se responde, no se ven el lugar para responder ni el botón
+    // de la herramienta (diría la respuesta). Después quedan marcadas la elegida y la correcta.
+    // a.tambien: opciones que también sirven aunque no sean la buscada (la llave maestra abre
+    // casi todo, pero por el camino largo); se marcan aparte, sin contarlas como error.
+    // a.respuesta: el título cuando la elegida no es la buscada.
+    function pintarAntes(ej, d) {
+      const caja = $('.pr-antes', raiz), resp = $('.pr-respuesta', raiz);
+      caja.hidden = !ej.antes;
+      resp.hidden = false;
+      if (!ej.antes) { caja.innerHTML = ''; return; }
+      const a = ej.antes, k = d.antes, espera = k == null && !d.resuelto;
+      resp.hidden = espera;
+      if (ej.herramienta && espera) $('[data-accion="herramienta"]', raiz).hidden = true;
+      const bien = k === a.correcta, tambien = !bien && (a.tambien || []).includes(k);
+      const marca = j => (k != null && j === a.correcta ? 'correcta' : k !== j ? '' : tambien ? 'tambien' : 'incorrecta');
+      const [tipo, ico, titulo] = bien ? ['ok', 'checkCirculo', '¡Correcto!']
+        : tambien ? ['info', 'info', a.tituloTambien || 'También sirve.']
+        : ['aviso', 'alerta', a.respuesta || `La respuesta es «${a.opciones[a.correcta]}».`];
+      caja.innerHTML = `
+        <p class="pr-antes-titulo">${icono('pista')}${a.pregunta}</p>
+        <div class="fila-botones">${a.opciones.map((o, j) => `<button type="button" class="btn btn-secundario btn-chico pr-antes-op ${marca(j)}" data-antes="${j}" ${k != null ? 'disabled' : ''}>${o}</button>`).join('')}</div>
+        ${k == null ? '<p class="texto-3">Primero esto; después aparece el lugar para responder.</p>'
+          : `<div class="mensaje ${tipo}">${icono(ico)}<div><span class="m-titulo">${titulo}</span>${bien ? a.bien : `${(a.porQue && a.porQue[k]) || ''} ${a.bien}`}</div></div>`}`;
     }
 
     function pintarBotonPista(ej, d) {
@@ -251,6 +281,17 @@
       if (b.dataset.ir != null) { mostrar(Number(b.dataset.ir)); return; }
       if (b.classList.contains('pr-opcion')) { elegirOpcion(b); return; }
       const ej = lista[actual], d = datosDe(ej);
+      if (b.dataset.antes != null) {
+        if (d.antes == null) {
+          d.antes = Number(b.dataset.antes);
+          guardar();
+          pintarAntes(ej, d);
+          if (ej.herramienta) $('[data-accion="herramienta"]', raiz).hidden = false;
+          const campo = $('.pr-respuesta .campo', raiz);
+          if (campo) campo.focus({ preventScroll: true });
+        }
+        return;
+      }
       switch (b.dataset.accion) {
         case 'comprobar': comprobar(); break;
         case 'pista':

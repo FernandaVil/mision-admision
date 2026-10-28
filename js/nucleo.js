@@ -168,7 +168,10 @@
     pizarra: '<rect x="2" y="3" width="20" height="13" rx="2"/><path d="M7 21l5-5 5 5M6 8h7M6 11.5h4"/>',
     flechaD: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     flechaI: '<path d="M19 12H5M11 18l-6-6 6-6"/>',
-    mano: '<path d="M9 11V6a1.5 1.5 0 0 1 3 0v4M12 10V4.5a1.5 1.5 0 0 1 3 0V10M15 10V6a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-.5a6 6 0 0 1-4.7-2.3L3.3 13.5a1.6 1.6 0 0 1 2.4-2.1L9 14"/>'
+    mano: '<path d="M9 11V6a1.5 1.5 0 0 1 3 0v4M12 10V4.5a1.5 1.5 0 0 1 3 0V10M15 10V6a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-.5a6 6 0 0 1-4.7-2.3L3.3 13.5a1.6 1.6 0 0 1 2.4-2.1L9 14"/>',
+    cuadricula: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 10h18M10 3v18"/>',
+    cuadrados: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M14 21v-7h7"/>',
+    llave: '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>'
   };
   MA.icono = function (nombre, clase = '') {
     if (nombre === 'avion') {
@@ -259,7 +262,16 @@
     tach: html => `<span class="tachado">${html}</span>`,
     raiz: html => `<span class="raiz"><span class="raiz-signo">√</span><span class="raiz-rad">${html}</span></span>`,
     cuad: html => `${html}<sup class="exp">2</sup>`,
-    bloque: html => `<div class="mt mt-bloque">${html}</div>`
+    bloque: html => `<div class="mt mt-bloque">${html}</div>`,
+    // Una respuesta tapada en una diapositiva: se ve «?» (o lo que diga antes) hasta revelar el paso.
+    // Ocupa el lugar de la respuesta, así nada se mueve al revelarla.
+    oculto: (html, paso = 1, antes = '?') => `<span class="d-oculta" data-paso="${paso}"><span class="d-oculta-valor">${html}</span><span class="d-oculta-antes" aria-hidden="true">${antes}</span></span>`,
+    // Lo mismo para un bloque entero (una nota, un dibujo): queda el lugar vacío, o con «antes» si se da
+    ocultoBloque: (html, paso = 1, antes = '') => `<div class="d-oculta d-oculta-bloque${antes ? ' con-marca' : ''}" data-paso="${paso}"><div class="d-oculta-valor">${html}</div><span class="d-oculta-antes" aria-hidden="true">${antes}</span></div>`,
+    // Algo que se ve desde el principio y cambia al revelar el paso (una fórmula con letras que pasa a tener números)
+    cambia: (antes, despues, paso = 1) => `<span class="d-oculta d-cambia" data-paso="${paso}"><span class="d-oculta-valor">${despues}</span><span class="d-oculta-antes">${antes}</span></span>`,
+    // Un pedazo que aparece recién cuando le toca a su paso (el «=» de un segundo renglón)
+    desde: (html, paso) => `<span class="mt" data-desde="${paso}">${html}</span>`
   };
   f.igual = f.op('=');
   f.por = f.op('·');

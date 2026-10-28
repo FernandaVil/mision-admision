@@ -35,13 +35,13 @@
     {
       id: 'm3', num: '03',
       titulo: 'Factorización',
-      resumen: 'Factor común, productos notables y ecuaciones de segundo grado.',
-      disponible: false,
+      resumen: 'Armar y desarmar multiplicaciones: factor común, diferencia de cuadrados y una llave maestra para los trinomios.',
+      disponible: true,
       temario: [
-        'Factor común',
-        'Diferencia de cuadrados',
-        'Trinomios de la forma x² + bx + c',
-        'Ecuaciones de segundo grado y fórmula cuadrática'
+        'Juntar términos del mismo tipo y multiplicar con la distributiva: todos contra todos',
+        'Factor común: sacar de a poco lo que está en todos los términos',
+        'Diferencia de cuadrados: un cuadrado menos otro se reacomoda en un rectángulo',
+        'La llave maestra: la fórmula cuadrática para factorizar cualquier trinomio y resolver ecuaciones, con las raíces en la gráfica'
       ]
     },
     {

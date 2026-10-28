@@ -2,7 +2,7 @@
    PLATAFORMA · rutas, navegación, tema, cajones y panel general
    Rutas (anclas simples, para que también funcionen como enlace directo):
      #inicio · #m1 · #m1-ideas · #m1-ideas-p2 · #m1-despejes ·
-     #m1-conversion · #m1-practica · #m2 · #m2-fracciones … #m6
+     #m1-conversion · #m1-practica · #m2 · #m2-fracciones … #m3-llave … #m6
    ===================================================================== */
 (function () {
   'use strict';
