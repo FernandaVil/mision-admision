@@ -2,9 +2,11 @@
    MÓDULO 1 · página completa
    Cabecera con progreso y plan de clase, pestañas y cuatro secciones:
    1) ideas clave (presentación + ficha), 2) despejes con la balanza,
-   3) conversión con factor unitario, 4) práctica progresiva.
+   3) conversión con factor unitario, 4) práctica progresiva y
+   5) rondas de práctica (js/rondas.js; no cuentan en el porcentaje
+   del módulo: son para seguir practicando).
    Rutas: #m1-ideas (#m1-ideas-p1, #m1-ideas-p2) · #m1-despejes ·
-          #m1-conversion · #m1-practica
+          #m1-conversion · #m1-practica · #m1-rondas
    ===================================================================== */
 (function () {
   'use strict';
@@ -16,7 +18,8 @@
     { id: 'ideas', nombre: 'Ideas clave', corto: 'Ideas', icono: 'libro' },
     { id: 'despejes', nombre: 'Despejes', corto: 'Despejes', icono: 'balanza' },
     { id: 'conversion', nombre: 'Conversión de unidades', corto: 'Conversión', icono: 'regla' },
-    { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' }
+    { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' },
+    { id: 'rondas', nombre: 'Rondas de práctica', corto: 'Rondas', icono: 'reiniciar' }
   ];
 
   function progreso() {
@@ -26,9 +29,11 @@
     const despejes = cuenta('m1.balanza.', C.RETOS_BALANZA.map(x => x.id));
     const conversion = cuenta('m1.conv.', C.RETOS_CONVERSION.map(x => x.id));
     const practica = cuenta('m1.prac.', C.EJERCICIOS.map(x => x.id));
+    // Las rondas (habilidades dominadas) no entran en el porcentaje: un módulo terminado sigue terminado
+    const rondas = cuenta('m1.rondas.', C.RONDAS.map(h => h.id));
     const todos = [ideas, despejes, conversion, practica];
     const hechos = todos.reduce((s, x) => s + x[0], 0), total = todos.reduce((s, x) => s + x[1], 0);
-    return { ideas, despejes, conversion, practica, hechos, total, pct: total ? hechos / total : 0 };
+    return { ideas, despejes, conversion, practica, rondas, hechos, total, pct: total ? hechos / total : 0 };
   }
 
   const por = op('·'), igual = op('=');
@@ -37,7 +42,7 @@
   function htmlIdeas() {
     return `
       <div class="seccion-cabeza">
-        <span class="etiqueta">Paso 1 de 4</span>
+        <span class="etiqueta">Paso 1 de ${SECCIONES.length}</span>
         <h2>Ideas clave antes de empezar</h2>
         <p class="entrada">Lo mínimo que hace falta saber antes de cualquier ejercicio, en dos partes cortas: la primera va antes de la balanza y la segunda, antes de la mesa de conversión.</p>
       </div>
@@ -52,7 +57,7 @@
   function htmlDespejes() {
     return `
       <div class="seccion-cabeza">
-        <span class="etiqueta">Paso 2 de 4</span>
+        <span class="etiqueta">Paso 2 de ${SECCIONES.length}</span>
         <h2>Despejar es equilibrar una balanza</h2>
         <p class="entrada">Una ecuación es una balanza en equilibrio: lo que hay a la izquierda del signo igual pesa exactamente lo mismo que lo que hay a la derecha. Despejar no es memorizar reglas; es hacerles a los dos platos la misma operación hasta que la variable buscada quede sola.</p>
       </div>
@@ -104,7 +109,7 @@
   function htmlConversion() {
     return `
       <div class="seccion-cabeza">
-        <span class="etiqueta">Paso 3 de 4</span>
+        <span class="etiqueta">Paso 3 de ${SECCIONES.length}</span>
         <h2>Convertir unidades con el factor unitario</h2>
         <p class="entrada">Convertir no cambia la cantidad, solo su nombre: 2,5 km y 2500 m son la misma distancia. El método consiste en multiplicar por fracciones que valen 1 y acomodarlas para que la unidad que se quiere eliminar quede una vez arriba y otra abajo. Así se cancela.</p>
       </div>
@@ -156,11 +161,22 @@
   function htmlPractica() {
     return `
       <div class="seccion-cabeza">
-        <span class="etiqueta">Paso 4 de 4</span>
+        <span class="etiqueta">Paso 4 de ${SECCIONES.length}</span>
         <h2>Práctica progresiva</h2>
         <p class="entrada">Dieciocho ejercicios, del más sencillo al más parecido al examen; los dos últimos son retos para ir un paso más allá. Sin calculadora: con papel o con el borrador. Ante una duda, primero una pista; la solución completa es el último recurso.</p>
       </div>
-      <div class="m1-practica"></div>`;
+      <div class="m1-practica"></div>
+      ${MA.Rondas.avisoHtml('m1')}`;
+  }
+
+  function htmlRondas() {
+    return `
+      <div class="seccion-cabeza">
+        <span class="etiqueta">Paso 5 de ${SECCIONES.length}</span>
+        <h2>Rondas de práctica</h2>
+        <p class="entrada">${MA.Rondas.ENTRADA}</p>
+      </div>
+      <div class="m1-rondas"></div>`;
   }
 
   const vista = {
@@ -182,6 +198,7 @@
             <div class="dato"><small>Balanza</small><b data-prog="despejes"></b></div>
             <div class="dato"><small>Conversión</small><b data-prog="conversion"></b></div>
             <div class="dato"><small>Práctica</small><b data-prog="practica"></b></div>
+            <div class="dato"><small>Habilidades dominadas</small><b data-prog="rondas"></b></div>
           </div>
         </header>
         <details class="plan-clase">
@@ -195,6 +212,7 @@
         <section class="m1-seccion" id="m1-despejes" data-sec="despejes" role="tabpanel" hidden>${htmlDespejes()}</section>
         <section class="m1-seccion" id="m1-conversion" data-sec="conversion" role="tabpanel" hidden>${htmlConversion()}</section>
         <section class="m1-seccion" id="m1-practica" data-sec="practica" role="tabpanel" hidden>${htmlPractica()}</section>
+        <section class="m1-seccion" id="m1-rondas" data-sec="rondas" role="tabpanel" hidden>${htmlRondas()}</section>
         <nav class="pie-seccion" aria-label="Navegación entre secciones"></nav>`;
       cont.appendChild(raiz);
       this.raiz = raiz;
@@ -222,6 +240,12 @@
         }
       });
       this.practica = practica;
+      this.rondas = MA.Rondas.crear($('.m1-rondas', raiz), {
+        modulo: 'm1',
+        habilidades: C.RONDAS,
+        teclado: 'decimal',
+        ayudaCampo: 'Solo el número. Sirven la coma o el punto decimal (2,5 o 2.5) y las fracciones (1/4).'
+      });
 
       MA.bus.on('progreso', () => this.pintarProgreso());
       this.pintarProgreso();
@@ -248,6 +272,7 @@
         ${sig ? `<a class="btn" href="#m1-${sig.id}">Siguiente sección: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
       if (sec === 'ideas' && extra && this.presentacion) this.presentacion.irParte(extra);
       if (sec === 'practica' && this.practica) this.practica.anunciar();
+      if (sec === 'rondas' && this.rondas) this.rondas.anunciar();
       return sec;
     }
   };

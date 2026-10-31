@@ -103,7 +103,7 @@ Usa frases cortas y palabras sencillas. Si usas un término técnico, explícalo
     $('input', ctx).disabled = !hay;
     $('input', ctx).checked = hay && st.incluir;
     $('.as-contexto-texto', ctx).innerHTML = hay
-      ? `Insertar el <b>ejercicio ${st.ejercicio.numero} de la práctica</b> en las plantillas.`
+      ? `Insertar el <b>${st.ejercicio.donde || `ejercicio ${st.ejercicio.numero} de la práctica`}</b> en las plantillas.`
       : 'Al abrir un ejercicio de la práctica, se puede insertar aquí automáticamente.';
     $$('.plantilla', raiz).forEach(d => d.addEventListener('toggle', () => {
       if (d.open) {

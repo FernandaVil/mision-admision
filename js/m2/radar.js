@@ -11,6 +11,9 @@
    sale después, con la plata, y puede ser negativo. La primera ronda
    es fija (MA.M2.RADAR); las siguientes cambian los números con las
    mismas trampas y se repiten igual al recargar (azar con semilla).
+   Cada ronda completa cuenta como en las rondas de práctica: es buena
+   con a lo sumo un error, y con dos buenas el radar queda dominado
+   (MA.Rondas.anotar, habilidad m2.rondas.radar).
    ===================================================================== */
 (function () {
   'use strict';
@@ -180,7 +183,8 @@
 
   function crearRadar(raiz) {
     const guardado = MA.almacen.leer('m2.radar', null) || {};
-    const st = { ronda: guardado.ronda || 1, actual: guardado.actual || 0, estado: guardado.estado || {} };
+    // anotada: la última ronda que ya se contó en las rondas de práctica (se cuenta una sola vez)
+    const st = { ronda: guardado.ronda || 1, actual: guardado.actual || 0, estado: guardado.estado || {}, anotada: guardado.anotada || 0 };
     let lista = generar(st.ronda);
 
     raiz.classList.add('banco', 'mesa-radar');
@@ -262,7 +266,7 @@
         ? 'Las diez a la primera: el radar funciona.'
         : `${primera} de ${lista.length} a la primera.${alertas ? ` La alerta del radar saltó en ${alertas === 1 ? 'un ejercicio' : `${alertas} ejercicios`}.` : ''}`;
       fin.innerHTML = `
-        <div class="mensaje ok">${icono('checkCirculo')}<div><span class="m-titulo">${titulo}</span>${texto} En otra ronda cambian los números, pero no las trampas.</div></div>
+        <div class="mensaje ok">${icono('checkCirculo')}<div><span class="m-titulo">${titulo}</span>${texto} ${primera >= lista.length - 1 ? 'Es una ronda buena (a lo sumo un error): cuenta para dominar el radar en las rondas de práctica.' : 'Con a lo sumo un error, la ronda es buena y cuenta para dominar el radar.'} En otra ronda cambian los números, pero no las trampas.</div></div>
         <div class="fila-botones"><button type="button" class="btn btn-chico" data-accion="ronda">${icono('reiniciar')}Otra ronda</button></div>`;
     }
 
@@ -301,6 +305,7 @@
         d.resuelto = true;
         guardar();
         MA.progreso.marcar('m2.radar.' + ej.id);
+        anotarSiTermina();
         mostrar(st.actual, true);
         return;
       }
@@ -319,6 +324,16 @@
       guardar();
       ponerMensaje(err && err.aviso ? 'aviso' : 'error', err ? err.titulo : 'Todavía no.', texto.trim());
       campo.select();
+    }
+
+    // Una ronda completa cuenta igual que en las rondas de práctica
+    function anotarSiTermina() {
+      if (st.anotada === st.ronda || !lista.every(resuelto) || !MA.Rondas) return;
+      st.anotada = st.ronda;
+      guardar();
+      const aciertos = lista.filter(ej => st.estado[ej.id].intentos === 0).length;
+      const r = MA.Rondas.anotar({ mod: 'm2', hab: 'radar', aciertos, total: lista.length });
+      if (r.dominaAhora) MA.aviso('¡Radar de signos dominado!', 'check');
     }
 
     // El siguiente sin resolver (después del actual y, si no hay, desde el principio)
@@ -356,6 +371,7 @@
     MA.bus.on('progreso', clave => {
       if (clave !== null) return;
       st.ronda = 1;
+      st.anotada = 0;
       st.estado = {};
       lista = generar(1);
       mostrar(0);
