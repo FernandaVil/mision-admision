@@ -1,0 +1,55 @@
+/* =====================================================================
+   Rondas de práctica (rn-), motor compartido de los módulos 1 a 3
+   Reutiliza .pasos-concepto de las secciones y .pr-mapa, .pr-punto,
+   .pr-opcion, .pr-letra y .pr-solucion de la práctica.
+   ===================================================================== */
+
+/* ---------- Cómo se trabaja y cuántas habilidades están dominadas ---------- */
+.rn-como { margin-bottom: 14px; }
+.rn-resumen { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 12px; font-size: 0.95rem; color: var(--texto-2); }
+.rn-resumen b { font-family: var(--f-mono); font-weight: 500; color: var(--texto); }
+.rn-resumen svg { width: 17px; height: 17px; color: var(--exito); }
+
+/* ---------- Habilidades ---------- */
+.rn-habilidades { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.rn-hab {
+  display: grid; gap: 6px; align-content: start; text-align: left;
+  padding: 12px 14px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio);
+  background: var(--superficie); color: var(--texto); font: inherit; text-decoration: none; cursor: pointer;
+}
+.rn-hab:hover { border-color: var(--primario); color: var(--texto); }
+.rn-hab:focus-visible { outline: none; box-shadow: var(--foco); }
+.rn-hab[aria-pressed="true"] { border-color: var(--primario); background: var(--primario-suave); box-shadow: inset 0 0 0 1px var(--primario); }
+.rn-hab-cabeza { display: flex; align-items: center; gap: 8px; }
+.rn-hab-cabeza svg { width: 18px; height: 18px; flex: none; color: var(--primario); }
+.rn-hab-cabeza b { font-weight: 600; font-size: 0.95rem; }
+.rn-hab-detalle { font-size: 0.85rem; color: var(--texto-2); }
+.rn-hab-estado { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rn-hab-estado .pildora svg, .rn-meta .pildora svg { width: 13px; height: 13px; }
+.rn-hab-rondas { font-family: var(--f-mono); font-size: 0.75rem; color: var(--texto-3); }
+.rn-hab-ir { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--primario); }
+.rn-hab-ir svg { width: 14px; height: 14px; }
+
+/* ---------- La ronda ---------- */
+.rn-banco .banco-cabeza { justify-content: space-between; }
+.rn-numero { display: block; margin: 4px 0 8px; }
+.rn-enunciado { font-size: 1.12rem; line-height: 1.75; margin-bottom: 16px; }
+.rn-enunciado p { margin: 0; }
+.rn-enunciado .mt { font-size: 1.04em; }
+.rn-respuesta { margin-bottom: 14px; }
+.rn-respuesta .campo-grupo.rn-bien { border-color: var(--exito-borde); background: var(--exito-suave); }
+.rn-respuesta .campo-grupo.rn-bien .campo { color: var(--exito); }
+.rn-banco .pr-opcion:disabled { cursor: default; }
+/* También abre, pero por el camino largo: ni bien ni mal */
+.rn-banco .pr-opcion.tambien { border-color: var(--primario); border-style: dashed; background: var(--superficie); }
+.rn-mensaje { margin-bottom: 12px; }
+.rn-ayudas { margin-bottom: 10px; }
+.rn-pista {
+  margin: 0 0 10px; padding: 10px 14px; font-size: 0.95rem;
+  background: var(--primario-suave); border-left: 3px solid var(--primario);
+  border-radius: 0 var(--radio-chico) var(--radio-chico) 0;
+}
+.rn-pista .mt, .rn-solucion .mt { white-space: normal; flex-wrap: wrap; }
+.rn-final { display: grid; gap: 10px; margin-bottom: 12px; }
+.rn-nav { justify-content: space-between; }
+.rn-aviso { margin-top: 16px; }

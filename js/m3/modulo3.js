@@ -1,9 +1,10 @@
 /* =====================================================================
    Módulo 3 · página completa (factorización)
    Secciones: 1) ideas clave, 2) armar y desarmar (mesa de áreas),
-   3) diferencia de cuadrados, 4) llave maestra, 5) práctica integrada.
+   3) diferencia de cuadrados, 4) llave maestra, 5) práctica integrada,
+   6) rondas de práctica (js/rondas.js; no cuentan en el porcentaje).
    Rutas: #m3-ideas (-p1, -p2, -p3) · #m3-areas · #m3-cuadrados ·
-          #m3-llave · #m3-practica
+          #m3-llave · #m3-practica · #m3-rondas
    ---------------------------------------------------------------------
    Por qué está armado así (decisiones pedagógicas)
    1. Una sola figura para entender todo el módulo: el rectángulo de
@@ -77,7 +78,8 @@
     { id: 'areas', nombre: 'Armar y desarmar', corto: 'Áreas', icono: 'cuadricula' },
     { id: 'cuadrados', nombre: 'Diferencia de cuadrados', corto: 'Cuadrados', icono: 'cuadrados' },
     { id: 'llave', nombre: 'Llave maestra', corto: 'Llave', icono: 'llave' },
-    { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' }
+    { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' },
+    { id: 'rondas', nombre: 'Rondas de práctica', corto: 'Rondas', icono: 'reiniciar' }
   ];
 
   function progreso() {
@@ -87,9 +89,11 @@
       areas: cuenta('m3.areas.', C.RETOS_AREAS.map(x => x.id)),
       cuadrados: cuenta('m3.cuad.', C.RETOS_CUADRADOS.map(x => x.id)),
       llave: cuenta('m3.llave.', C.RETOS_LLAVE.map(x => x.id)),
-      practica: cuenta('m3.prac.', C.EJERCICIOS.map(x => x.id))
+      practica: cuenta('m3.prac.', C.EJERCICIOS.map(x => x.id)),
+      rondas: cuenta('m3.rondas.', C.RONDAS.map(h => h.id))
     };
-    const todos = SECCIONES.map(s => res[s.id]);
+    // Las rondas no entran en el porcentaje: un módulo terminado sigue terminado
+    const todos = SECCIONES.filter(s => s.id !== 'rondas').map(s => res[s.id]);
     res.hechos = todos.reduce((s, x) => s + x[0], 0);
     res.total = todos.reduce((s, x) => s + x[1], 0);
     res.pct = res.total ? res.hechos / res.total : 0;
@@ -293,7 +297,14 @@
   function htmlPractica() {
     return `
       ${cabeza(5, 'Práctica integrada', 'Quince ejercicios en el orden del módulo: juntar, armar y las tres llaves; al final, tipo examen y retos. Antes de cada factorización hay que decir qué llave logra abrir el candado. El chequeo va en orden: ¿hay algo en todos los términos? ¿Son dos cuadrados con una resta? Si no, la llave maestra. Sin calculadora: con papel o con el borrador.')}
-      <div class="m3-practica"></div>`;
+      <div class="m3-practica"></div>
+      ${MA.Rondas.avisoHtml('m3')}`;
+  }
+
+  function htmlRondas() {
+    return `
+      ${cabeza(6, 'Rondas de práctica', MA.Rondas.ENTRADA)}
+      <div class="m3-rondas"></div>`;
   }
 
   const vista = {
@@ -313,6 +324,7 @@
             <div class="dato"><small>Ideas clave</small><b data-prog="ideas"></b></div>
             <div class="dato"><small>Herramientas</small><b data-prog="herramientas"></b></div>
             <div class="dato"><small>Práctica</small><b data-prog="practica"></b></div>
+            <div class="dato"><small>Habilidades dominadas</small><b data-prog="rondas"></b></div>
           </div>
         </header>
         <details class="plan-clase">
@@ -327,6 +339,7 @@
         <section class="m1-seccion m3-seccion" id="m3-cuadrados" data-sec="cuadrados" role="tabpanel" hidden>${htmlCuadrados()}</section>
         <section class="m1-seccion m3-seccion" id="m3-llave" data-sec="llave" role="tabpanel" hidden>${htmlLlave()}</section>
         <section class="m1-seccion m3-seccion" id="m3-practica" data-sec="practica" role="tabpanel" hidden>${htmlPractica()}</section>
+        <section class="m1-seccion m3-seccion" id="m3-rondas" data-sec="rondas" role="tabpanel" hidden>${htmlRondas()}</section>
         <nav class="pie-seccion" aria-label="Navegación entre secciones"></nav>`;
       cont.appendChild(raiz);
       this.raiz = raiz;
@@ -381,6 +394,24 @@
         }
       });
       this.practica = practica;
+      // Las rondas abren su ejercicio en la mesa, igual que la práctica, y vuelven a la ronda
+      const rondas = MA.Rondas.crear($('.m3-rondas', raiz), {
+        modulo: 'm3',
+        habilidades: C.RONDAS,
+        teclado: 'text',
+        ayudaCampo: 'Solo el número. Los negativos llevan el signo menos (−4); sirven las fracciones (1/2) y la coma decimal (2,5).',
+        abrirHerramienta(ej, numero) {
+          const h = ej.herramienta;
+          herramientas[h.mesa].cargarProblema(h.problema, {
+            etiqueta: `Ejercicio ${numero} de la ronda`,
+            textoVolver: 'Volver a la ronda',
+            textoFinal: `Volver al ejercicio ${numero}`,
+            volver: () => { location.hash = '#m3-rondas'; setTimeout(() => rondas.irAlBanco(), 60); }
+          });
+          irA(h.mesa);
+        }
+      });
+      this.rondas = rondas;
 
       MA.bus.on('progreso', () => this.pintarProgreso());
       this.pintarProgreso();
@@ -388,7 +419,7 @@
     pintarProgreso() {
       if (!this.raiz) return;
       const p = progreso();
-      ['ideas', 'herramientas', 'practica'].forEach(k => { $(`[data-prog="${k}"]`, this.raiz).textContent = `${p[k][0]} de ${p[k][1]}`; });
+      ['ideas', 'herramientas', 'practica', 'rondas'].forEach(k => { $(`[data-prog="${k}"]`, this.raiz).textContent = `${p[k][0]} de ${p[k][1]}`; });
       SECCIONES.forEach(s => {
         const [h, t] = p[s.id];
         $(`.pestana[data-sec="${s.id}"] .pt-ok`, this.raiz).innerHTML = h === t ? icono('check') : '';
@@ -409,6 +440,7 @@
         ${sig ? `<a class="btn" href="#m3-${sig.id}">Siguiente sección: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
       if (sec === 'ideas' && extra && this.presentacion) this.presentacion.irParte(extra);
       if (sec === 'practica' && this.practica) this.practica.anunciar();
+      if (sec === 'rondas' && this.rondas) this.rondas.anunciar();
       // GeoGebra pesa: se carga al abrir la llave, y el navegador espera a que esté cerca de la vista.
       // Se vuelve a cargar cada vez que se abre la sección: mientras está oculta mide 0 × 0 y se desordena.
       const gg = sec === 'llave' && $('.gg-iframe', this.raiz);

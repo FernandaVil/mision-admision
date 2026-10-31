@@ -2,10 +2,11 @@
    MÓDULO 2 · página completa (álgebra básica)
    Secciones: 1) ideas clave, 2) fracciones (sumar y restar; multiplicar
    y dividir), 3) signos y orden, 4) potencias con letras, 5) práctica,
-   6) radar de signos (práctica extra).
+   6) radar de signos (práctica extra), 7) rondas de práctica
+   (js/rondas.js; no cuentan en el porcentaje del módulo).
    La factorización es el módulo 3; la notación científica, el módulo 5.
    Rutas: #m2-ideas (-p1, -p2, -p3) · #m2-fracciones · #m2-operaciones ·
-          #m2-potencias · #m2-practica · #m2-radar
+          #m2-potencias · #m2-practica · #m2-radar · #m2-rondas
    ===================================================================== */
 (function () {
   'use strict';
@@ -28,7 +29,8 @@
     { id: 'operaciones', nombre: 'Signos y orden', corto: 'Signos', icono: 'objetivo' },
     { id: 'potencias', nombre: 'Potencias', corto: 'Potencias', icono: 'flechaD' },
     { id: 'practica', nombre: 'Práctica', corto: 'Práctica', icono: 'hoja' },
-    { id: 'radar', nombre: 'Radar de signos', corto: 'Radar', icono: 'radar' }
+    { id: 'radar', nombre: 'Radar de signos', corto: 'Radar', icono: 'radar' },
+    { id: 'rondas', nombre: 'Rondas de práctica', corto: 'Rondas', icono: 'reiniciar' }
   ];
 
   function progreso() {
@@ -40,9 +42,11 @@
       operaciones: cuenta('m2.op.', C.RETOS_OPERACIONES.map(x => x.id)),
       potencias: cuenta('m2.pot.', C.RETOS_EXPONENTES.map(x => x.id)),
       practica: cuenta('m2.prac.', C.EJERCICIOS.map(x => x.id)),
-      radar: cuenta('m2.radar.', C.RADAR.map(x => x.id))
+      radar: cuenta('m2.radar.', C.RADAR.map(x => x.id)),
+      rondas: cuenta('m2.rondas.', C.RONDAS.map(h => h.id))
     };
-    const todos = SECCIONES.map(s => res[s.id]);
+    // Las rondas no entran en el porcentaje: un módulo terminado sigue terminado
+    const todos = SECCIONES.filter(s => s.id !== 'rondas').map(s => res[s.id]);
     res.hechos = todos.reduce((s, x) => s + x[0], 0);
     res.total = todos.reduce((s, x) => s + x[1], 0);
     res.pct = res.total ? res.hechos / res.total : 0;
@@ -190,7 +194,14 @@
   function htmlPractica() {
     return `
       ${cabeza(5, 'Práctica progresiva', 'Quince ejercicios de fracciones, signos y potencias, del más sencillo al más parecido al examen; los dos últimos son retos. Sin calculadora: con papel o con el borrador. Ante una duda, primero una pista; la solución completa es el último recurso.')}
-      <div class="m2-practica"></div>`;
+      <div class="m2-practica"></div>
+      ${MA.Rondas.avisoHtml('m2')}`;
+  }
+
+  function htmlRondas() {
+    return `
+      ${cabeza(7, 'Rondas de práctica', MA.Rondas.ENTRADA)}
+      <div class="m2-rondas"></div>`;
   }
 
   function htmlRadar() {
@@ -254,6 +265,7 @@
             <div class="dato"><small>Ideas clave</small><b data-prog="ideas"></b></div>
             <div class="dato"><small>Herramientas</small><b data-prog="herramientas"></b></div>
             <div class="dato"><small>Práctica</small><b data-prog="practica"></b></div>
+            <div class="dato"><small>Habilidades dominadas</small><b data-prog="rondas"></b></div>
           </div>
         </header>
         <details class="plan-clase">
@@ -269,6 +281,7 @@
         <section class="m1-seccion m2-seccion" id="m2-potencias" data-sec="potencias" role="tabpanel" hidden>${htmlPotencias()}</section>
         <section class="m1-seccion m2-seccion" id="m2-practica" data-sec="practica" role="tabpanel" hidden>${htmlPractica()}</section>
         <section class="m1-seccion m2-seccion" id="m2-radar" data-sec="radar" role="tabpanel" hidden>${htmlRadar()}</section>
+        <section class="m1-seccion m2-seccion" id="m2-rondas" data-sec="rondas" role="tabpanel" hidden>${htmlRondas()}</section>
         <nav class="pie-seccion" aria-label="Navegación entre secciones"></nav>`;
       cont.appendChild(raiz);
       this.raiz = raiz;
@@ -305,6 +318,12 @@
       });
       this.practica = practica;
       MA.Radar.crear($('.m2-radar', raiz));
+      this.rondas = MA.Rondas.crear($('.m2-rondas', raiz), {
+        modulo: 'm2',
+        habilidades: C.RONDAS,
+        teclado: 'text',
+        ayudaCampo: 'Solo el número. Los negativos llevan el signo menos (−4); sirven las fracciones (3/2) y la coma decimal (2,5).'
+      });
 
       MA.bus.on('progreso', () => this.pintarProgreso());
       this.pintarProgreso();
@@ -312,7 +331,7 @@
     pintarProgreso() {
       if (!this.raiz) return;
       const p = progreso();
-      ['ideas', 'herramientas', 'practica'].forEach(k => { $(`[data-prog="${k}"]`, this.raiz).textContent = `${p[k][0]} de ${p[k][1]}`; });
+      ['ideas', 'herramientas', 'practica', 'rondas'].forEach(k => { $(`[data-prog="${k}"]`, this.raiz).textContent = `${p[k][0]} de ${p[k][1]}`; });
       SECCIONES.forEach(s => {
         const [h, t] = p[s.id];
         $(`.pestana[data-sec="${s.id}"] .pt-ok`, this.raiz).innerHTML = h === t ? icono('check') : '';
@@ -333,6 +352,7 @@
         ${sig ? `<a class="btn" href="#m2-${sig.id}">Siguiente sección: ${sig.nombre.toLowerCase()}${icono('flechaD')}</a>` : `<a class="btn btn-secundario" href="#inicio">Volver al panel general${icono('flechaD')}</a>`}`;
       if (sec === 'ideas' && extra && this.presentacion) this.presentacion.irParte(extra);
       if (sec === 'practica' && this.practica) this.practica.anunciar();
+      if (sec === 'rondas' && this.rondas) this.rondas.anunciar();
       return sec;
     }
   };

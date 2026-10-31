@@ -124,6 +124,7 @@
         <div class="portada-dato">
           <div class="dato"><small class="ini-mod">Módulo 1 completado</small><b class="ini-pct"></b><div class="barra"><i class="ini-barra"></i></div></div>
           <div class="dato"><small>Actividades terminadas</small><b class="ini-act"></b></div>
+          <div class="dato"><small>Habilidades dominadas en las rondas de práctica</small><b class="ini-hab"></b></div>
           <div class="dato"><small>Ritmo sugerido</small><b>30 a 40 min al día</b></div>
         </div>
       </div>
@@ -142,7 +143,7 @@
         <div class="seccion-cabeza"><h2>Cómo estudiar aquí</h2></div>
         <div class="consejos">
           <div class="tarjeta"><h3>${icono('balanza')}Entender antes de memorizar</h3><p>Cada tema empieza con una herramienta que se puede mover. La idea es probarla hasta poder explicar por qué funciona.</p></div>
-          <div class="tarjeta"><h3>${icono('hoja')}Practicar como en el examen</h3><p>Sin calculadora y con papel. Las pistas se piden en orden; la solución completa es el último recurso.</p></div>
+          <div class="tarjeta"><h3>${icono('hoja')}Practicar como en el examen</h3><p>A mano, con lápiz y papel y los pasos escritos. Primero la práctica de cada módulo; después, las rondas de práctica hasta dominar cada habilidad.</p></div>
           <div class="tarjeta"><h3>${icono('chat')}Usar la IA como tutor</h3><p>Para estudiar solo, las plantillas del centro de comando hacen que la IA guíe sin dar la respuesta.</p></div>
         </div>
       </section>`;
@@ -151,6 +152,9 @@
   function pintarInicio() {
     const v = vistas.inicio;
     if (!v) return;
+    // Las habilidades de las rondas de práctica de todos los módulos que las tienen
+    const habilidades = MA.MODULOS.filter(vistaDe).flatMap(x => ((MA[x.id.toUpperCase()] || {}).RONDAS || []).map(h => `${x.id}.rondas.${h.id}`));
+    $('.ini-hab', v).textContent = `${habilidades.filter(k => MA.progreso.hecho(k)).length} de ${habilidades.length}`;
     const m = moduloActual(), vm = vistaDe(m);
     if (!vm) return;
     const p = vm.progreso(), n = Number(m.num);

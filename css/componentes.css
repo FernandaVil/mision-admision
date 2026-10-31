@@ -102,8 +102,9 @@
 .caja-neutra { background: var(--superficie-2); border-left-color: var(--borde-fuerte); }
 
 /* ---------- Pestañas del módulo ---------- */
+/* Si no caben en una fila, pasan a la siguiente: ninguna pestaña queda escondida */
 .pestanas {
-  display: flex; gap: 4px; padding: 4px;
+  display: flex; flex-wrap: wrap; gap: 4px; padding: 4px;
   background: var(--superficie-2); border: 1px solid var(--borde); border-radius: 10px;
   margin: 22px 0 28px;
   overflow-x: auto; scrollbar-width: none;
@@ -190,7 +191,8 @@
 }
 
 /* ---------- Cabecera de módulo ---------- */
-.mod-cabeza { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 28px; align-items: end; }
+/* El título tiene un ancho mínimo: si no caben, los datos pasan a otra fila */
+.mod-cabeza { display: grid; grid-template-columns: minmax(360px, 1fr) auto; gap: 18px 28px; align-items: end; }
 .mod-cabeza h1 { margin: 4px 0 8px; }
 .mod-cabeza .entrada { margin: 0; }
 .mod-resumen { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
@@ -230,6 +232,8 @@
   /* Seis pestañas no caben en una fila: dos filas de tres */
   .pestanas:has(> .pestana:nth-child(6)) { flex-wrap: wrap; }
   .pestanas:has(> .pestana:nth-child(6)) > .pestana { flex: 1 1 30%; }
+  /* Siete: una fila de cuatro y otra de tres */
+  .pestanas:has(> .pestana:nth-child(7)) > .pestana { flex-basis: 22%; }
 }
 
 /* ---------- Panel general (inicio) ---------- */
