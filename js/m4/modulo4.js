@@ -26,11 +26,17 @@
    5. Despejar la t de la distancia sin partir del reposo es un candado
       con t²: lo abre la llave maestra del módulo 3. Se nombra, pero no
       se trabaja: en el examen casi siempre parte del reposo.
-   6. Cada despeje se comprueba con los números de un reto del radar, y
-      el entrenamiento termina con tres misiones de vuelo de varios
-      pasos (despegue, frenado y una pista corta), con pistas en orden:
-      primero los datos, después el tiempo y al final lo que se pide.
-   7. Unidades del SI todo el tiempo, y km/h ↔ m/s con el 3,6 del
+   6. Cada despeje se comprueba con los números de un reto del radar.
+   7. La guía se retira en el entrenamiento. Las herramientas llevan de
+      la mano, paso a paso, y eso sirve para entender; pero en la clase 3
+      se vio que, con la mesa, se resuelve solo el paso que pide y no se
+      piensa el ejercicio entero. Por eso, desde el nivel tipo examen no
+      hay botón de herramienta, los números son reales (el examen
+      permite calculadora), las pistas dicen qué pensar y no hacen las
+      cuentas, y se abren después del primer intento. Las tres misiones
+      de vuelo (despegue, frenado y una pista corta) se hacen de
+      principio a fin.
+   8. Unidades del SI todo el tiempo, y km/h ↔ m/s con el 3,6 del
       módulo 1. Las fórmulas se escriben con MA.f, como en todo el curso
       (sin KaTeX): así funcionan sin internet y con la misma tipografía.
    ===================================================================== */
@@ -181,7 +187,7 @@
 
   function htmlEntrenamiento() {
     return `
-      ${cabeza(4, 'Entrenamiento', 'Doce ejercicios, del más sencillo al más parecido al examen. Los tres últimos son misiones de vuelo de varios pasos: despegue, frenado y una pista corta. Ante una duda, primero una pista: van en orden, de la más general a la más concreta. Sin calculadora: con papel o con el borrador.')}
+      ${cabeza(4, 'Entrenamiento', 'Doce ejercicios, del más sencillo al más parecido al examen, y cada vez con menos ayuda. Los básicos e intermedios tienen números redondos, para hacer de cabeza o en el papel, y pueden abrir una herramienta. Desde el nivel tipo examen van como en el examen: con calculadora, sin herramientas y de principio a fin. Sus pistas dicen qué pensar, no hacen las cuentas, y se abren después del primer intento. Los tres últimos son misiones de vuelo: despegue, frenado y una pista corta.')}
       <div class="m4-practica"></div>`;
   }
 
@@ -252,7 +258,9 @@
       const practica = MA.Practica.crear($('.m4-practica', raiz), {
         datos: C,
         modulo: 'm4',
-        ayudaCampo: 'Solo el número, sin la unidad: ya está al lado. Sirven la coma o el punto decimal (2,5 o 2.5) y las fracciones (1/2).',
+        ayudaCampo: 'Solo el número, sin la unidad: ya está al lado. Sirven la coma o el punto decimal (2,5 o 2.5) y las fracciones (1/2). Con decimales, basta con uno o dos.',
+        // Tipo examen y retos: primero un intento completo; las pistas y la solución se abren después
+        primeroIntentar: ['examen', 'reto'],
         abrirHerramienta(ej, numero) {
           const h = ej.herramienta;
           herramientas[h.mesa].cargarProblema(h.problema, {

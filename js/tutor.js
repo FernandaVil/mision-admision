@@ -23,7 +23,7 @@
     claveCheck: 'guia.check',
     antes: [
       'Envíale el enlace de la plataforma y pídele que la abra en el computador.',
-      'Que tenga papel, lápiz y nada de calculadora: así es el examen.',
+      'Que tenga papel, lápiz y nada de calculadora: en este módulo las cuentas se hacen a mano.',
       'Abre la plataforma en «Ideas clave» y prueba antes las dos formas de escribir: «Escribir» (tecla E) anota sobre la diapositiva y «Pizarrón» (tecla B) abre una hoja en blanco. Esc la cierra.',
       'Ten este guion en el celular. En la teoría compartes tú la pantalla; en la balanza, la mesa y la práctica la comparte él y hace los clics.'
     ],

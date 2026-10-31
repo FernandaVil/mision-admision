@@ -432,9 +432,13 @@
   ];
 
   /* ---------- Entrenamiento ----------
-     Del más sencillo al más parecido al examen. Los tres retos son
-     misiones de vuelo de varios pasos: las pistas van en orden, de la
-     más general a la más concreta. */
+     Del más sencillo al más parecido al examen, y la guía se va
+     retirando. Básico e intermedio: números redondos y un botón para
+     abrir la herramienta. Tipo examen y retos (misiones de vuelo):
+     números reales para la calculadora, como en el examen, sin
+     herramienta, y pistas de estrategia que no hacen las cuentas; se
+     abren después del primer intento. Así se practica el ejercicio
+     completo, de principio a fin, y no solo el paso que pide la mesa. */
   const tachU = u => tach(un(u));
   const EJERCICIOS = [
     // ----- Básico -----
@@ -515,6 +519,9 @@
       herramienta: { boton: 'Verlo en el radar de pista', icono: 'radar', mesa: 'radar', problema: { v0: 0, a: 4, hasta: 't', t: 5, pista: 100, mide: 'd', pregunta: '¿Cuántos metros recorre en 5 s?' } }
     },
     // ----- Tipo examen -----
+    // Desde aquí, como en el examen: con calculadora, sin herramientas y con
+    // pistas de estrategia (qué pensar), no de cuentas. Las pistas se abren
+    // después del primer intento (primeroIntentar en modulo4.js).
     {
       id: 'e7', nivel: 'examen', tema: 'mruv', tipo: 'opciones', correcta: 0,
       enunciado: `Un móvil parte del reposo con aceleración constante. En los primeros ${q(2, 's')} recorre ${q(6, 'm')}. ¿Cuántos metros habrá recorrido a los ${q(4, 's')}?`,
@@ -526,91 +533,89 @@
         2: 'Ese resultado sale de sumar otros 6 m dos veces, como si cada segundo recorriera lo mismo. Con aceleración, cada segundo recorre más.',
         3: 'Ese resultado sale de elevar al cuadrado los 6 m. Lo que va al cuadrado es el tiempo: el doble de tiempo, 4 veces la distancia.'
       },
-      pistas: ['Desde el reposo, d = ½ · a · t²: la distancia va con el cuadrado del tiempo.', 'Con el doble de tiempo, t² se vuelve 2² = 4 veces más grande. O se calcula la a: 6 = ½ · a · 2².'],
+      pistas: ['¿Qué fórmula relaciona la distancia con el tiempo cuando parte del reposo? ¿Qué le pasa a la distancia si el tiempo cambia?', 'Otro camino: con los datos de los primeros 2 s se puede calcular la aceleración, y con ella, la distancia a los 4 s.'],
       solucion: [`Con los primeros datos: ${mt(n(6), igual, medio, por, L.a, por, pot(n(2), 2), igual, n(2), por, L.a)}, así que ${mt(L.a, igual, q(3, 'm/s²'))}.`, `${mt(L.d, igual, medio, por, n(3), por, pot(n(4), 2), igual, medio, por, n(3), por, n(16), igual, n(24))}`, 'Atajo: el doble de tiempo da 4 veces la distancia: 6 · 4 = 24 m. Es lo mismo que se ve en el radar: 1, 4, 9, 16.']
     },
     {
       id: 'e8', nivel: 'examen', tema: 'unidades', tipo: 'opciones', correcta: 0,
-      enunciado: `Un avión vuela a ${q(180, 'km/h')} con velocidad constante. ¿Cuántos metros recorre en ${q(10, 's')}?`,
-      plano: 'Un avión vuela a 180 km/h con velocidad constante. ¿Cuántos metros recorre en 10 s?',
-      opciones: [q(500, 'm'), q(1800, 'm'), q(50, 'm'), q(18, 'm')],
-      opcionesPlano: ['500 m', '1800 m', '50 m', '18 m'],
+      enunciado: `Un avión de pasajeros vuela a ${q(828, 'km/h')} con velocidad constante. ¿Cuántos kilómetros recorre en 2 h 15 min?`,
+      plano: 'Un avión de pasajeros vuela a 828 km/h con velocidad constante. ¿Cuántos kilómetros recorre en 2 h 15 min?',
+      opciones: [q(1863, 'km'), q(1780.2, 'km'), q(230, 'km'), q(368, 'km')],
+      opcionesPlano: ['1863 km', '1780,2 km', '230 km', '368 km'],
       porQue: {
-        1: 'Ese resultado sale de multiplicar 180 · 10 sin convertir: km/h y s no se cancelan. Primero, 180 km/h = 50 m/s.',
-        2: 'Esa es la velocidad en m/s: falta multiplicarla por el tiempo.',
-        3: 'Ese resultado sale de dividir 180 entre 10. Primero se convierte y después se multiplica.'
+        1: 'Ese resultado sale de escribir 2 h 15 min como 2,15 h. Pero 15 minutos son un cuarto de hora: 2,25 h.',
+        2: '828 ÷ 3,6 = 230 es la velocidad en m/s. Aquí no hace falta pasar a m/s: la velocidad está en km/h y el tiempo se pasa a horas.',
+        3: 'Ese resultado sale de dividir 828 entre 2,25. Con velocidad constante, la distancia es la velocidad por el tiempo.'
       },
-      pistas: ['Las unidades no coinciden: la velocidad está en km/h y el tiempo en segundos. Primero hay que pasar a m/s.', `${mt(n(180), entre, n('3,6'), igual, n(1800), entre, n(36), igual, n(50))} m/s. Ahora, ${dvt}.`],
-      solucion: [`${mt(q(180, 'km/h'), entre, n('3,6'), igual, q(50, 'm/s'))}`, `${mt(L.d, igual, n(50), por, n(10), igual, n(500))}`, `Respuesta: ${q(500, 'm')}.`]
+      pistas: ['Las horas y los minutos no se escriben con coma tal cual: ¿qué parte de una hora son 15 minutos?', 'Si la velocidad está en km/h y la pregunta es en km, conviene dejar el tiempo en horas.'],
+      solucion: [`${mt('<span>15 min</span>', igual, fr(n(15), n(60)), un('h'), igual, q(0.25, 'h'))}, así que el tiempo es ${q(2.25, 'h')}.`, `${mt(L.d, igual, n(828), por, n(2.25), igual, n(1863))}`, `Respuesta: ${q(1863, 'km')}.`]
     },
     {
       id: 'e9', nivel: 'examen', tema: 'mruv', tipo: 'opciones', correcta: 0,
-      enunciado: `Un avión aterriza a ${q(60, 'm/s')} y frena con una aceleración de ${q(-3, 'm/s²')}. ¿Cuánto tarda en detenerse?`,
-      plano: 'Un avión aterriza a 60 m/s y frena con una aceleración de −3 m/s². ¿Cuánto tarda en detenerse?',
-      opciones: [q(20, 's'), q(180, 's'), q(-20, 's'), q(57, 's')],
-      opcionesPlano: ['20 s', '180 s', '−20 s', '57 s'],
+      enunciado: `Un avión aterriza a ${q(252, 'km/h')} y frena con una aceleración de ${q(-3.5, 'm/s²')}. ¿Cuánto tarda en detenerse?`,
+      plano: 'Un avión aterriza a 252 km/h y frena con una aceleración de −3,5 m/s². ¿Cuánto tarda en detenerse?',
+      opciones: [q(20, 's'), q(72, 's'), q(-20, 's'), q(245, 's')],
+      opcionesPlano: ['20 s', '72 s', '−20 s', '245 s'],
       porQue: {
-        1: 'Ese resultado sale de multiplicar 60 · 3. Cada segundo pierde 3 m/s: hay que ver cuántas veces cabe 3 en 60.',
-        2: 'Un tiempo no es negativo. Arriba queda 0 − 60 = −60, y −60 ÷ (−3) = +20: menos entre menos da más.',
-        3: 'Ese resultado sale de restar 60 − 3: es la velocidad que le queda después del primer segundo.'
+        1: 'Ese resultado sale de usar los 252 km/h sin convertir. La aceleración está en m/s²: la velocidad tiene que ir en m/s.',
+        2: 'Un tiempo no es negativo. Arriba queda 0 menos la velocidad inicial, que es negativo, y abajo la aceleración, también negativa: menos entre menos da más.',
+        3: 'Ese resultado sale de multiplicar la velocidad por la aceleración. Cada segundo pierde 3,5 m/s: hay que ver cuántas veces cabe 3,5 en la velocidad.'
       },
-      pistas: ['Se detiene: vf = 0. Frena: la a es negativa.', `${mt(L.t, igual, fr(vfv0, L.a), igual, fr(`${n(0)} ${menos} ${n(60)}`, neg(-3)))}. Ojo con los signos.`],
-      solucion: [`${mt(L.t, igual, fr(`${n(0)} ${menos} ${n(60)}`, neg(-3)), igual, fr(n(-60), neg(-3)))}`, 'Menos entre menos da más: 60 ÷ 3 = 20.', `Respuesta: ${q(20, 's')}.`]
+      pistas: ['¿Qué dato esconde «detenerse»? ¿Las unidades de la velocidad van con las de la aceleración?', 'Sirve la fórmula de la velocidad, despejada para el tiempo. Ojo con los signos.'],
+      solucion: [`${mt(q(252, 'km/h'), entre, n('3,6'), igual, q(70, 'm/s'))}`, `${mt(L.t, igual, fr(vfv0, L.a), igual, fr(`${n(0)} ${menos} ${n(70)}`, neg(-3.5)), igual, fr(n(-70), neg(-3.5)))}`, 'Menos entre menos da más: 70 ÷ 3,5 = 20.', `Respuesta: ${q(20, 's')}.`]
     },
-    // ----- Reto: misiones de vuelo -----
+    // ----- Reto: misiones de vuelo, de principio a fin -----
     {
-      id: 'e10', nivel: 'reto', tema: 'mision', tipo: 'numero', respuesta: 1600, unidad: 'm',
-      enunciado: `<b>Misión 1 · despegue.</b> Un avión de entrenamiento parte del reposo y acelera a ${q(2, 'm/s²')}. Despega cuando llega a ${q(80, 'm/s')}. ¿Cuántos metros de pista necesita para despegar?`,
-      plano: 'Misión 1, despegue. Un avión de entrenamiento parte del reposo y acelera a 2 m/s². Despega cuando llega a 80 m/s. ¿Cuántos metros de pista necesita para despegar?',
+      id: 'e10', nivel: 'reto', tema: 'mision', tipo: 'numero', respuesta: 1339.29, unidad: 'm',
+      enunciado: `<b>Misión 1 · despegue.</b> Un avión de pasajeros parte del reposo y acelera parejo a ${q(2.1, 'm/s²')} hasta su velocidad de despegue, ${q(270, 'km/h')}. ¿Cuántos metros de pista usa para despegar?`,
+      plano: 'Misión 1, despegue. Un avión de pasajeros parte del reposo y acelera parejo a 2,1 m/s² hasta su velocidad de despegue, 270 km/h. ¿Cuántos metros de pista usa para despegar?',
       errores: [
-        { valor: 40, msg: 'Ese es el tiempo hasta despegar, en segundos. Falta la distancia.' },
-        { valor: 3200, msg: 'Ese resultado sale de multiplicar 80 m/s por 40 s, como si hubiera ido a 80 m/s desde el principio. Falta el ½: en promedio fue a 40 m/s.' },
-        { valor: 6400, msg: 'Ese resultado sale de elevar al cuadrado la velocidad. En la fórmula, lo que va al cuadrado es el tiempo.' },
-        { valor: 160, msg: 'Ese resultado sale de multiplicar 2 · 80. Primero hace falta el tiempo hasta llegar a 80 m/s.' }
+        { valor: 17357, msg: 'Ese resultado sale de usar los 270 km/h sin convertir. La aceleración está en m/s²: la velocidad tiene que ir en m/s.' },
+        { valor: 2678.6, msg: 'Ese resultado sale de multiplicar la velocidad de despegue por el tiempo, como si hubiera ido así desde el principio. Arrancó en 0: falta el ½.' },
+        { valor: 35.71, msg: 'Ese es el tiempo hasta despegar, en segundos. Falta la distancia.' },
+        { valor: 1360.8, msg: 'Casi. Ese resultado sale de redondear el tiempo a 36 s antes de elevarlo al cuadrado, y el cuadrado agranda la diferencia. Conviene usar el tiempo con todos sus decimales.' }
       ],
       pistas: [
-        'Primero, los datos. Parte del reposo: v₀ = 0. La aceleración: a = 2 m/s². La velocidad final es la de despegue: vf = 80 m/s. Falta el tiempo.',
-        `El tiempo, con la fórmula de la velocidad: ${mt(n(80), igual, n(0), mas, n(2), por, L.t)}, así que ${mt(L.t, igual, q(40, 's'))}.`,
-        `Ahora la distancia: ${mt(L.d, igual, medio, por, n(2), por, pot(n(40), 2))}. O con el promedio: fue de 0 a 80 m/s, en promedio a 40 m/s, durante 40 s.`
+        'Antes de calcular, los datos y las unidades: ¿cuánto vale la velocidad inicial? ¿La velocidad de despegue está en las mismas unidades que la aceleración?',
+        'Son dos pasos: con la fórmula de la velocidad se sabe cuánto tarda en llegar a la de despegue; con ese tiempo, la fórmula de la distancia.',
+        'En la calculadora, el tiempo va con todos sus decimales (o guardado en la memoria). El cuadrado va solo sobre el tiempo: ½ · a · (t)².'
       ],
-      solucion: [`${mt(L.t, igual, fr(`${n(80)} ${menos} ${n(0)}`, n(2)), igual, q(40, 's'))}`, `${mt(L.d, igual, medio, por, n(2), por, pot(n(40), 2), igual, n(1600))}`, `Con el promedio: ${mt(n(40), por, n(40), igual, n(1600))}.`, `Respuesta: ${q(1600, 'm')}, es decir, 1,6 km de pista.`],
-      herramienta: { boton: 'Verlo en el radar de pista', icono: 'radar', mesa: 'radar', problema: { v0: 0, a: 2, hasta: 'vf', vf: 80, pista: 2000, mide: 'd', pregunta: '¿Cuántos metros de pista usa hasta llegar a 80 m/s?' } }
+      solucion: [`${mt(q(270, 'km/h'), entre, n('3,6'), igual, q(75, 'm/s'))}`, `${mt(L.t, igual, fr(`${n(75)} ${menos} ${n(0)}`, n(2.1)), igual, q(35.71, 's'))}`, `${mt(L.d, igual, medio, por, n(2.1), por, pot(n(35.71), 2), igual, n(1339.3))}`, `Con el promedio: fue de 0 a 75 m/s, en promedio a 37,5 m/s: ${mt(n(37.5), por, n(35.71), igual, n(1339.3))}.`, `Respuesta: unos ${q(1339, 'm')}.`]
     },
     {
-      id: 'e11', nivel: 'reto', tema: 'mision', tipo: 'numero', respuesta: 490, unidad: 'm',
-      enunciado: `<b>Misión 2 · frenado en pista.</b> Un avión aterriza a ${q(70, 'm/s')} y frena con una aceleración de ${q(-5, 'm/s²')} hasta detenerse. ¿Cuántos metros de pista usa al frenar?`,
-      plano: 'Misión 2, frenado en pista. Un avión aterriza a 70 m/s y frena con una aceleración de −5 m/s² hasta detenerse. ¿Cuántos metros de pista usa al frenar?',
+      id: 'e11', nivel: 'reto', tema: 'mision', tipo: 'numero', respuesta: 812.5, unidad: 'm',
+      enunciado: `<b>Misión 2 · frenado en pista.</b> Un avión toca la pista a ${q(234, 'km/h')} y frena con una aceleración de ${q(-2.6, 'm/s²')} hasta detenerse. ¿Cuántos metros de pista usa al frenar?`,
+      plano: 'Misión 2, frenado en pista. Un avión toca la pista a 234 km/h y frena con una aceleración de −2,6 m/s² hasta detenerse. ¿Cuántos metros de pista usa al frenar?',
       errores: [
-        { valor: 14, msg: 'Ese es el tiempo de frenado, en segundos. Falta la distancia.' },
-        { valor: 980, msg: 'Ese resultado sale de multiplicar 70 m/s por 14 s, como si no frenara. Pasó de 70 a 0: en promedio fue a 35 m/s.' },
-        { valor: 1470, msg: 'El ½ · a · t² es negativo, porque la a es negativa: se resta. 980 − 490.' }
+        { valor: 25, msg: 'Ese es el tiempo de frenado, en segundos. Falta la distancia.' },
+        { valor: 1625, msg: 'Ese resultado sale de multiplicar la velocidad de aterrizaje por el tiempo, como si no frenara. Al frenar, cada segundo recorre menos.' },
+        { valor: 2437.5, msg: 'El ½ · a · t² es negativo, porque la aceleración es negativa: se resta, no se suma.' },
+        { valor: 10530, msg: 'Ese resultado sale de usar los 234 km/h sin convertir. La aceleración está en m/s²: la velocidad tiene que ir en m/s.' }
       ],
       pistas: [
-        'Primero, los datos. Aterriza a v₀ = 70 m/s. Se detiene: vf = 0. Frena: a = −5 m/s², negativa. Falta el tiempo.',
-        `El tiempo: ${mt(n(0), igual, n(70), mas, neg(-5), por, L.t)}, así que ${mt(L.t, igual, q(14, 's'))}. Cada segundo pierde 5 m/s.`,
-        `La distancia con el promedio: fue de 70 a 0, en promedio a 35 m/s, durante 14 s. O con la fórmula: ${mt(L.d, igual, n(70), por, n(14), mas, medio, por, neg(-5), por, pot(n(14), 2))}.`
+        'Antes de calcular: ¿qué dato esconde «hasta detenerse»? ¿Las unidades coinciden?',
+        'Dos pasos, como en el despegue: primero cuánto tarda en frenar; después, cuánta pista usa. La aceleración va con su signo menos en las dos fórmulas.',
+        'Para comprobar, sale también con la velocidad promedio: de la velocidad de aterrizaje a 0.'
       ],
-      solucion: [`${mt(L.t, igual, fr(`${n(0)} ${menos} ${n(70)}`, neg(-5)), igual, q(14, 's'))}`, `Con el promedio: ${mt(n(35), por, n(14), igual, n(490))}.`, `Con la fórmula: ${mt(n(980), menos, medio, por, n(5), por, n(196), igual, n(980), menos, n(490), igual, n(490))}.`, `Respuesta: ${q(490, 'm')}.`],
-      herramienta: { boton: 'Verlo en el radar de pista', icono: 'radar', mesa: 'radar', problema: { v0: 70, a: -5, hasta: 'para', pista: 600, mide: 'd', pregunta: '¿Cuántos metros recorre hasta detenerse?' } }
+      solucion: [`${mt(q(234, 'km/h'), entre, n('3,6'), igual, q(65, 'm/s'))}`, `${mt(L.t, igual, fr(`${n(0)} ${menos} ${n(65)}`, neg(-2.6)), igual, q(25, 's'))}`, `${mt(L.d, igual, n(65), por, n(25), mas, medio, por, neg(-2.6), por, pot(n(25), 2), igual, n(1625), menos, n(812.5), igual, n(812.5))}`, `Con el promedio: ${mt(n(32.5), por, n(25), igual, n(812.5))}.`, `Respuesta: ${q(812.5, 'm')}.`]
     },
     {
       id: 'e12', nivel: 'reto', tema: 'mision', tipo: 'opciones', correcta: 0,
-      enunciado: `<b>Misión 3 · una pista corta.</b> Una avioneta despega cuando llega a ${q(40, 'm/s')}. Parte del reposo y acelera a ${q(2, 'm/s²')}. La pista mide ${q(300, 'm')}. ¿Le alcanza para despegar?`,
-      plano: 'Misión 3, una pista corta. Una avioneta despega cuando llega a 40 m/s. Parte del reposo y acelera a 2 m/s². La pista mide 300 m. ¿Le alcanza para despegar?',
-      opciones: ['No le alcanza: necesita 400 m', 'No le alcanza: necesita 800 m', 'Sí le alcanza: necesita 80 m', 'Sí le alcanza: necesita 20 m'],
-      opcionesPlano: ['No le alcanza: necesita 400 m', 'No le alcanza: necesita 800 m', 'Sí le alcanza: necesita 80 m', 'Sí le alcanza: necesita 20 m'],
+      enunciado: `<b>Misión 3 · una pista corta.</b> Una avioneta de entrenamiento despega cuando llega a ${q(100, 'km/h')}. Parte del reposo y acelera a ${q(1.9, 'm/s²')}. La pista del aeródromo mide ${q(220, 'm')}. ¿Le alcanza para despegar?`,
+      plano: 'Misión 3, una pista corta. Una avioneta de entrenamiento despega cuando llega a 100 km/h. Parte del reposo y acelera a 1,9 m/s². La pista del aeródromo mide 220 m. ¿Le alcanza para despegar?',
+      opciones: ['Sí le alcanza: necesita unos 203 m', 'No le alcanza: necesita unos 406 m', 'No le alcanza: necesita unos 2632 m', 'Sí le alcanza: necesita unos 15 m'],
+      opcionesPlano: ['Sí le alcanza: necesita unos 203 m', 'No le alcanza: necesita unos 406 m', 'No le alcanza: necesita unos 2632 m', 'Sí le alcanza: necesita unos 15 m'],
       porQue: {
-        1: 'No le alcanza, pero no necesita 800 m: eso sale de multiplicar 40 m/s por 20 s, como si hubiera ido a 40 m/s desde el principio. En promedio fue a 20 m/s.',
-        2: 'Ese resultado sale de multiplicar 2 · 40: la aceleración por la velocidad no da metros. Primero hace falta el tiempo.',
-        3: '20 es el tiempo hasta despegar, en segundos, no la distancia.'
+        1: 'Los 406 m salen de multiplicar la velocidad de despegue por el tiempo, como si hubiera ido así desde el principio. Arrancó en 0: falta el ½.',
+        2: 'Los 2632 m salen de usar los 100 km/h sin convertir a m/s.',
+        3: '15 es el tiempo hasta despegar, en segundos, no la distancia.'
       },
       pistas: [
-        'Hay que comparar dos distancias: la que necesita para llegar a 40 m/s y la que tiene la pista.',
-        `El tiempo hasta 40 m/s: ${mt(n(40), igual, n(0), mas, n(2), por, L.t)}, así que ${mt(L.t, igual, q(20, 's'))}.`,
-        `La distancia: ${mt(L.d, igual, medio, por, n(2), por, pot(n(20), 2), igual, n(400))}. ¿Es más o menos que 300 m?`
+        'Hay que comparar dos distancias: la que necesita para llegar a la velocidad de despegue y la que mide la pista.',
+        'Primero las unidades; después, el tiempo hasta despegar y la distancia, como en la misión 1.',
+        'En la calculadora conviene no redondear el tiempo antes de elevarlo al cuadrado.'
       ],
-      solucion: [`${mt(L.t, igual, fr(n(40), n(2)), igual, q(20, 's'))}`, `${mt(L.d, igual, medio, por, n(2), por, n(400), igual, q(400, 'm'))}`, 'Necesita 400 m y la pista mide 300 m: no le alcanza. Al final de la pista va a unos 35 m/s, todavía sin la velocidad para despegar.'],
-      herramienta: { boton: 'Verlo en el radar de pista', icono: 'radar', mesa: 'radar', problema: { v0: 0, a: 2, hasta: 'vf', vf: 40, pista: 500, marca: 300, textoMarca: 'Fin de la pista real', mide: 'd', pregunta: '¿Cuántos metros usa hasta llegar a 40 m/s?' } }
+      solucion: [`${mt(q(100, 'km/h'), entre, n('3,6'), igual, q(27.78, 'm/s'))}`, `${mt(L.t, igual, fr(n(27.78), n(1.9)), igual, q(14.62, 's'))}`, `${mt(L.d, igual, medio, por, n(1.9), por, pot(n(14.62), 2), igual, q(203, 'm'))}`, 'Necesita unos 203 m y la pista mide 220 m: sí le alcanza, con unos 17 m de margen.']
     }
   ];
 
@@ -625,7 +630,7 @@
     ['15 min', 'Radar de pista: el modo libre con aceleración y los retos 4 a 7.'],
     ['7 min', 'Ideas clave, parte 3: las tres fórmulas como balanzas.'],
     ['15 min', 'Fórmulas en la balanza: retos 1 a 6.'],
-    ['15 min', 'Entrenamiento: las misiones de despegue y de frenado (ejercicios 10 y 11). Los demás quedan de tarea.']
+    ['15 min', 'Entrenamiento: las misiones de despegue y de frenado (ejercicios 10 y 11), con calculadora y de principio a fin. Los demás quedan de tarea.']
   ];
 
   MA.M4 = {

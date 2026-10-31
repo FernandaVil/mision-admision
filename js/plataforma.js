@@ -142,7 +142,7 @@
         <div class="seccion-cabeza"><h2>Cómo estudiar aquí</h2></div>
         <div class="consejos">
           <div class="tarjeta"><h3>${icono('balanza')}Entender antes de memorizar</h3><p>Cada tema empieza con una herramienta que se puede mover. La idea es probarla hasta poder explicar por qué funciona.</p></div>
-          <div class="tarjeta"><h3>${icono('hoja')}Practicar como en el examen</h3><p>Sin calculadora y con papel. Las pistas se piden en orden; la solución completa es el último recurso.</p></div>
+          <div class="tarjeta"><h3>${icono('hoja')}Practicar como en el examen</h3><p>Con papel, y la calculadora solo para las cuentas largas. Las pistas se piden en orden; la solución completa es el último recurso.</p></div>
           <div class="tarjeta"><h3>${icono('chat')}Usar la IA como tutor</h3><p>Para estudiar solo, las plantillas del centro de comando hacen que la IA guíe sin dar la respuesta.</p></div>
         </div>
       </section>`;

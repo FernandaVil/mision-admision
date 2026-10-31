@@ -7,6 +7,9 @@
    Un ejercicio puede traer una pregunta previa (ej.antes: por ejemplo,
    qué llave logra abrir el candado en el módulo 3). No bloquea:
    cualquier respuesta muestra el porqué y abre el lugar para responder.
+   Con opciones.primeroIntentar (una lista de niveles), en esos niveles
+   las pistas y la solución se abren recién después del primer intento:
+   el ejercicio se piensa completo, como en el examen.
    ===================================================================== */
 (function () {
   'use strict';
@@ -187,11 +190,16 @@
           : `<div class="mensaje ${tipo}">${icono(ico)}<div><span class="m-titulo">${titulo}</span>${bien ? a.bien : `${(a.porQue && a.porQue[k]) || ''} ${a.bien}`}</div></div>`}`;
     }
 
+    // opciones.primeroIntentar: niveles en los que primero va un intento completo, de principio a fin.
+    // Las pistas y la solución se abren después del primer intento (o si ya está resuelto).
+    const primero = new Set(opciones.primeroIntentar || []);
+    const cerradas = (ej, d) => primero.has(ej.nivel) && !d.resuelto && d.intentos === 0;
     function pintarBotonPista(ej, d) {
       const b = $('[data-accion="pista"]', raiz);
-      const quedan = d.pistas < ej.pistas.length;
-      b.disabled = !quedan;
-      $('span', b).textContent = quedan ? `Pista ${d.pistas + 1} de ${ej.pistas.length}` : 'No hay más pistas';
+      const quedan = d.pistas < ej.pistas.length, cerrado = cerradas(ej, d);
+      b.disabled = !quedan || cerrado;
+      $('span', b).textContent = cerrado ? 'Pistas después del primer intento' : quedan ? `Pista ${d.pistas + 1} de ${ej.pistas.length}` : 'No hay más pistas';
+      $('[data-accion="solucion"]', raiz).disabled = cerrado && !d.solucion;
     }
 
     function acierto(ej, d) {
@@ -203,13 +211,16 @@
       const sig = $('[data-accion="siguiente"]', raiz);
       sig.classList.remove('btn-secundario');
       $('.pr-cabeza', raiz).insertAdjacentHTML('beforeend', $('.pr-estado', raiz) ? '' : `<span class="pildora pildora-exito pr-estado">${icono('check')}Resuelto</span>`);
+      if (primero.has(ej.nivel)) pintarBotonPista(ej, d);   // ya resuelto: se abren la solución y las pistas, para comparar
       pintarMapa();
     }
     function fallo(ej, d, texto) {
       d.intentos++;
       guardar();
-      const extra = d.intentos >= 2 && d.pistas < ej.pistas.length ? ' Una pista puede ayudar: para eso están.' : '';
+      const abre = primero.has(ej.nivel) && d.intentos === 1;
+      const extra = abre ? ' Ahora ya se pueden pedir las pistas.' : d.intentos >= 2 && d.pistas < ej.pistas.length ? ' Una pista puede ayudar: para eso están.' : '';
       ponerMensaje('error', 'Todavía no.', texto + extra);
+      if (abre) pintarBotonPista(ej, d);
     }
     function comprobar() {
       const ej = lista[actual], d = datosDe(ej);

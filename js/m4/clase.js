@@ -93,7 +93,7 @@
           <div class="d-tarjeta"><span class="d-num">De km/h a m/s: ÷ 3,6</span>${mt(q(72, 'km/h'), igual, oculto(q(20, 'm/s')))}</div>
           <div class="d-tarjeta"><span class="d-num">De m/s a km/h: × 3,6</span>${mt(q(50, 'm/s'), igual, oculto(q(180, 'km/h'), 2))}</div>
         </div>
-        <p class="d-nota">Valores redondos para el examen: 36 → 10 · 72 → 20 · 108 → 30 · 180 → 50 · 288 → 80.</p>`
+        <p class="d-nota">Valores redondos para hacer de cabeza: 36 → 10 · 72 → 20 · 108 → 30 · 180 → 50 · 288 → 80.</p>`
     },
     {
       titulo: 'Su turno: el radar de pista',
@@ -234,7 +234,7 @@
         <ul class="d-lista">
           <li>Abra <b>Fórmulas en la balanza</b>: retos 1 a 6. Antes de tocar, diga qué operación va en los dos platos.</li>
           <li>Después, el <b>Entrenamiento</b>: la misión 1 (despegue) y la misión 2 (frenado).</li>
-          <li>Las pistas van en orden: primero los datos, después el tiempo y al final la distancia.</li>
+          <li>Las misiones van como en el examen: con calculadora y de principio a fin. Las pistas se abren después del primer intento.</li>
         </ul>`
     }
   ];

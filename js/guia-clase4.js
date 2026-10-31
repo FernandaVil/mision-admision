@@ -17,9 +17,9 @@
     claveCheck: 'guia.check.c4',
     antes: [
       'Confirma que en su plataforma ya aparece el módulo 4 como disponible. Si no aparece, falta publicar esta versión.',
-      'Que tenga papel, lápiz y nada de calculadora.',
+      'Que tenga papel, lápiz y la calculadora que va a usar en el examen. En el radar, las fórmulas y los ejercicios básicos va sin ella; en las misiones, con ella.',
       'Prueba antes el radar de pista: el modo libre con los dos tipos de movimiento y un reto con una predicción equivocada, para ver el «Otro vuelo». Prueba también un despeje en «Fórmulas en la balanza».',
-      'Repasa de memoria los valores redondos de km/h a m/s: 36 → 10, 72 → 20, 108 → 30, 180 → 50. Los va a necesitar en el examen sin calculadora.',
+      'Repasa de memoria los valores redondos de km/h a m/s: 36 → 10, 72 → 20, 108 → 30, 180 → 50. Sirven para estimar y para detectar un resultado absurdo en la calculadora.',
       'Si hay tiempo antes de empezar, que haga una ronda del radar de signos del módulo 2: el frenado trae −20 ÷ (−5).'
     ],
     objetivos: [
@@ -34,6 +34,8 @@
       'Solo tres fórmulas. Si pregunta por v² = v₀² + 2 · a · d, dile que es una cuarta que sale de juntar estas dos y que la verán más adelante; por ahora, siempre primero el tiempo y después la distancia.',
       'Las fórmulas son balanzas, como en el módulo 1: lo mismo en los dos platos, y primero se quita lo que suma o resta. Que diga la operación en voz alta antes de tocar.',
       'Él quiere resolver de cabeza: úsalo. En la bitácora del radar, que diga el renglón que sigue antes de que aparezca.',
+      'Las herramientas son para entender, no para resolver. En la clase 3 se apoyó tanto en la mesa que resolvía solo el paso que le pedía. Por eso, desde el nivel tipo examen no hay botón de herramienta, y las pistas se abren después del primer intento. En las misiones, no le dictes los pasos: que plantee todo en el borrador, de principio a fin, y si se traba, que diga primero qué datos tiene y qué le falta.',
+      'Con calculadora aparecen dos trampas nuevas: redondear el tiempo antes de elevarlo al cuadrado y olvidar los paréntesis. Pídele que escriba en el papel lo que va a teclear antes de teclearlo.',
       'Ve despacio. Si a los 45 minutos todavía está en el radar, deja las fórmulas para la próxima clase.'
     ],
     minimo: [
@@ -143,10 +145,11 @@
       {
         tiempo: '65–80 min', titulo: 'Entrenamiento: misiones de despegue y frenado, y cierre', comparte: 'Los dos', ruta: 'index.html#m4-entrenamiento', boton: 'Abrir el entrenamiento',
         pasos: [
-          { t: 'tu', x: 'Las misiones son como las del examen: varios pasos. Primero los datos, después el tiempo y al final la distancia.' },
-          { t: 'el', x: 'Ejercicio 10, misión 1: el despegue. Que escriba los datos en el borrador antes de calcular.' },
-          { t: 'ojo', x: 'Si se traba, que pida las pistas en orden: la primera solo ordena los datos. Con «Verlo en el radar de pista» se ve el despegue en cámara rápida, también con predicción.' },
-          { t: 'pregunta', x: '¿Por qué no es 80 · 40?', r: 'Porque no fue todo el tiempo a 80 m/s: arrancó en 0. En promedio fue a 40 m/s, y 40 · 40 = 1600 m.' },
+          { t: 'tu', x: 'Las misiones son como las del examen: varios pasos, con calculadora y sin ayuda al principio. Plantéelo completo en el papel y después lo comprueba.' },
+          { t: 'el', x: 'Ejercicio 10, misión 1: el despegue. Escribe los datos en el borrador, pasa la velocidad a m/s y plantea el tiempo y la distancia antes de teclear.' },
+          { t: 'ojo', x: 'Las pistas se abren después del primer intento y dicen qué pensar, no hacen las cuentas. No hay botón del radar: lo tiene que resolver él. Si se traba, pregúntale qué datos tiene y qué le falta, sin darle números.' },
+          { t: 'pregunta', x: '¿Por qué no es 75 por el tiempo?', r: 'Porque no fue todo el tiempo a 75 m/s: arrancó en 0. En promedio fue a 37,5 m/s. Da unos 1339 m.' },
+          { t: 'ojo', x: 'Si le da 1361, redondeó el tiempo a 36 s antes de elevarlo al cuadrado: la plataforma se lo dice. Que use el tiempo con todos sus decimales o la memoria de la calculadora.' },
           { t: 'el', x: 'Ejercicio 11, misión 2: el frenado.' },
           { t: 'pregunta', x: 'Sin mirar: si el tiempo se duplica desde el reposo, ¿qué pasa con la distancia?', r: 'Se cuadruplica: la t va al cuadrado.' },
           { t: 'tu', x: 'De tarea quedan la misión 3 (la pista corta) y los ejercicios 1 a 9.' },
@@ -156,8 +159,9 @@
     ],
     ajustes: [
       ['Si te falta tiempo', 'Corta antes de la parte 3: las fórmulas en la balanza abren la próxima clase. Lo que no se puede saltar es el promedio (diapositiva 9 y reto 5 del radar).'],
-      ['Si te sobra tiempo', 'La misión 3 (la pista corta, con «Verlo en el radar») o los ejercicios tipo examen 7 a 9.'],
-      ['Si va muy rápido', 'Que salte al entrenamiento: ejercicios 7 a 12. El 7 es la pregunta típica de «el doble de tiempo».'],
+      ['Si te sobra tiempo', 'La misión 3 (la pista corta) o los ejercicios tipo examen 7 a 9.'],
+      ['Si va muy rápido', 'Que salte al entrenamiento: ejercicios 7 a 12, sin herramientas. El 7 es la pregunta típica de «el doble de tiempo».'],
+      ['Si se apoya en la herramienta para todo', 'En los ejercicios básicos e intermedios el botón de la herramienta está a la vista: pídele que lo intente primero sin abrirlo y que lo use solo para comprobar.'],
       ['Si se enreda con los signos del frenado', 'Una ronda del radar de signos del módulo 2 y vuelvan al reto 6 del radar.'],
       ['Si pregunta por v² = v₀² + 2 · a · d', 'Es cierta y sirve para frenados, pero sale de juntar las otras dos. Por ahora basta con tiempo primero y distancia después.']
     ]
