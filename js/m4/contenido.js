@@ -624,13 +624,14 @@
 
   /* ---------- Plan de la clase (lo ve el estudiante en la cabecera del módulo) ---------- */
   const PLAN_CLASE = [
-    ['6 min', 'Ideas clave, parte 1: distancia, velocidad y tiempo.'],
-    ['12 min', 'Radar de pista: el modo libre con velocidad constante y los retos 1 a 3.'],
-    ['7 min', 'Ideas clave, parte 2: la aceleración.'],
-    ['15 min', 'Radar de pista: el modo libre con aceleración y los retos 4 a 7.'],
-    ['7 min', 'Ideas clave, parte 3: las tres fórmulas como balanzas.'],
-    ['15 min', 'Fórmulas en la balanza: retos 1 a 6.'],
-    ['15 min', 'Entrenamiento: las misiones de despegue y de frenado (ejercicios 10 y 11), con calculadora y de principio a fin. Los demás quedan de tarea.']
+    ['5 min', 'Ideas clave, parte 1: distancia, velocidad y tiempo.'],
+    ['9 min', 'Radar de pista: el modo libre con velocidad constante y los retos 1 a 3.'],
+    ['6 min', 'Ideas clave, parte 2: la aceleración.'],
+    ['10 min', 'Radar de pista: el modo libre con aceleración y los retos 4 a 6.'],
+    ['6 min', 'Ideas clave, parte 3: las tres fórmulas como balanzas.'],
+    ['8 min', 'Fórmulas en la balanza: retos 1, 3 y 5.'],
+    ['30 min', 'Entrenamiento, como en el examen: los ejercicios 7 y 9, y las misiones de despegue y de frenado (10 y 11), con calculadora y de principio a fin.'],
+    ['3 min', 'Cierre. De tarea: el reto 7 del radar, los retos 2, 4 y 6 de las fórmulas, los ejercicios 1 a 6, el 8 y la misión 3.']
   ];
 
   MA.M4 = {

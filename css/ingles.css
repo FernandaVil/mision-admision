@@ -1,0 +1,40 @@
+/* =====================================================================
+   Inglés · los quizzes (in-). Reutiliza la práctica del módulo 1 y las
+   tablas de siempre; aquí solo van la oración destacada, los textos de
+   lectura, las tarjetas de los cuatro quizzes y el repaso plegable.
+   ===================================================================== */
+.in-seccion { margin-top: 22px; }
+
+/* Los cuatro quizzes, como los pasos de un módulo */
+.in-quizzes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 16px; padding: 0; list-style: none; }
+.in-quizzes li { margin: 0; padding: 14px 16px; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); }
+.in-quizzes .pc-num { font-family: var(--f-mono); font-size: 0.78rem; color: var(--primario); font-weight: 500; }
+.in-quizzes h3 { font-size: 0.98rem; margin: 2px 0 4px; }
+.in-quizzes p { font-size: 0.88rem; color: var(--texto-2); margin: 0; }
+@media (max-width: 1100px) { .in-quizzes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .in-quizzes { grid-template-columns: minmax(0, 1fr); } }
+
+/* Repaso plegable */
+.in-repaso { margin-bottom: 18px; padding: 0; }
+.in-repaso > summary { display: flex; align-items: center; gap: 10px; padding: 14px 18px; cursor: pointer; font-weight: 600; list-style: none; }
+.in-repaso > summary::-webkit-details-marker { display: none; }
+.in-repaso > summary svg { width: 18px; height: 18px; color: var(--primario); flex: none; }
+.in-repaso > summary .chev { transition: transform 0.2s ease; color: var(--texto-3); }
+.in-repaso[open] > summary .chev { transform: rotate(90deg); }
+.in-repaso-grilla { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px 28px; padding: 0 18px 18px; }
+.in-repaso h4 { font-size: 0.95rem; margin: 6px 0 6px; }
+.in-repaso ul { margin: 0 0 10px; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.9rem; }
+.in-repaso .tabla { font-size: 0.86rem; }
+.in-repaso .tabla td { padding: 7px 8px; }
+.in-repaso p { font-size: 0.88rem; margin: 4px 0 0; }
+@media (max-width: 900px) { .in-repaso-grilla { grid-template-columns: minmax(0, 1fr); } }
+
+/* La oración del ejercicio y los textos de lectura */
+.in-frase, .in-lectura {
+  display: block; margin: 10px 0 0; padding: 10px 14px;
+  border-left: 3px solid var(--primario); border-radius: 0 var(--radio-chico) var(--radio-chico) 0;
+  background: var(--superficie-2); color: var(--texto);
+}
+.in-frase { font-size: 1.12rem; font-weight: 500; }
+.in-lectura { font-size: 0.98rem; line-height: 1.6; max-width: 72ch; }
+.in-pregunta { display: block; margin-top: 12px; font-weight: 600; }

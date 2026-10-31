@@ -79,6 +79,19 @@
         'pOH y la regla del 14',
         'Simulacro final con tiempo y retroalimentación'
       ]
+    },
+    {
+      // Práctica por cuenta propia, sin clase: va después de los seis módulos
+      id: 'ingles', num: '07',
+      titulo: 'Inglés',
+      resumen: 'Práctica por cuenta propia: cuatro quizzes cortos de tiempos verbales, vocabulario, lectura y uno mixto.',
+      disponible: true,
+      temario: [
+        'Tiempos verbales y condicionales',
+        'Preposiciones, vocabulario de aviación y falsos amigos',
+        'Lectura de textos cortos',
+        'Un quiz mixto tipo examen'
+      ]
     }
   ];
 

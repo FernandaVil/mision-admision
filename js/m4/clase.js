@@ -163,8 +163,8 @@
         <h2>Su turno: el radar con aceleración</h2>
         <ul class="d-lista">
           <li>Abra otra vez el radar, en modo libre con aceleración: mire cómo se separan las huellas. Pruebe también una aceleración negativa.</li>
-          <li>Después, los retos 4 a 7.</li>
-          <li>En los retos 5 y 7, piense en la velocidad promedio.</li>
+          <li>Después, los retos 4 a 6. El 7 queda de tarea.</li>
+          <li>En el reto 5, piense en la velocidad promedio.</li>
         </ul>`
     },
     // ---------------- Parte 3 · fórmulas y balanzas ----------------
@@ -232,17 +232,17 @@
         <div class="d-icono">${icono('balanza')}</div>
         <h2>Su turno: fórmulas y entrenamiento</h2>
         <ul class="d-lista">
-          <li>Abra <b>Fórmulas en la balanza</b>: retos 1 a 6. Antes de tocar, diga qué operación va en los dos platos.</li>
-          <li>Después, el <b>Entrenamiento</b>: la misión 1 (despegue) y la misión 2 (frenado).</li>
+          <li>Abra <b>Fórmulas en la balanza</b>: retos 1, 3 y 5. Antes de tocar, diga qué operación va en los dos platos.</li>
+          <li>Después, el <b>Entrenamiento</b>: los ejercicios 7 y 9, y las misiones 1 (despegue) y 2 (frenado).</li>
           <li>Las misiones van como en el examen: con calculadora y de principio a fin. Las pistas se abren después del primer intento.</li>
         </ul>`
     }
   ];
 
   const PARTES = [
-    { id: 'p1', nombre: 'Parte 1 · distancia, velocidad y tiempo', corto: 'Parte 1 · distancia, velocidad y tiempo', desde: 0, hasta: 4, minutos: '6 min' },
-    { id: 'p2', nombre: 'Parte 2 · la aceleración', corto: 'Parte 2 · la aceleración', desde: 5, hasta: 10, minutos: '7 min' },
-    { id: 'p3', nombre: 'Parte 3 · fórmulas y balanzas', corto: 'Parte 3 · fórmulas y balanzas', desde: 11, hasta: 16, minutos: '7 min' }
+    { id: 'p1', nombre: 'Parte 1 · distancia, velocidad y tiempo', corto: 'Parte 1 · distancia, velocidad y tiempo', desde: 0, hasta: 4, minutos: '5 min' },
+    { id: 'p2', nombre: 'Parte 2 · la aceleración', corto: 'Parte 2 · la aceleración', desde: 5, hasta: 10, minutos: '6 min' },
+    { id: 'p3', nombre: 'Parte 3 · fórmulas y balanzas', corto: 'Parte 3 · fórmulas y balanzas', desde: 11, hasta: 16, minutos: '6 min' }
   ];
 
   MA.Clase4 = { DIAPOSITIVAS, PARTES };

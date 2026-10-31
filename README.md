@@ -9,6 +9,7 @@ Plataforma de estudio para preparar el examen de admisión a Ingeniería Aeroná
 - **Módulo 3 · factorización** (disponible): juntar términos, la distributiva y el factor común en una mesa de áreas (armar y desarmar un rectángulo), y el paso del dibujo al papel con las flechas de todos contra todos. Sigue la diferencia de cuadrados, con una figura que se corta y se reacomoda, y la llave maestra (la fórmula cuadrática) para cualquier trinomio, con una calculadora de GeoGebra para ver las raíces en la gráfica. Trae una práctica integrada de 15 ejercicios que, antes de cada factorización, pregunta qué llave logra abrir el candado.
 - **Módulo 4 · física mecánica I: cinemática** (disponible): el movimiento con velocidad constante y con aceleración en un radar de pista, con huellas de cada segundo, instrumentos en tiempo real y una bitácora; en cada reto se predice antes de despegar. Sigue con las tres fórmulas del movimiento dibujadas como balanzas para despejar, y un entrenamiento de 12 ejercicios que termina con tres misiones de vuelo: despegue, frenado y una pista corta.
 - **Módulos 5 y 6** (en preparación): estequiometría y notación científica; pH y simulacro final.
+- **Inglés** (práctica por cuenta propia): cuatro quizzes de 10 preguntas (tiempos verbales, vocabulario y preposiciones, lectura y uno mixto), con una ficha de repaso. Cada respuesta equivocada explica por qué no.
 
 ## Cómo abrirla
 
@@ -28,6 +29,7 @@ js/m1/                módulo 1: contenido, motores y herramientas
 js/m2/                módulo 2: contenido, diapositivas y las cuatro mesas
 js/m3/                módulo 3: contenido, diapositivas, mesa de áreas, flechas, diferencia de cuadrados y llave maestra
 js/m4/                módulo 4: contenido, diapositivas, radar de pista y fórmulas en la balanza
+js/ingles/            inglés: los cuatro quizzes para practicar por cuenta propia
 js/asistente.js       centro de comando IA
 js/plataforma.js      rutas, navegación y tema
 ```
