@@ -196,8 +196,8 @@
       </li>`;
   }
 
-  // Guías disponibles (las de las clases 2 y 3 solo existen si se cargó su archivo)
-  const guias = () => [GUIA, MA.GuiaClase2, MA.GuiaClase3].filter(Boolean);
+  // Guías disponibles (las de las clases 2 a 4 solo existen si se cargó su archivo)
+  const guias = () => [GUIA, MA.GuiaClase2, MA.GuiaClase3, MA.GuiaClase4].filter(Boolean);
 
   function montarGuia(cont) {
     const lista = guias();

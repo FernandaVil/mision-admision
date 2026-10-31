@@ -46,15 +46,14 @@
     },
     {
       id: 'm4', num: '04',
-      titulo: 'Física mecánica',
-      resumen: 'Cómo se describe el movimiento y por qué se mueven las cosas.',
-      disponible: false,
+      titulo: 'Física mecánica I: cinemática',
+      resumen: 'Cómo se describe un movimiento: velocidad constante, aceleración y frenado, con un radar de pista y tres fórmulas.',
+      disponible: true,
       temario: [
-        'Velocidad y aceleración: movimiento uniforme y acelerado',
-        'Caída libre y lanzamiento vertical',
-        'Las tres leyes de Newton, el peso y la fricción',
-        'Trabajo y energía',
-        'Las cuatro fuerzas sobre una aeronave en vuelo'
+        'Distancia, velocidad y tiempo: el movimiento con velocidad constante (MRU)',
+        'La aceleración: ganar o perder velocidad en cada segundo (MRUV)',
+        'Tres fórmulas que se despejan como balanzas',
+        'Misiones de vuelo: despegue, frenado y una pista corta'
       ]
     },
     {

@@ -1,0 +1,153 @@
+/* =====================================================================
+   Módulo 4 · radar de pista (rp-), fórmulas en la balanza (fb-) y
+   diapositivas de la clase 4. Reutiliza las piezas de los módulos 1 y
+   2 (banco, bitácora, mensajes, pregunta para predecir, recuadro de
+   cálculo, origen).
+   Colores: azul es la velocidad (la flecha y su instrumento); ámbar es
+   la aceleración, las huellas de cada segundo y lo que se cancela.
+   ===================================================================== */
+.m4-seccion > .banco { margin: 8px 0 18px; }
+.m4-seccion .pasos-concepto .mt-bloque { margin: 10px 0 0; font-size: 1.05rem; justify-content: flex-start; }
+
+/* ---------- Comunes a las dos herramientas ---------- */
+.mesa-rp .banco-cabeza, .mesa-fb .banco-cabeza { justify-content: space-between; }
+.m4-retos { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.m4-grupo { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.m4-grupo-nombre { font-size: 0.74rem; color: var(--texto-3); margin-right: 2px; }
+.m4-grupo .segmento { min-width: 36px; justify-content: center; padding: 0 10px; }
+.m4-pildoras { display: flex; flex-wrap: wrap; gap: 6px; }
+.m4-pildoras .pildora, .rp-datos .pildora { font-size: 0.78rem; }
+.rp-mensaje:empty, .fb-mensaje:empty, .rp-botones:empty, .fb-botones:empty { display: none; }
+.banco-pie .rp-mensaje, .banco-pie .fb-mensaje { margin-bottom: 10px; }
+.banco-pie .rp-mensaje:last-child, .banco-pie .fb-mensaje:last-child { margin-bottom: 0; }
+.mesa-rp .banco-pie:has(> .rp-mensaje:empty + .rp-botones:empty) { display: none; }
+.mesa-rp .mensaje .mt, .mesa-fb .mensaje .mt { white-space: normal; flex-wrap: wrap; }
+
+/* ---------- Radar de pista ---------- */
+.rp-datos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.rp-controles { padding: 14px 18px 0; display: grid; gap: 12px; }
+.rp-deslizadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 24px; max-width: 760px; }
+.rp-controles .segmento:disabled, .rp-controles input:disabled { opacity: 0.55; cursor: default; }
+.rp-escena { margin: 14px 18px 0; border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); overflow: hidden; }
+.rp-svg { display: block; width: 100%; height: auto; }
+.rp-asfalto { fill: var(--superficie-3); stroke: var(--borde-fuerte); stroke-width: 1; }
+.rp-umbral { stroke: var(--texto-3); stroke-width: 3; stroke-dasharray: 6 4; }
+.rp-eje { stroke: var(--borde-fuerte); stroke-width: 3; stroke-dasharray: 16 12; }
+.rp-tick { stroke: var(--texto-3); stroke-width: 1.5; }
+.rp-etq-escala, .rp-etq-huella, .rp-etq-tramo, .rp-etq-marca { font-family: var(--f-mono); font-size: 11px; }
+.rp-etq-escala { fill: var(--texto-3); }
+.rp-huella { stroke: var(--ambar); stroke-width: 2; }
+.rp-etq-huella { fill: var(--ambar); font-weight: 600; }
+.rp-etq-tramo { fill: var(--texto-2); }
+.rp-marca { stroke: var(--texto); stroke-width: 2; stroke-dasharray: 5 4; }
+.rp-etq-marca { fill: var(--texto); font-weight: 600; }
+.rp-avion { fill: var(--texto); }
+.rp-flecha { stroke: var(--primario); stroke-width: 4; stroke-linecap: round; }
+.rp-punta { fill: var(--primario); }
+
+.rp-tablero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 18px; }
+.rp-instrumento {
+  display: grid; gap: 2px; min-width: 0; padding: 10px 12px;
+  border: 1px solid var(--borde); border-radius: var(--radio-chico); background: var(--superficie);
+}
+.rp-instrumento small { font-size: 0.76rem; color: var(--texto-3); }
+.rp-instrumento div { display: flex; align-items: baseline; gap: 4px; min-width: 0; }
+.rp-instrumento b { font-family: var(--f-mono); font-size: 1.5rem; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.rp-instrumento span { font-size: 0.82rem; color: var(--texto-2); }
+.rp-i-v { background: var(--primario-suave); border-color: var(--primario-borde); }
+.rp-i-v b { color: var(--primario); }
+.rp-i-a b { color: var(--ambar); }
+
+.rp-prediccion { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.rp-prediccion .campo { width: 120px; }
+.rp-prediccion .btn svg { width: 16px; height: 16px; }
+.rp-tabla td { font-family: var(--f-mono); font-size: 0.86rem; font-variant-numeric: tabular-nums; padding: 6px 10px; white-space: nowrap; }
+.rp-tabla td:last-child { color: var(--ambar); }
+.rp-tabla tr.rp-ultima td { color: var(--primario); font-weight: 600; }
+@media (max-width: 640px) {
+  .rp-escena { margin: 12px 12px 0; }
+  .rp-controles { padding: 12px 12px 0; }
+  .rp-tablero { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; gap: 8px; }
+  .rp-instrumento b { font-size: 1.25rem; }
+}
+
+/* ---------- Balanza de las fórmulas ----------
+   Un plato por lado de la igualdad y el «=» en el apoyo. Al aplicar una
+   operación, la operación aparece sobre los dos platos y el brazo
+   apenas se mueve: sigue en equilibrio. */
+.fb-balanza { display: grid; justify-items: center; width: 100%; max-width: 640px; margin: 0 auto; }
+.fb-brazo { display: grid; width: 100%; transform-origin: 50% 100%; }
+.fb-platos { display: flex; justify-content: space-between; align-items: flex-end; gap: 8%; padding: 0 3%; }
+.fb-plato { display: grid; justify-items: center; align-content: end; flex: 0 1 auto; min-width: 30%; }
+.fb-op { min-height: 1.7em; display: flex; align-items: center; color: var(--ambar); font-weight: 600; }
+.fb-op .mt { padding: 0.1em 0.5em; border-radius: 999px; background: var(--ambar-suave); border: 1px solid var(--ambar-borde); animation: entrar 0.25s ease; }
+.fb-op .op, .fb-op .vr, .fb-op .num { color: var(--ambar); }
+.fb-carga {
+  max-width: 100%; padding: 0.5em 0.8em; text-align: center;
+  border: 1.5px solid var(--borde-fuerte); border-radius: var(--radio-chico);
+  background: var(--superficie); box-shadow: var(--sombra-1); font-size: 1.3rem;
+}
+.fb-carga .mt { white-space: normal; flex-wrap: wrap; justify-content: center; row-gap: 0.25em; }
+.fb-bandeja { display: block; width: 86%; height: 6px; margin-top: 6px; border-radius: 3px; background: var(--primario); }
+.fb-poste { display: block; width: 3px; height: 18px; background: var(--borde-fuerte); }
+.fb-viga { height: 10px; border-radius: 5px; background: var(--borde-fuerte); }
+.fb-fulcro { position: relative; width: 0; height: 0; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 44px solid var(--texto-3); }
+.fb-fulcro span { position: absolute; left: -10px; top: 17px; width: 20px; text-align: center; color: var(--superficie); font-weight: 700; font-size: 1.15rem; line-height: 1; }
+.fb-base { width: 150px; height: 8px; border-radius: 4px; background: var(--borde-fuerte); }
+.fb-tambalea .fb-brazo { animation: fb-tambalear 1.1s ease-in-out; }
+@keyframes fb-tambalear {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-1.4deg); }
+  65% { transform: rotate(0.9deg); }
+}
+.fb-mini .fb-op { display: none; }
+.fb-mini .fb-carga { font-size: 1rem; padding: 0.35em 0.55em; box-shadow: none; }
+.fb-mini .fb-carga .mt { white-space: nowrap; flex-wrap: nowrap; }
+.fb-mini .fb-platos { gap: 4%; padding: 0; }
+.fb-mini .fb-bandeja { height: 4px; margin-top: 4px; }
+.fb-mini .fb-poste { height: 10px; }
+.fb-mini .fb-viga { height: 7px; }
+.fb-mini .fb-fulcro { border-left-width: 20px; border-right-width: 20px; border-bottom-width: 30px; }
+.fb-mini .fb-fulcro span { left: -8px; top: 12px; width: 16px; font-size: 0.85rem; }
+.fb-mini .fb-base { width: 90px; height: 6px; }
+
+/* Tarjetas de fórmulas */
+.fb-tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 8px 0 18px; }
+.fb-tarjeta { display: grid; gap: 12px; align-content: start; }
+.fb-tarjetas > .tarjeta + .tarjeta { margin-top: 0; }
+.fb-tarjeta h3 { font-size: 1rem; margin: 2px 0 0; }
+.fb-tarjeta p { margin: 0; font-size: 0.9rem; }
+.fb-letras { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; font-size: 0.88rem; color: var(--texto-2); }
+.fb-tarjeta .btn { justify-self: start; }
+
+/* Mesa de las fórmulas */
+.fb-mesa { padding: 16px 18px 12px; display: grid; gap: 12px; justify-items: center; }
+.fb-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.fb-pregunta .fila-botones .btn { min-width: 64px; justify-content: center; }
+.fb-opcion .mt { font-size: 1.05rem; }
+.fb-opcion.incorrecta, .fb-opcion.incorrecta:disabled:hover { background: var(--error-suave); border-color: var(--error); opacity: 1; }
+.fb-calculo label { font-size: 1rem; flex-basis: 100%; display: block; }
+.fb-calculo label .mt { white-space: normal; }
+.fb-pasos .mt { flex-wrap: wrap; }
+@media (max-width: 640px) {
+  .fb-carga { font-size: 1.05rem; padding: 0.4em 0.5em; }
+  .fb-platos { gap: 6%; padding: 0; }
+  .fb-mesa { padding: 14px 12px 10px; }
+}
+
+/* ---------- Diapositivas de la clase 4 ---------- */
+.m4-tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2cqw; }
+.d-tarjetas.m4-tres .d-tarjeta .mt { font-size: 1.4em; }
+.m4-balanzas > div { display: grid; justify-items: center; align-content: end; gap: 0.5em; }
+.m4-balanzas .d-num { text-align: center; }
+.diapo .fb-carga { font-size: 0.8em; }
+.m4-balanzas .fb-carga { font-size: 0.72em; }
+.diapo .d-dos .fb-carga { font-size: 1.1em; }
+.rp-figura { display: block; width: 100%; height: auto; }
+.diapo .rp-figura { max-width: 80%; margin: 0 auto; }
+.rp-figura text { font-size: 13px; }
+.m4-serie th, .m4-serie td { text-align: center; }
+.m4-serie th { text-align: left; }
+@media (max-width: 640px) {
+  .m4-tres { grid-template-columns: minmax(0, 1fr); }
+}
