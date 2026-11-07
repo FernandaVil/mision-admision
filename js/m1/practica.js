@@ -10,6 +10,8 @@
    Con opciones.primeroIntentar (una lista de niveles), en esos niveles
    las pistas y la solución se abren recién después del primer intento:
    el ejercicio se piensa completo, como en el examen.
+   Con opciones.tachar, cada opción lleva una × para tacharla y practicar
+   el descarte (solo lo activa el módulo 5).
    ===================================================================== */
 (function () {
   'use strict';
@@ -120,8 +122,13 @@
       const resp = $('.pr-respuesta', raiz);
       if (ej.tipo === 'opciones') {
         const orden = barajarEstable(ej.opciones.length, ej.id);
-        resp.innerHTML = `<div class="pr-opciones" role="group" aria-label="Opciones">${orden.map((k, pos) => `
-          <button type="button" class="pr-opcion" data-k="${k}"><span class="pr-letra">${LETRAS[pos]}</span><span>${ej.opciones[k]}</span></button>`).join('')}</div>`;
+        const tachadas = d.resuelto ? [] : d.tachadas || [];
+        const boton = (k, pos) => `
+          <button type="button" class="pr-opcion${tachadas.includes(k) ? ' tachada' : ''}" data-k="${k}" ${tachadas.includes(k) ? 'disabled' : ''}><span class="pr-letra">${LETRAS[pos]}</span><span>${ej.opciones[k]}</span></button>`;
+        const fila = (k, pos) => (opciones.tachar && !d.resuelto
+          ? `<div class="pr-opcion-fila">${boton(k, pos)}<button type="button" class="pr-tachar" data-tachar="${k}" aria-pressed="${tachadas.includes(k)}" aria-label="Tachar la opción ${LETRAS[pos]}" title="Tachar esta opción">${icono('cerrar')}</button></div>`
+          : boton(k, pos));
+        resp.innerHTML = `<div class="pr-opciones" role="group" aria-label="Opciones">${orden.map(fila).join('')}</div>`;
         if (d.resuelto) $(`.pr-opcion[data-k="${ej.correcta}"]`, resp).classList.add('correcta');
       } else {
         resp.innerHTML = `
@@ -206,6 +213,7 @@
       const primera = d.intentos === 0 && d.pistas === 0 && !d.solucion;
       d.resuelto = true;
       guardar();
+      $$('.pr-tachar', raiz).forEach(b => { b.hidden = true; });
       MA.progreso.marcar(mod + '.prac.' + ej.id);
       ponerMensaje('ok', '¡Correcto!', primera ? 'A la primera y sin ayudas: ¡muy bien!' : '¡Bien hecho! Lo importante es entender el procedimiento: vale la pena compararlo con la solución.');
       const sig = $('[data-accion="siguiente"]', raiz);
@@ -230,6 +238,18 @@
       if (cands.some(c => MA.casiIgual(c, ej.respuesta, ej.tolerancia || 0.01))) { acierto(ej, d); return; }
       const err = (ej.errores || []).find(er => cands.some(c => MA.casiIgual(c, er.valor, 0.01)));
       fallo(ej, d, err ? err.msg : 'Conviene revisar el planteamiento: ¿se cancelan bien las unidades? ¿El tamaño del número tiene sentido?');
+    }
+    // Tachar no cuenta como intento: es lo que se hace con el lápiz en el examen
+    function tachar(k) {
+      const d = datosDe(lista[actual]);
+      d.tachadas = d.tachadas || [];
+      const i = d.tachadas.indexOf(k), activa = i < 0;
+      if (activa) d.tachadas.push(k); else d.tachadas.splice(i, 1);
+      guardar();
+      const op = $(`.pr-opcion[data-k="${k}"]`, raiz);
+      op.classList.toggle('tachada', activa);
+      op.disabled = activa;
+      $(`[data-tachar="${k}"]`, raiz).setAttribute('aria-pressed', String(activa));
     }
     function elegirOpcion(btn) {
       const ej = lista[actual], d = datosDe(ej);
@@ -290,6 +310,7 @@
       const b = e.target.closest('button');
       if (!b || !raiz.contains(b)) return;
       if (b.dataset.ir != null) { mostrar(Number(b.dataset.ir)); return; }
+      if (b.dataset.tachar != null) { tachar(Number(b.dataset.tachar)); return; }
       if (b.classList.contains('pr-opcion')) { elegirOpcion(b); return; }
       const ej = lista[actual], d = datosDe(ej);
       if (b.dataset.antes != null) {

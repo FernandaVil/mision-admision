@@ -200,7 +200,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 4 de 6</span>
+            <span class="etiqueta">Módulo 4 de 7</span>
             <h1>Física mecánica I: cinemática</h1>
             <p class="entrada">Cómo se describe un movimiento en línea recta: con velocidad constante, acelerando y frenando. Un radar de pista para verlo, tres fórmulas que se despejan como balanzas y misiones de despegue y frenado como las del examen.</p>
           </div>

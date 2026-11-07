@@ -353,6 +353,20 @@ body.arrastrando .cv-cadena { border-color: var(--primario-borde); }
 .pr-opcion.correcta { border-color: var(--exito); background: var(--exito-suave); }
 .pr-opcion.correcta .pr-letra { background: var(--exito); border-color: var(--exito); color: var(--superficie); }
 .pr-opcion.incorrecta { border-color: var(--error); background: var(--error-suave); }
+/* Tachar una opción descartada (opciones.tachar) */
+.pr-opcion-fila { position: relative; display: grid; min-width: 0; }
+.pr-opcion-fila .pr-opcion { width: 100%; padding-right: 46px; }
+.pr-tachar {
+  position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; padding: 0;
+  display: grid; place-items: center;
+  border: 1px solid var(--borde); border-radius: 7px; background: var(--superficie); color: var(--texto-3);
+}
+.pr-tachar svg { width: 15px; height: 15px; }
+.pr-tachar:hover { border-color: var(--error); color: var(--error); }
+.pr-tachar[aria-pressed="true"] { background: var(--error-suave); border-color: var(--error-borde); color: var(--error); }
+.pr-tachar[hidden] { display: none; }
+.pr-opcion.tachada { opacity: 0.45; text-decoration: line-through; cursor: default; }
+.pr-opcion.tachada:hover { border-color: var(--borde-fuerte); }
 .pr-feedback { margin-bottom: 14px; }
 /* Pregunta previa (opcional): por ejemplo, qué llave se usa en el módulo 3 */
 .pr-antes { display: grid; gap: 10px; margin-bottom: 16px; padding: 12px 16px; border: 1.5px solid var(--primario-borde); border-radius: var(--radio); background: var(--primario-suave); }

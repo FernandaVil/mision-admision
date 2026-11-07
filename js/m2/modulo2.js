@@ -4,7 +4,7 @@
    y dividir), 3) signos y orden, 4) potencias con letras, 5) práctica,
    6) radar de signos (práctica extra), 7) rondas de práctica
    (js/rondas.js; no cuentan en el porcentaje del módulo).
-   La factorización es el módulo 3; la notación científica, el módulo 5.
+   La factorización es el módulo 3; la notación científica, el módulo 6.
    Rutas: #m2-ideas (-p1, -p2, -p3) · #m2-fracciones · #m2-operaciones ·
           #m2-potencias · #m2-practica · #m2-radar · #m2-rondas
    ===================================================================== */
@@ -257,7 +257,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 2 de 6</span>
+            <span class="etiqueta">Módulo 2 de 7</span>
             <h1>Álgebra básica</h1>
             <p class="entrada">Fracciones, signos, orden de las operaciones y potencias con letras: las cuentas que aparecen dentro de cada fórmula del examen. La factorización viene en el módulo 3.</p>
           </div>

@@ -4,7 +4,7 @@
    el motor de práctica de siempre. No tiene clase ni guion: es para
    practicar solo, unos 15 minutos por quiz.
    Ruta: #ingles (o #ingles-quizzes)
-   Va en el catálogo con el número 07, después de los seis módulos: el
+   Va en el catálogo con el número 08, después de los siete módulos: el
    número solo se ve en la barra lateral y en el título de la pestaña.
    ===================================================================== */
 (function () {

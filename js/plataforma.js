@@ -115,7 +115,7 @@
         <div>
           <span class="etiqueta">Panel general</span>
           <h1>Preparación para el examen de admisión</h1>
-          <p class="entrada">Seis módulos, de la base hacia el examen. El punto de partida es el módulo 1: despejar y convertir unidades es la base de toda la física y la química que vienen después.</p>
+          <p class="entrada">Siete módulos, de la base hacia el examen. El punto de partida es el módulo 1: despejar y convertir unidades es la base de toda la física y la química que vienen después.</p>
           <div class="fila-botones">
             <a class="btn ini-continuar" href="#m1">Continuar con el módulo 1${icono('flechaD')}</a>
             <button type="button" class="btn btn-secundario" data-abrir-asistente>${icono('chat')}Centro de comando IA</button>
@@ -170,7 +170,7 @@
   function vistaPendiente(m) {
     const v = crear('section', 'vista-pendiente');
     v.innerHTML = `
-      <span class="etiqueta">Módulo ${Number(m.num)} de 6</span>
+      <span class="etiqueta">Módulo ${Number(m.num)} de 7</span>
       <h1>${m.titulo}</h1>
       <p class="entrada">${m.resumen}</p>
       <div class="tarjeta">

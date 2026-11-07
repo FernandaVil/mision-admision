@@ -1,7 +1,7 @@
 /* =====================================================================
    MÓDULO 2 · contenido (álgebra básica: fracciones, signos, jerarquía y
    potencias con letras). La factorización es el módulo 3 y la notación
-   científica llega en el módulo 5, con la química.
+   científica llega en el módulo 6, con la química.
    ---------------------------------------------------------------------
    - RETOS_SUMAS, RETOS_FRACCIONES, RETOS_OPERACIONES, RETOS_EXPONENTES:
      las cuatro herramientas.

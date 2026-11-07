@@ -1,0 +1,188 @@
+/* =====================================================================
+   Módulo 5 · dibujos de fuerzas (m5-), mesa de fuerzas (fz-), la rampa
+   (rm-) y diapositivas de la clase 6. Reutiliza las piezas de los módulos
+   anteriores (banco, bitácora, mensajes, pregunta para predecir, recuadro
+   de cálculo, instrumentos, grupos de retos).
+   Colores: violeta es el peso (la única fuerza sin contacto), color de
+   texto son los contactos, ámbar es la fuerza neta y la aceleración
+   (siempre apuntan igual) y azul es la velocidad. Al frenar, ámbar y azul
+   apuntan a lados contrarios.
+   ===================================================================== */
+.m5-seccion > .banco { margin: 8px 0 18px; }
+.m5-seccion .pasos-concepto .mt-bloque { margin: 10px 0 0; font-size: 1.05rem; justify-content: flex-start; }
+.m5-fn { font-family: var(--f-texto); font-style: normal; font-weight: 500; }
+
+/* ---------- Dibujos ---------- */
+.m5-fig { display: block; width: 100%; height: auto; }
+.m5-flecha { --c: var(--texto); }
+.m5-f-peso { --c: var(--violeta); }
+.m5-f-neta { --c: var(--ambar); }
+.m5-f-vel { --c: var(--primario); }
+.m5-f-parte { --c: var(--ambar); }
+.m5-flecha line { stroke: var(--c); stroke-width: 3.5; stroke-linecap: round; }
+.m5-f-vel line { stroke-width: 2; stroke-dasharray: 5 4; }
+.m5-f-parte line { stroke-width: 2.5; stroke-dasharray: 6 4; }
+.m5-flecha polygon { fill: var(--c); }
+.m5-flecha text { fill: var(--c); font-family: var(--f-texto); font-size: 14px; font-weight: 600; paint-order: stroke; stroke: var(--superficie); stroke-width: 3px; stroke-linejoin: round; }
+
+.m5-cuerpo ellipse, .m5-cuerpo rect, .m5-cuerpo circle, .m5-cuerpo > path:not(.m5-raya) { fill: var(--superficie-3); stroke: var(--texto-3); stroke-width: 1.5; }
+.m5-raya { fill: none; stroke: var(--texto-3); stroke-width: 1.25; }
+.m5-silueta { fill: var(--texto-3); }
+.m5-ojo { fill: var(--superficie); }
+.m5-trazo { fill: none; stroke: var(--texto-3); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.m5-piso { stroke: var(--borde-fuerte); stroke-width: 2; }
+.m5-rayado { fill: none; stroke: var(--borde-fuerte); stroke-width: 1; }
+.m5-rampa { fill: var(--superficie-3); stroke: var(--borde-fuerte); stroke-width: 1.5; stroke-linejoin: round; }
+.m5-arco { fill: none; stroke: var(--texto-3); stroke-width: 1.5; }
+.m5-cuerda { stroke: var(--texto-3); stroke-width: 2; }
+.m5-viento { fill: none; stroke: var(--borde-fuerte); stroke-width: 2; stroke-dasharray: 8 6; }
+.m5-plataforma { fill: var(--superficie-3); stroke: var(--borde-fuerte); stroke-width: 1.5; }
+.m5-rueda { fill: var(--superficie); stroke: var(--texto-3); stroke-width: 3; }
+.m5-rotulo { fill: var(--texto-3); font-family: var(--f-mono); font-size: 12px; }
+.m5-rotulo-vel { fill: var(--primario); }
+.m5-medida { fill: var(--texto); font-family: var(--f-texto); font-size: 16px; font-weight: 600; }
+.m5-theta { font-family: var(--f-mate); font-style: italic; fill: var(--ambar); }
+.m5-mosca { fill: var(--texto-3); }
+.m5-trazo-fino { fill: none; stroke: var(--texto-3); stroke-width: 1; stroke-dasharray: 2 3; }
+.m5-extra { transition: opacity 0.25s ease; }
+/* Para dibujar, el cuerpo queda solo: lo demás se apaga */
+.m5-solo .m5-extra { opacity: 0.22; }
+/* Un diagrama como opción de un ejercicio: se ve más chico, así que la letra va más grande */
+.m5-op .m5-flecha text { font-size: 20px; }
+.m5-op-fig { display: block; width: 100%; }
+.pr-opcion:has(.m5-op-fig) > span:last-child { flex: 1; min-width: 0; }
+
+/* Gráficos por tramos */
+.m5-graf { display: block; width: 100%; height: auto; }
+.pr-enunciado .m5-graf { max-width: 400px; margin: 12px 0 2px; }
+.m5-g-eje { fill: none; stroke: var(--texto); stroke-width: 1.5; }
+.m5-g-punta { fill: var(--texto); }
+.m5-g-guia { stroke: var(--texto-3); stroke-width: 1; stroke-dasharray: 4 4; }
+.m5-g-linea { fill: none; stroke: var(--primario); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.m5-g-num { fill: var(--texto-2); font-family: var(--f-mono); font-size: 13px; }
+.m5-g-rot { fill: var(--texto-2); font-family: var(--f-texto); font-size: 13px; }
+
+/* ---------- Mesa de fuerzas ---------- */
+.mesa-fz .banco-cabeza, .mesa-rm .banco-cabeza { justify-content: space-between; }
+.fz-mensaje:empty, .rm-mensaje:empty, .fz-botones:empty, .rm-botones:empty { display: none; }
+.banco-pie .fz-mensaje, .banco-pie .rm-mensaje { margin-bottom: 10px; }
+.banco-pie .fz-mensaje:last-child, .banco-pie .rm-mensaje:last-child { margin-bottom: 0; }
+.mesa-fz .mensaje .mt, .mesa-rm .mensaje .mt { white-space: normal; flex-wrap: wrap; }
+.mesa-rm .banco-pie:has(> .rm-mensaje:empty + .rm-botones:empty) { display: none; }
+
+.fz-mesa { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; padding: 16px 18px; align-items: start; }
+.fz-escena { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); overflow: hidden; }
+.fz-panel { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.fz-panel .mf-pregunta, .fz-panel .mo-calculo { margin: 0; }
+.fz-panel > p { margin: 0; }
+.fz-pregunta { display: grid; gap: 10px; }
+.fz-pregunta p { margin: 0; }
+.fz-pregunta .fila-botones .btn { white-space: normal; text-align: left; height: auto; min-height: 32px; padding-block: 6px; }
+.fz-opcion:disabled:not(.incorrecta) { opacity: 0.55; }
+.fz-opcion.incorrecta, .fz-opcion.incorrecta:disabled:hover { background: var(--error-suave); border-color: var(--error); opacity: 1; }
+.fz-lista, .fz-toca { gap: 6px; }
+.fz-lista .segmento, .fz-toca .segmento { white-space: normal; text-align: left; height: auto; min-height: 32px; padding-block: 4px; }
+.fz-signos { display: grid; gap: 8px; }
+.fz-fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; font-size: 0.92rem; }
+.fz-fila .segmento { min-width: 36px; justify-content: center; }
+.fz-calculo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.fz-calculo label { flex-basis: 100%; font-size: 1.05rem; }
+.fz-calculo label .mt { white-space: normal; flex-wrap: wrap; }
+.fz-calculo .campo { width: 100px; }
+
+/* Una flecha que se puede mover: se toca en toda su línea, y la punta es más grande */
+.fz-f { cursor: grab; touch-action: none; outline: none; }
+.fz-arrastrando .fz-f { cursor: grabbing; }
+.fz-toque { stroke: transparent; stroke-width: 24; stroke-linecap: round; }
+.fz-asa { fill: none; stroke: var(--primario); stroke-width: 2; stroke-dasharray: 3 3; }
+.fz-asa-toque { fill: transparent; }
+.fz-f:hover .fz-asa, .fz-f:focus-visible .fz-asa { stroke-width: 3; stroke-dasharray: none; }
+.fz-f:focus-visible .fz-toque { stroke: var(--primario-suave); }
+.m5-silueta, .m5-cuerpo, .m5-trazo { pointer-events: none; }
+@media (max-width: 860px) {
+  .fz-mesa { grid-template-columns: minmax(0, 1fr); padding: 12px; }
+}
+
+/* ---------- La rampa ---------- */
+.rm-retos .segmento { min-width: 36px; justify-content: center; padding: 0 10px; }
+.rm-mesa { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; padding: 16px 18px 0; align-items: start; }
+.rm-escena { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); overflow: hidden; }
+.rm-lado { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.rm-partir { justify-self: start; }
+.rm-partir[hidden] { display: none; }
+.rm-partir[aria-pressed="true"] { background: var(--ambar-suave); color: var(--ambar); border-color: var(--ambar-borde); }
+.rm-deslizador input:disabled { opacity: 0.45; cursor: not-allowed; }
+.rm-deslizador[hidden] { display: none; }
+.rm-tablero { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 8px; }
+.rm-tablero .rp-instrumento { padding: 8px 10px; }
+.rm-tablero .rp-instrumento b { font-size: 1.2rem; }
+.rm-tablero .rp-instrumento div { flex-wrap: wrap; }
+.rm-tablero .rp-instrumento span { font-size: 0.74rem; }
+.rm-i-sen { background: var(--ambar-suave); border-color: var(--ambar-borde); }
+.rm-i-sen b { color: var(--ambar); }
+.rm-i-peso b { color: var(--violeta); }
+.rm-panel { padding: 14px 18px 0; }
+.rm-panel:empty { display: none; }
+.rm-panel .mf-pregunta, .rm-panel .mo-calculo { margin: 0; }
+.rm-pregunta { display: grid; gap: 10px; }
+.rm-pregunta p { margin: 0; }
+.rm-calculo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.rm-calculo label { flex-basis: 100%; font-size: 1rem; display: block; }
+.rm-calculo .campo { width: 100px; }
+@media (max-width: 860px) {
+  .rm-mesa { grid-template-columns: minmax(0, 1fr); padding: 12px 12px 0; }
+  .rm-panel { padding: 12px 12px 0; }
+}
+
+/* ---------- Tablas de consulta ---------- */
+.m5-tabla { margin: 0 0 18px; }
+.m5-tabla h3 { margin-bottom: 8px; }
+.m5-tabla > p { margin: 10px 0 0; font-size: 0.9rem; }
+
+/* ---------- Diapositivas de la clase 6 ---------- */
+.m5-apuestas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2cqw; }
+.m5-apuestas .d-tarjeta { font-size: 0.92em; }
+.m5-apuestas .d-num { font-size: 0.72em; }
+.m5-pasos-d { margin: 0; padding-left: 1.3em; display: grid; gap: 0.5em; }
+.m5-pasos-d li { margin: 0; padding-left: 0.2em; }
+.m5-d-fig { min-width: 0; }
+.m5-d-fig svg { max-height: 23cqw; }
+.m5-d-tabla { font-size: 0.86em; }
+.m5-d-apretada td { padding-block: 0.32em; }
+.m5-d-tabla tbody th { color: var(--texto-2); font-weight: 500; font-size: 0.92em; border-bottom: 1px solid var(--borde); }
+.m5-d-tabla tr:last-child th { border-bottom: 0; }
+.m5-d-extremo { display: grid; gap: 0.15em; font-size: 1.05em; }
+.m5-d-extremo .d-pie-tarjeta { display: block; margin-bottom: 0.45em; }
+.diapo .m5-flecha text { font-size: 18px; }
+.diapo .m5-rotulo { font-size: 14px; }
+.m5-d-seno { gap: 0.6em 2.4em; }
+.m5-d-seno .un { color: var(--texto); }
+.m5-d-fila { font-size: 0.98em; gap: 0.4em 1.2em; }
+.m5-d-enunciado { font-size: 0.92em; max-width: none; }
+.m5-modelo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1cqw; }
+.m5-modelo-op { display: grid; justify-items: center; gap: 0.2em; padding: 0.3em; border: 1px solid var(--borde); border-radius: var(--radio-chico); background: var(--superficie); min-width: 0; }
+.m5-modelo-op .d-svg { width: 100%; }
+.m5-modelo-op svg { max-height: 12cqw; }
+.m5-modelo-op .pr-letra { width: 1.5em; height: 1.5em; font-size: 0.72em; }
+.m5-modelo-op small { font-size: 0.68em; text-align: center; min-height: 2.6em; color: var(--texto-2); }
+.diapo .m5-modelo .m5-flecha text { font-size: 24px; }
+@media (max-width: 640px) {
+  .m5-apuestas { grid-template-columns: minmax(0, 1fr); }
+  .m5-d-fig svg { max-height: none; }
+  .m5-modelo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- Para seguir explorando: el simulador de PhET (m5-phet) ----------
+   Se carga solo con el botón: pesa unos 5 MB y necesita internet. El marco
+   guarda la proporción del simulador (1024 × 618), que se ajusta a cualquier
+   ancho; en el celular queda chico, y por eso va también el enlace. */
+.m5-phet { margin-top: 16px; }
+.m5-phet > p { margin: 4px 0 0; max-width: 75ch; font-size: 0.93rem; }
+.m5-phet-predicciones { display: grid; gap: 6px; max-width: 75ch; margin: 12px 0 14px; padding-left: 1.4em; font-size: 0.93rem; }
+.m5-phet-marco { position: relative; aspect-ratio: 1024 / 618; border: 1px solid var(--borde-fuerte); border-radius: var(--radio); overflow: hidden; background: var(--superficie-2); }
+.m5-phet-cargando, .m5-phet-inicio { position: absolute; inset: 0; margin: 0; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 16px; text-align: center; }
+.m5-phet-cargando { color: var(--texto-3); font-size: 0.88rem; }
+.m5-phet-inicio p { margin: 0; font-size: 0.84rem; }
+.m5-phet-marco iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.m5-phet-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 10px; }
+.m5-phet-pie .texto-3 { flex: 1 1 320px; margin: 0; font-size: 0.84rem; }

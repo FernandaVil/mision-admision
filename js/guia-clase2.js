@@ -12,7 +12,7 @@
     id: 'c2',
     nombre: 'Clase 2',
     titulo: 'Guion de la clase 2',
-    entrada: 'Unos 80 minutos por videollamada, a un ritmo más pausado que la clase 1: fracciones (las cuatro operaciones), signos y orden de las operaciones, y potencias con letras. La factorización es el módulo 3 y la notación científica llega en el módulo 5, con la química. Igual que la clase pasada, cada bloque corto de teoría va justo antes de su herramienta.',
+    entrada: 'Unos 80 minutos por videollamada, a un ritmo más pausado que la clase 1: fracciones (las cuatro operaciones), signos y orden de las operaciones, y potencias con letras. La factorización es el módulo 3 y la notación científica llega en el módulo 6, con la química. Igual que la clase pasada, cada bloque corto de teoría va justo antes de su herramienta.',
     diapositivas: () => MA.Clase2.DIAPOSITIVAS,
     claveCheck: 'guia.check.c2',
     antes: [
@@ -45,7 +45,7 @@
         tiempo: '0–3 min', titulo: 'Apertura', comparte: 'Él', ruta: 'index.html#inicio', boton: 'Abrir el panel general',
         pasos: [
           { t: 'tu', x: 'Hoy vamos con fracciones, signos y potencias: las cuentas que aparecen dentro de cada fórmula. Vamos con calma, una cosa a la vez.' },
-          { t: 'el', x: 'Comparte la pantalla en el panel general: se ve cuánto avanzó en el módulo 1 y la ruta nueva de seis módulos.' },
+          { t: 'el', x: 'Comparte la pantalla en el panel general: se ve cuánto avanzó en el módulo 1 y la ruta de módulos.' },
           { t: 'pregunta', x: '¿Qué ejercicio de la tarea se le hizo más difícil?', r: 'Anótalo. Si es de fracciones de unidades o de N y J, se ve hoy.' },
           { t: 'ojo', x: 'Si no hizo la tarea, no la repases ahora. Lo pendiente del módulo 1 queda para la casa.' }
         ]

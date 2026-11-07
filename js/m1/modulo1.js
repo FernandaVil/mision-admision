@@ -89,7 +89,7 @@
             <tbody class="tabla-luego">
               <tr class="tabla-luego-titulo"><td colspan="3">Más adelante (por ahora no hace falta aprenderlas)</td></tr>
               <tr><td>al cuadrado: ${mt(cuad(vr('x')))}</td><td>${mt(raiz(vr('x')))} raíz cuadrada</td><td>${mt(cuad(vr('x')), igual, n(9))} → ${mt(vr('x'), igual, raiz(n(9)), igual, n(3))} · caída libre y energía</td></tr>
-              <tr><td>en el exponente: ${mt(`${n(10)}<sup class="exp">${vr('x')}</sup>`)}</td><td>log (logaritmo)</td><td>${mt(`${n(10)}<sup class="exp">${vr('x')}</sup>`, igual, n(1000))} → ${mt(vr('x'), igual, 'log 1000', igual, n(3))} · pH, módulo 6</td></tr>
+              <tr><td>en el exponente: ${mt(`${n(10)}<sup class="exp">${vr('x')}</sup>`)}</td><td>log (logaritmo)</td><td>${mt(`${n(10)}<sup class="exp">${vr('x')}</sup>`, igual, n(1000))} → ${mt(vr('x'), igual, 'log 1000', igual, n(3))} · pH, módulo 7</td></tr>
             </tbody>
           </table>
         </div>
@@ -189,7 +189,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 1 de 6</span>
+            <span class="etiqueta">Módulo 1 de 7</span>
             <h1>Conversión de unidades y despejes</h1>
             <p class="entrada">Dos herramientas que se usan en todo el examen: despejar fórmulas y convertir unidades. Aquí no se memorizan reglas: se entiende por qué funcionan.</p>
           </div>

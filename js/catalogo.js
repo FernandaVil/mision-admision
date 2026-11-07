@@ -1,5 +1,5 @@
 /* =====================================================================
-   CATÁLOGO DEL CURSO · los 6 módulos
+   CATÁLOGO DEL CURSO · los 7 módulos
    Para habilitar un módulo nuevo: cambia "disponible" a true y
    registra su vista en MA.vistasModulo (ver js/m1/modulo1.js).
    ===================================================================== */
@@ -58,6 +58,19 @@
     },
     {
       id: 'm5', num: '05',
+      titulo: 'Física mecánica II: dinámica',
+      resumen: 'Por qué se mueve lo que se mueve: masa y peso, las flechas de cada fuerza, las tres leyes de Newton y la rampa.',
+      disponible: true,
+      temario: [
+        'Masa y peso: qué cambia y qué no',
+        'Las cinco fuerzas y ¿Quién lo toca?: las flechas de cualquier situación, en el piso, en el aire y en la rampa',
+        'Las tres leyes de Newton y la fuerza neta',
+        'Seno y coseno en la rampa',
+        'Tácticas para descartar opciones en preguntas tipo examen'
+      ]
+    },
+    {
+      id: 'm6', num: '06',
       titulo: 'Estequiometría y notación científica',
       resumen: 'El mol, las cantidades en una reacción química y los números muy grandes o muy pequeños.',
       disponible: false,
@@ -69,7 +82,7 @@
       ]
     },
     {
-      id: 'm6', num: '06',
+      id: 'm7', num: '07',
       titulo: 'pH y simulacro final',
       resumen: 'Escala de acidez y un simulacro cronometrado tipo examen.',
       disponible: false,
@@ -81,8 +94,8 @@
       ]
     },
     {
-      // Práctica por cuenta propia, sin clase: va después de los seis módulos
-      id: 'ingles', num: '07',
+      // Práctica por cuenta propia, sin clase: va después de los siete módulos
+      id: 'ingles', num: '08',
       titulo: 'Inglés',
       resumen: 'Práctica por cuenta propia: cuatro quizzes cortos de tiempos verbales, vocabulario, lectura y uno mixto.',
       disponible: true,

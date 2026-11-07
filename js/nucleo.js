@@ -171,7 +171,9 @@
     mano: '<path d="M9 11V6a1.5 1.5 0 0 1 3 0v4M12 10V4.5a1.5 1.5 0 0 1 3 0V10M15 10V6a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-.5a6 6 0 0 1-4.7-2.3L3.3 13.5a1.6 1.6 0 0 1 2.4-2.1L9 14"/>',
     cuadricula: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 10h18M10 3v18"/>',
     cuadrados: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M14 21v-7h7"/>',
-    llave: '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>'
+    llave: '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>',
+    fuerzas: '<rect x="9" y="9" width="6" height="6" rx="1"/><path d="M12 9V2M9.5 4.5 12 2l2.5 2.5M12 15v7M9.5 19.5 12 22l2.5-2.5M15 12h7M19.5 9.5 22 12l-2.5 2.5"/>',
+    rampa: '<path d="M3 20h18L3 7z"/><path d="M8 20a5 5 0 0 0-1-3"/>'
   };
   MA.icono = function (nombre, clase = '') {
     if (nombre === 'avion') {
