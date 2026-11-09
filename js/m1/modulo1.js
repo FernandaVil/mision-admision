@@ -189,7 +189,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 1 de 7</span>
+            <span class="etiqueta">Módulo 1 de 9</span>
             <h1>Conversión de unidades y despejes</h1>
             <p class="entrada">Dos herramientas que se usan en todo el examen: despejar fórmulas y convertir unidades. Aquí no se memorizan reglas: se entiende por qué funcionan.</p>
           </div>

@@ -257,7 +257,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 2 de 7</span>
+            <span class="etiqueta">Módulo 2 de 9</span>
             <h1>Álgebra básica</h1>
             <p class="entrada">Fracciones, signos, orden de las operaciones y potencias con letras: las cuentas que aparecen dentro de cada fórmula del examen. La factorización viene en el módulo 3.</p>
           </div>

@@ -1,0 +1,93 @@
+/* =====================================================================
+   Módulo 6 · dibujos de la caída libre (m6-), la torre de lanzamiento
+   (tr-) y diapositivas de la clase 7. Reutiliza los dibujos y las
+   flechas del módulo 5 (m5-fig, m5-flecha, m5-graf), los instrumentos
+   del radar (rp-instrumento) y las piezas de siempre (banco, bitácora,
+   mensajes, pregunta para predecir, recuadro de cálculo).
+   Colores, como en el módulo 5: violeta es el peso, azul punteado es la
+   velocidad (no es una fuerza) y ámbar son las huellas de cada segundo,
+   como en el radar de pista.
+   ===================================================================== */
+.m6-seccion > .banco { margin: 8px 0 18px; }
+.m6-seccion .pasos-concepto .mt-bloque { margin: 10px 0 0; font-size: 1.05rem; justify-content: flex-start; }
+
+/* ---------- Dibujos ---------- */
+.m6-huella { fill: var(--superficie); stroke: var(--ambar); stroke-width: 2; }
+.m6-huella-lado { fill: var(--ambar-suave); }
+.m6-huella-num { fill: var(--ambar); font-family: var(--f-mono); font-size: 11px; font-weight: 600; }
+.m6-guia { stroke: var(--ambar); stroke-width: 1.25; stroke-dasharray: 4 4; }
+.m6-torre { fill: var(--superficie-3); stroke: var(--borde-fuerte); stroke-width: 1.5; }
+.m6-torre-raya { fill: none; stroke: var(--borde-fuerte); stroke-width: 1; }
+.m6-trayecto { fill: none; stroke: var(--texto-3); stroke-width: 1.5; stroke-dasharray: 3 5; }
+.m6-cota { fill: none; stroke: var(--texto-3); stroke-width: 1.25; }
+.m6-paquete { fill: var(--superficie-3); stroke: var(--texto-2); stroke-width: 1.5; }
+.m6-regla { stroke: var(--texto-3); stroke-width: 1.25; }
+.m6-regla-num { fill: var(--texto-3); font-family: var(--f-mono); font-size: 11px; }
+.m6-errores { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.m6-op-graf .m5-g-linea { stroke-width: 4; }
+
+/* ---------- La torre de lanzamiento (tr-) ---------- */
+.mesa-tr .banco-cabeza { justify-content: space-between; }
+.tr-retos .segmento { min-width: 36px; justify-content: center; padding: 0 10px; }
+.tr-mensaje:empty, .tr-botones:empty { display: none; }
+.banco-pie .tr-mensaje { margin-bottom: 10px; }
+.banco-pie .tr-mensaje:last-child { margin-bottom: 0; }
+.mesa-tr .mensaje .mt { white-space: normal; flex-wrap: wrap; }
+.mesa-tr .banco-pie:has(> .tr-mensaje:empty + .tr-botones:empty) { display: none; }
+
+.tr-mesa { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; padding: 16px 18px 0; align-items: start; }
+.tr-escena { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); overflow: hidden; }
+.tr-svg { max-height: 520px; }
+.tr-lado { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.tr-tablero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tr-tablero .rp-instrumento { padding: 8px 10px; }
+.tr-tablero .rp-instrumento b { font-size: 1.2rem; }
+.tr-tablero .rp-instrumento div { flex-wrap: wrap; }
+.tr-grafica { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); padding: 6px 4px 2px; }
+.tr-grafica[hidden] { display: none; }
+.tr-g-punto { fill: var(--primario); }
+.tr-leyenda { margin: 0; font-size: 0.82rem; }
+.tr-ley-peso { color: var(--violeta); font-weight: 600; }
+.tr-ley-vel { color: var(--primario); font-weight: 600; }
+
+.tr-panel { padding: 14px 18px 0; }
+.tr-panel:empty { display: none; }
+.tr-panel .mf-pregunta, .tr-panel .mo-calculo { margin: 0; }
+.tr-pregunta { display: grid; gap: 10px; }
+.tr-pregunta p { margin: 0; }
+.tr-pregunta .fila-botones .btn { white-space: normal; text-align: left; height: auto; min-height: 32px; padding-block: 6px; }
+.tr-pregunta .btn.tr-elegida:disabled { opacity: 1; border-color: var(--primario); background: var(--primario-suave); color: var(--primario); }
+.tr-calculo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.tr-calculo label { flex-basis: 100%; font-size: 1rem; display: block; }
+.tr-calculo .campo { width: 100px; }
+.tr-serie { display: grid; gap: 10px; justify-items: start; }
+.tr-serie-preg { margin: 0; font-size: 1rem; }
+.tr-serie-campos { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+.tr-serie-campo { display: grid; gap: 4px; font-size: 0.86rem; color: var(--texto-2); }
+.tr-serie-campo .campo { width: 76px; }
+.campo-grupo:has(.tr-bien) { border-color: var(--exito); background: var(--exito-suave); }
+.campo-grupo:has(.tr-mal) { border-color: var(--error); background: var(--error-suave); }
+@media (max-width: 860px) {
+  .tr-mesa { grid-template-columns: minmax(0, 1fr); padding: 12px 12px 0; }
+  .tr-panel { padding: 12px 12px 0; }
+}
+
+/* ---------- Diapositivas de la clase 7 ---------- */
+.m6-tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2cqw; }
+.m6-tres figure { margin: 0; display: grid; gap: 0.4em; justify-items: center; min-width: 0; }
+.m6-tres .m5-d-fig { width: 100%; }
+.m6-tres svg { max-height: 16cqw; }
+.m6-tres figcaption { font-size: 0.82em; text-align: center; color: var(--texto-2); }
+.m6-d-fotos svg { max-height: 24cqw; }
+.m6-d-ancha svg { max-height: 17cqw; }
+.m6-d-moneda svg { max-height: 18cqw; }
+.m6-d-serie { width: auto; font-size: 1em; }
+.m6-d-serie th, .m6-d-serie td { text-align: center; min-width: 3.2em; }
+.m6-d-serie tbody th { color: var(--texto-2); font-weight: 500; font-size: 0.8em; text-align: left; border-bottom: 1px solid var(--borde); }
+.m6-d-serie tbody tr:last-child th { border-bottom: 0; }
+.m6-d-formulas { display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 0.6em 0.9em; }
+@media (max-width: 640px) {
+  .m6-tres { grid-template-columns: minmax(0, 1fr); }
+  .m6-tres svg, .m6-d-fotos svg, .m6-d-ancha svg { max-height: none; }
+  .m6-d-formulas { grid-template-columns: auto; }
+}

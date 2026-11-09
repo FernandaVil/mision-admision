@@ -197,7 +197,7 @@
   }
 
   // Guías disponibles (las de las clases 2 a 6 solo existen si se cargó su archivo)
-  const guias = () => [GUIA, MA.GuiaClase2, MA.GuiaClase3, MA.GuiaClase4, MA.GuiaClase6].filter(Boolean);
+  const guias = () => [GUIA, MA.GuiaClase2, MA.GuiaClase3, MA.GuiaClase4, MA.GuiaClase6, MA.GuiaClase7].filter(Boolean);
 
   function montarGuia(cont) {
     const lista = guias();

@@ -1,5 +1,5 @@
 /* =====================================================================
-   CATÁLOGO DEL CURSO · los 7 módulos
+   CATÁLOGO DEL CURSO · los 9 módulos
    Para habilitar un módulo nuevo: cambia "disponible" a true y
    registra su vista en MA.vistasModulo (ver js/m1/modulo1.js).
    ===================================================================== */
@@ -71,31 +71,55 @@
     },
     {
       id: 'm6', num: '06',
-      titulo: 'Estequiometría y notación científica',
-      resumen: 'El mol, las cantidades en una reacción química y los números muy grandes o muy pequeños.',
-      disponible: false,
+      titulo: 'Física mecánica III: caída libre y tiro',
+      resumen: 'Lo que pasa cuando solo actúa el peso: lanzar hacia arriba, soltar desde lo alto y lanzar de lado, con una torre de lanzamiento y las fórmulas del módulo 4.',
+      disponible: true,
       temario: [
-        'Notación científica y potencias de 10, con calculadora',
-        'El mol y la masa molar',
-        'Gramos ↔ moles con el mismo factor unitario del módulo 1',
-        'Balanceo de ecuaciones y relaciones molares'
+        'Caída libre: solo el peso, y una aceleración de −10 m/s² todo el tiempo, también en lo más alto',
+        'Lanzar hacia arriba: tiempo de subida, altura máxima y la gráfica de velocidad que cruza el cero',
+        'Soltar desde lo alto: cuánto tarda en caer y con qué rapidez llega',
+        'Tiro parabólico: cada eje por su lado, y el lanzamiento horizontal'
       ]
     },
     {
       id: 'm7', num: '07',
+      titulo: 'Estequiometría: soluciones y reacciones',
+      resumen: 'Cuánto hay de cada cosa: la concentración de una solución, el mol y las proporciones de una reacción química, con preguntas como las del ICFES.',
+      disponible: false,
+      temario: [
+        'Soluto, solvente y concentración: tantos mL en tantos mL',
+        'Leer tablas y gráficas de solubilidad',
+        'El mol: gramos ÷ masa molar',
+        'La reacción química: balanceo por tanteo, conservación de la masa y el reactivo límite'
+      ]
+    },
+    {
+      id: 'm8', num: '08',
+      titulo: 'Física mecánica IV: fricción y energía',
+      resumen: 'La fricción con su coeficiente, el trabajo, la energía cinética y la potencial, y la potencia.',
+      disponible: false,
+      temario: [
+        'Fricción con coeficiente: cuánto frena una superficie',
+        'Trabajo, energía cinética y energía potencial',
+        'La energía se conserva: la rapidez al final de una caída o de una rampa',
+        'Potencia y resortes'
+      ]
+    },
+    {
+      id: 'm9', num: '09',
       titulo: 'pH y simulacro final',
       resumen: 'Escala de acidez y un simulacro cronometrado tipo examen.',
       disponible: false,
       temario: [
         'Qué mide el pH y la escala de 0 a 14',
-        'El pH como exponente: potencias de 10',
-        'pOH y la regla del 14',
+        'Ácido, neutro y básico: sustancias de la casa, y qué pasa al diluir',
+        'El pH y las potencias de 10',
         'Simulacro final con tiempo y retroalimentación'
       ]
     },
     {
-      // Práctica por cuenta propia, sin clase: va después de los siete módulos
-      id: 'ingles', num: '08',
+      // Práctica por cuenta propia, sin clase: va después de los nueve módulos
+      id: 'ingles', num: '10',
       titulo: 'Inglés',
       resumen: 'Práctica por cuenta propia: cuatro quizzes cortos de tiempos verbales, vocabulario, lectura y uno mixto.',
       disponible: true,

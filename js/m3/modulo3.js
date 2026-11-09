@@ -316,7 +316,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 3 de 7</span>
+            <span class="etiqueta">Módulo 3 de 9</span>
             <h1>Factorización</h1>
             <p class="entrada">Armar y desarmar multiplicaciones: juntar términos, la distributiva, el factor común, la diferencia de cuadrados y una llave maestra para cualquier trinomio. Sirve para simplificar fórmulas y para resolver las ecuaciones de la física.</p>
           </div>

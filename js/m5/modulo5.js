@@ -247,7 +247,7 @@
       raiz.innerHTML = `
         <header class="mod-cabeza">
           <div>
-            <span class="etiqueta">Módulo 5 de 7</span>
+            <span class="etiqueta">Módulo 5 de 9</span>
             <h1>Física mecánica II: dinámica</h1>
             <p class="entrada">Por qué se mueve lo que se mueve. Masa y peso, las flechas de cualquier situación, las tres leyes de Newton y la rampa, con preguntas como las de los exámenes y tácticas para descartar opciones.</p>
           </div>

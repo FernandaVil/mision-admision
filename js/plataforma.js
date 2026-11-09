@@ -170,7 +170,7 @@
   function vistaPendiente(m) {
     const v = crear('section', 'vista-pendiente');
     v.innerHTML = `
-      <span class="etiqueta">Módulo ${Number(m.num)} de 7</span>
+      <span class="etiqueta">Módulo ${Number(m.num)} de 9</span>
       <h1>${m.titulo}</h1>
       <p class="entrada">${m.resumen}</p>
       <div class="tarjeta">
